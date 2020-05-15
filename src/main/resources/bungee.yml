@@ -1,0 +1,4 @@
+main: cn.newcraft.system.bungee.Main
+author: Hello_Han
+name: NewCraftSystem
+version: ${project.version}

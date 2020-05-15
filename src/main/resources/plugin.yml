@@ -1,0 +1,8 @@
+name: NewCraftSystem
+version: ${project.version}
+main: cn.newcraft.system.bukkit.Main
+prefix: NewCraftSystem
+softdepend:
+  - PlaceholderAPI
+authors: [Hello_Han]
+description: NewCraft 核心
