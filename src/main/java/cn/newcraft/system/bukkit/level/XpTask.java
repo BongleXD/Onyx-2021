@@ -1,7 +1,7 @@
 package cn.newcraft.system.bukkit.level;
 
-import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
+import cn.newcraft.system.bukkit.api.PlayerProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -16,7 +16,9 @@ public class XpTask {
             @Override
             public void run() {
                 for(Player p : Bukkit.getOnlinePlayers()){
-                    PlayerProfile.getDataFromUUID(p.getUniqueId()).addXp(30);
+                    PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
+                    assert prof != null;
+                    prof.addXp(30);
                 }
             }
         }.runTaskTimerAsynchronously(Main.getInstance(), 3 * 60 * 20, 3 * 60 * 20);

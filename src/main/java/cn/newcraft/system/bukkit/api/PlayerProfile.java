@@ -6,6 +6,7 @@ import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.rank.RankData;
 import cn.newcraft.system.bukkit.util.interact.ActionBarUtil;
 import cn.newcraft.system.bukkit.util.Method;
+import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.shared.util.SQLHelper;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
@@ -224,7 +225,9 @@ public class PlayerProfile {
     }
 
     public static PlayerProfile getDataFromUUID(UUID uuid){
-        return dataMap.getOrDefault(sql.getData("uuid", uuid.toString(), "player_data", "pid"), null);
+        PlayerData data = PlayerData.getDataFromUUID(uuid);
+        if(data == null) return null;
+        return dataMap.getOrDefault(data.getPID(), null);
     }
 
     public void saveData(boolean destroy){

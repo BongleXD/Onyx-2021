@@ -1,6 +1,5 @@
 package cn.newcraft.system.bukkit;
 
-import cn.newcraft.system.bukkit.packet.PacketListener;
 import cn.newcraft.system.bukkit.support.v1_12_R1.v1_12_R1;
 import cn.newcraft.system.bukkit.util.placeholders.FormatPlaceholders;
 import cn.newcraft.system.bukkit.util.plugin.PluginManager;
@@ -83,6 +82,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        PluginInfo.init(this.getDescription().getVersion());
         Bukkit.getConsoleSender().sendMessage(
                 "\n§6-----------------------------------------------------------------------------------------------------\n" +
                 "§9 __   _   _____   _          __  _____   _____        ___   _____   _____  \n" +
@@ -187,7 +187,6 @@ public final class Main extends JavaPlugin {
     }
 
     private void regListener(){
-        new PacketListener();
         new ProfileListener();
         new CommandLimitListener();
         new ChatListener();

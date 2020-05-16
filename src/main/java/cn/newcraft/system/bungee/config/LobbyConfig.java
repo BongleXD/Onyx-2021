@@ -17,15 +17,15 @@ public class LobbyConfig extends ConfigManager {
         List<String> mainList = cfg.getYml().getStringList("Lobby.MainLobby");
         mainList.add("Lobby_01");
         mainList.add("Lobby_02");
-        cfg.getYml().set("Lobby.MainLobby", mainList);
+        cfg.addDefault("Lobby.MainLobby", mainList);
 
         List<String> skyWarsList = cfg.getYml().getStringList("Lobby.SkyWarsLobby");
         skyWarsList.add("SWLOBBY_01");
-        cfg.getYml().set("Lobby.SkyWarsLobby", skyWarsList);
+        cfg.addDefault("Lobby.SkyWarsLobby", skyWarsList);
 
         List<String> bedWarsList = cfg.getYml().getStringList("Lobby.BedWarsLobby");
         bedWarsList.add("BWLOBBY_01");
-        cfg.getYml().set("Lobby.BedWarsLobby", bedWarsList);
+        cfg.addDefault("Lobby.BedWarsLobby", bedWarsList);
         cfg.save();
     }
 }

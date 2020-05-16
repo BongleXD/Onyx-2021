@@ -1,6 +1,14 @@
 package cn.newcraft.system.shared;
 
+import org.bukkit.plugin.PluginDescriptionFile;
+
 public class PluginInfo {
+
+    private static String ver;
+
+    public static void init(String version){
+        ver = version;
+    }
 
     public static String INFO = "§bNewCraftSystem §7>";
     public static String ERROR = "§bNewCraftSystem §cERROR §7>";
@@ -11,7 +19,7 @@ public class PluginInfo {
     public static String BUNGEE_WARNING = "§bNewCraftSystem-Bungee §eWARNING §7>";
 
     public static String getVersion() {
-        return "0.1.2";
+        return ver;
     }
     public static String getAuthor() {
         return "Hello_Han, May_Block";

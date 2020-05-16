@@ -19,6 +19,7 @@ public class PlayerData {
     private String serverJoined;
     private long joinTime;
     private int staySecs;
+    private static HashMap<String, String> pidMap = new HashMap<>();
     private static HashMap<String, PlayerData> dataMap = new HashMap<>();
 
     public PlayerData(String pid, String uuid, String name, String ipLastJoin, String lastLeaveMills, String rejoinServer, String guild, String status, String serverJoined, int staySecs){
@@ -38,6 +39,7 @@ public class PlayerData {
     public PlayerData(String pid) {
         this.pid = pid;
         putData();
+        pidMap.put(uuid, this.pid);
         dataMap.put(pid, this);
     }
 
@@ -163,25 +165,29 @@ public class PlayerData {
     }
 
     public static PlayerData getDataFromUUID(UUID uuid){
-        return dataMap.getOrDefault(sql.getData("uuid", uuid.toString(), "player_data", "pid"), null);
+        return dataMap.getOrDefault(pidMap.get(uuid.toString()), null);
     }
 
     public static PlayerData getDataFromName(String name){
-        return dataMap.getOrDefault(sql.getData("player_name", name, "player_data", "pid"), null);
+        return dataMap.getOrDefault(pidMap.get(name), null);
     }
 
-    public static void checkDataFromUUID(UUID uuid){
+    public static PlayerData initFromUUID(UUID uuid){
         String pid = (String) sql.getData("uuid", uuid.toString(), "player_data", "pid");
         if(pid != null) {
-            new PlayerData(pid);
+            pidMap.put(uuid.toString(), pid);
+            return new PlayerData(pid);
         }
+        return null;
     }
 
-    public static void checkDataFromName(String name){
+    public static PlayerData initFromName(String name){
         String pid = (String) sql.getData("player_name", name, "player_data", "pid");
         if(pid != null) {
-            new PlayerData(pid);
+            pidMap.put(name, pid);
+            return new PlayerData(pid);
         }
+        return null;
     }
 
     public void saveData(boolean destroy){

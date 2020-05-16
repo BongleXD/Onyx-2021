@@ -33,39 +33,33 @@ public class ProfileListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onLogin(PlayerPreConnectEvent e) {
-            new BukkitRunnable(){
-                @Override
-                public void run() {
-                    //init profile
-                    PlayerData.checkDataFromName(e.getName());
-                    PlayerData data = PlayerData.getDataFromName(e.getName());
-                    //checkUUID(e, off, data);
-                    if(data != null) {
-                        boolean b = Main.getSQL().checkDataExists("player_profile", "uuid", e.getUniqueId().toString());
-                        if (b) {
-                            //load profile
-                            new PlayerProfile(data.getPID());
-                        } else {
-                            //create new profile
-                            PlayerProfile profile = new PlayerProfile(
-                                    data.getPID(),
-                                    e.getUniqueId(),
-                                    1,
-                                    0,
-                                    1.0,
-                                    1.0,
-                                    false,
-                                    false,
-                                    "",
-                                    "",
-                                    "",
-                                    ""
-                            );
-                            profile.saveData(false);
-                        }
-                    }
-                }
-            }.runTask(Main.getInstance());
+        //init profile
+        PlayerData data = PlayerData.initFromName(e.getName());
+        //checkUUID(e, off, data);
+        if (data != null) {
+            boolean b = Main.getSQL().checkDataExists("player_profile", "uuid", e.getUniqueId().toString());
+            if (b) {
+                //load profile
+                new PlayerProfile(data.getPID());
+            } else {
+                //create new profile
+                PlayerProfile profile = new PlayerProfile(
+                        data.getPID(),
+                        e.getUniqueId(),
+                        1,
+                        0,
+                        1.0,
+                        1.0,
+                        false,
+                        false,
+                        "",
+                        "",
+                        "",
+                        ""
+                );
+                profile.saveData(false);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -74,94 +68,89 @@ public class ProfileListener implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                synchronized (this){
-                    //check data exists
-                    boolean b = Main.getSQL().checkDataExists("player_data", "uuid", p.getUniqueId().toString());
-                    if(!b){
-                        this.cancel();
-                        return;
-                    }
-                    String pid = SystemAPI.getApi().getPID(p.getUniqueId());
-                    PlayerProfile prof = PlayerProfile.getData(pid);
-                    if(prof == null){
-                        return;
-                    }
-
-                    //tag init
-                    if(TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())){
-                        for(Player online : Bukkit.getOnlinePlayers()){
-                            if (p != online)
-                                Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
-                            Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
-                            if(p != online) {
-                                String suffix = PlaceholderAPI.setPlaceholders(p, getTagData(p).getSuffix());
-                                if(prof.isVanish()){
-                                    suffix = " §c[已隐身]";
-                                }
-                                String priority = Method.getTagPriority(p, prof);
-                                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
-                            }
-                            if(PlayerProfile.getDataFromUUID(online.getUniqueId()) != null) {
-                                String suffix = PlaceholderAPI.setPlaceholders(online, getTagData(online).getSuffix());
-                                PlayerProfile profile = PlayerProfile.getDataFromUUID(online.getUniqueId());
-                                if (profile.isVanish()) {
-                                    suffix = " §c[已隐身]";
-                                }
-                                String priority = Method.getTagPriority(online, profile);
-                                Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, suffix), TeamAction.CREATE, priority);
-                            }
-                        }
-                    }
-
-                    //nick check
-                    if(((prof.isNicked() && Main.getGameManager() != null) || (prof.isNicked() && p.hasPermission("ncs.nick.staff"))) && !Main.getInstance().getConfig().getBoolean("disable-nick")){
-                        if(!Main.getSQL().checkDataExists("player_data", "player_name", prof.getNickName())) {
-                            Main.getNMS().changeName(p, prof.getNickName());
-                        }else {
-                            prof.setNicked(false);
-                            prof.setNickSkin("");
-                            prof.setNickName("");
-                            prof.setNickPrefix("");
-                            prof.saveData(false);
-                            p.sendMessage("§c有玩家使用了此昵称所以已经将你的昵称还原！");
-                            SystemAPI.getApi().refreshTag(p);
-                        }
-                    }else if(prof.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick")) {
-                        Main.getNMS().restoreName(p);
-                    }
-
-                    //join message
-                    p.setDisplayName(PlaceholderAPI.setPlaceholders(p, "%profile_prefix%") + p.getName() + PlaceholderAPI.setPlaceholders(p, "%profile_suffix%"));
-                    if (SettingConfig.cfg.getYml().getBoolean("Setting.JoinMessage.Enable")) {
-                        if (!prof.isVanish()) {
-                            String message = SettingConfig.cfg.getYml().getString("Setting.JoinMessage.Text")
-                                    .replace("{displayname}", p.getDisplayName())
-                                    .replace("{name}", p.getName());
-                            for (Player online : Bukkit.getOnlinePlayers()) {
-                                online.sendMessage(message);
-                                online.playSound(p.getLocation(), Sound.valueOf(Main.getNMS().joinSound()), 3.0F, 1.3F);
-                            }
-                        }
-                    }
-
-                    //vanish check
-                    if (prof.isVanish()) {
+                //check data exists
+                String pid = (String) Main.getSQL().getData("uuid", p.getUniqueId().toString(), "player_data", "pid");
+                if(pid == null){
+                    if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
                         for (Player online : Bukkit.getOnlinePlayers()) {
-                            vanishPlayer(p, online, true);
+                            PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
+                            if (p != online)
+                                Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, "100");
+                            String otherPriority = "100";
+                            if (other != null) {
+                                otherPriority = Method.getTagPriority(online, other);
+                            }
+                            Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, otherPriority);
+                            //restore tag
+                            Main.getNMS().changeNameTag(online, p, "§7[未注册] ", "", TeamAction.CREATE, "100");
+                            if (other != null && p != online) {
+                                String suffix = PlaceholderAPI.setPlaceholders(online, getTagData(online).getSuffix());
+                                if (other.isVanish()) {
+                                    suffix = " §c[已隐身]";
+                                }
+                                Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, suffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                            }
                         }
-                        PlayerProfile.vanishs.add(e.getPlayer().getUniqueId());
                     }
-                    for (UUID uuid : PlayerProfile.vanishs) {
-                        PlayerProfile profile = PlayerProfile.getDataFromUUID(uuid);
-                        if (profile.isVanish()) {
-                            vanishPlayer(Bukkit.getPlayer(uuid), p, true);
-                        }
-                    }
-                    prof.checkStatus();
                     this.cancel();
+                    return;
                 }
+
+                PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
+                if(!init(p, prof)){
+                    return;
+                }
+
+                //nick check
+                if(((prof.isNicked() && Main.getGameManager() != null) || (prof.isNicked() && p.hasPermission("ncs.nick.staff"))) && !Main.getInstance().getConfig().getBoolean("disable-nick")){
+                    if(!Main.getSQL().checkDataExists("player_data", "player_name", prof.getNickName())) {
+                        Main.getNMS().changeName(p, prof.getNickName());
+                    }else {
+                        prof.setNicked(false);
+                        prof.setNickSkin("");
+                        prof.setNickName("");
+                        prof.setNickPrefix("");
+                        prof.saveData(false);
+                        p.sendMessage("§c有玩家使用了此昵称所以已经将你的昵称还原！");
+                        SystemAPI.getApi().refreshTag(p);
+                    }
+                }else if(prof.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick")) {
+                    Main.getNMS().restoreName(p);
+                }
+
+                //join message
+                p.setDisplayName(PlaceholderAPI.setPlaceholders(p, "%profile_prefix%") + p.getName() + PlaceholderAPI.setPlaceholders(p, "%profile_suffix%"));
+                if (SettingConfig.cfg.getYml().getBoolean("Setting.JoinMessage.Enable")) {
+                    if (!prof.isVanish()) {
+                        String message = SettingConfig.cfg.getYml().getString("Setting.JoinMessage.Text")
+                                .replace("{displayname}", p.getDisplayName())
+                                .replace("{name}", p.getName());
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.sendMessage(message);
+                            online.playSound(p.getLocation(), Sound.valueOf(Main.getNMS().joinSound()), 3.0F, 1.3F);
+                        }
+                    }
+                }
+
+                //vanish check
+                if (prof.isVanish()) {
+                    for (Player online : Bukkit.getOnlinePlayers()) {
+                        vanishPlayer(p, online, true);
+                    }
+                    PlayerProfile.vanishs.add(e.getPlayer().getUniqueId());
+                }
+                for (UUID uuid : PlayerProfile.vanishs) {
+                    PlayerProfile profile = PlayerProfile.getDataFromUUID(uuid);
+                    if (profile.isVanish()) {
+                        vanishPlayer(Bukkit.getPlayer(uuid), p, true);
+                    }
+                }
+
+                prof.checkStatus();
+                this.cancel();
             }
-        }.runTaskTimer(Main.getInstance(), 0, 20);
+        }.runTaskTimerAsynchronously(Main.getInstance(), 10, 10);
+
         if (SettingConfig.cfg.getYml().getBoolean("Setting.JoinMessage.Enable")) {
             e.setJoinMessage(null);
         }
@@ -181,33 +170,8 @@ public class ProfileListener implements Listener {
     public void onWorldChange(PlayerChangedWorldEvent e){
         Player p = e.getPlayer();
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
-        if(prof == null){
+        if(!init(p, prof)){
             return;
-        }
-        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
-            for (Player online : Bukkit.getOnlinePlayers()) {
-                if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
-                //restore tag
-                if(p != online) {
-                    String suffix = PlaceholderAPI.setPlaceholders(p, getTagData(p).getSuffix());
-                    if(prof.isVanish()){
-                        suffix = " §c[已隐身]";
-                    }
-                    String priority = Method.getTagPriority(p, prof);
-                    Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
-                }
-                if(PlayerProfile.getDataFromUUID(online.getUniqueId()) != null) {
-                    String suffix = PlaceholderAPI.setPlaceholders(online, getTagData(online).getSuffix());
-                    PlayerProfile profile = PlayerProfile.getDataFromUUID(online.getUniqueId());
-                    if (profile.isVanish()) {
-                        suffix = " §c[已隐身]";
-                    }
-                    String priority = Method.getTagPriority(online, profile);
-                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, suffix), TeamAction.CREATE, priority);
-                }
-            }
         }
         for (UUID uuid : PlayerProfile.vanishs) {
             PlayerProfile profile = PlayerProfile.getDataFromUUID(uuid);
@@ -224,6 +188,7 @@ public class ProfileListener implements Listener {
         if(profile == null){
             return;
         }
+        //Tag Init
         if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 if (p != online)
@@ -247,6 +212,35 @@ public class ProfileListener implements Listener {
             e.setQuitMessage(null);
         }
         profile.saveData(true);
+    }
+
+    private boolean init(Player p, PlayerProfile prof){
+        if(prof == null){
+            return false;
+        }
+        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
+                if (p != online)
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
+                //restore tag
+                String suffix = PlaceholderAPI.setPlaceholders(p, getTagData(p).getSuffix());
+                if (prof.isVanish()) {
+                    suffix = " §c[已隐身]";
+                }
+                String priority = Method.getTagPriority(p, prof);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
+                if (other != null && p != online) {
+                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, getTagData(online).getSuffix());
+                    if (other.isVanish()) {
+                        otherSuffix = " §c[已隐身]";
+                    }
+                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                }
+            }
+        }
+        return true;
     }
 
     private void checkUUID(PlayerPreConnectEvent e, OfflinePlayer off, PlayerData data){

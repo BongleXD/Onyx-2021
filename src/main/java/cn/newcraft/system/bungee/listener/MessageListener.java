@@ -99,9 +99,9 @@ public class MessageListener implements Listener {
         Main.getInstance().getProxy().getPlayer(playerName).connect(server);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onConnect(ServerConnectEvent e){
-        List<String> ipList = DataConfig.cfg.getYml().getStringList("Data.BlackIP");
+        List<String> ipList = DataConfig.cfg.getYml().getStringList("black-ip");
         if(ipList.contains(e.getPlayer().getAddress().getAddress().getHostAddress())){
             e.getPlayer().disconnect("§c§lANTI ATTACK! §7检测到你的 IP 连接异常，请联系管理员解除异常状态\n§bQQ群：764575479");
             Main.getInstance().getProxy().getConsole().sendMessage("§c§lANTI ATTACK! §7检测到黑名单 IP §c" + e.getPlayer().getAddress().getAddress().getHostAddress() + " §7试图加入服务器，已被拒绝！");

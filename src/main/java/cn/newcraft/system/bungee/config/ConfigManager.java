@@ -32,6 +32,12 @@ public class ConfigManager {
         }
     }
 
+    public void addDefault(String path, Object value){
+        if(this.yml.get(path) == null){
+            this.yml.set(path, value);
+        }
+    }
+
     public Configuration getYml(){
         return yml;
     }

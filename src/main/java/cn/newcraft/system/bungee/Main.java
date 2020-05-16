@@ -4,7 +4,7 @@ import cn.newcraft.system.bungee.config.SkinConfig;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.shared.PluginInfo;
 import cn.newcraft.system.bungee.command.AntiAttack;
-import cn.newcraft.system.bungee.command.GList;
+import cn.newcraft.system.bungee.command.Glist;
 import cn.newcraft.system.bungee.command.TpTo;
 import cn.newcraft.system.bungee.config.DataConfig;
 import cn.newcraft.system.bungee.config.LobbyConfig;
@@ -28,6 +28,7 @@ public class Main extends Plugin {
 
     @Override
     public void onLoad() {
+        PluginInfo.init(this.getDescription().getVersion());
         getProxy().getConsole().sendMessage(new TextComponent("§bNewCraftSystem-Bungee §7> §a加载中..."));
     }
 
@@ -39,9 +40,9 @@ public class Main extends Plugin {
         sql = new SQLHelper("localhost:36109", "root", "Mysql_r53Era_2686chen.", "newcraftsystem");
         PlayerData.putSQL(sql);
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
-        getProxy().getPluginManager().registerCommand(this, new GList());
+        getProxy().getPluginManager().registerCommand(this, new Glist());
         getProxy().getPluginManager().registerCommand(this, new TpTo());
-        BungeeCord.getInstance().getConsole().sendMessage(new TextComponent("§bNewCraftSystem-Bungee §7> §a加载中..."));
+        BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(PluginInfo.BUNGEE_INFO + " §a加载中..."));
         regListener();
         getProxy().getConsole().sendMessage(PluginInfo.BUNGEE_INFO + " §a已成功加载！ §b版本号" + PluginInfo.getVersion());
     }
