@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.command.admin;
 
 import cn.newcraft.system.bukkit.Main;
+import cn.newcraft.system.bukkit.api.SystemAPI;
 import cn.newcraft.system.bukkit.command.CommandManager;
 import cn.newcraft.system.bukkit.config.BungeeConfig;
 import cn.newcraft.system.bukkit.util.Method;
@@ -12,6 +13,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,15 +41,7 @@ public class Reboot extends CommandManager {
 
     @Cmd(arg = "<integer>", perm = "ncs.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void reboot(CommandSender sender, String[] args){
-        if(sender instanceof Player) {
-            Player p = (Player) sender;
-            TextComponent text = new TextComponent("§e你确定吗！ 点击这里执行重启！");
-            text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reboot confirm " + args[0]));
-            text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§c点击这里确认重启！").create()));
-            p.spigot().sendMessage(text);
-        }else{
-            Bukkit.dispatchCommand(sender, "reboot confirm " + args[0]);
-        }
+        Bukkit.dispatchCommand(sender, "reboot " + args[0] + " 重启服务器");
     }
 
     @Cmd(arg = "<integer> <value>", perm = "ncs.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
@@ -65,30 +59,7 @@ public class Reboot extends CommandManager {
 
     @Cmd(arg = "confirm <integer>", perm = "ncs.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void rebootConfirm(CommandSender sender, String[] args){
-        if(Method.getTask("reboot") != null){
-            sender.sendMessage("§c服务器关闭执行中！");
-            return;
-        }
-        sender.sendMessage("§e已执行服务器重启操作！");
-        BukkitTask task = new BukkitRunnable(){
-            int i = Integer.parseInt(args[1]);
-            @Override
-            public void run() {
-                if(i <= 0){
-                    for (Player players : Bukkit.getOnlinePlayers()) {
-                        shutdown(players, "重启服务器");
-                    }
-                    this.cancel();
-                } else if(i % 10 == 0 || i <= 5) {
-                    for (Player online : Bukkit.getOnlinePlayers()) {
-                        online.playSound(online.getLocation(), Main.getNMS().NOTE_STICKS(), 2.0F, 1.0F);
-                        TitleUtil.sendTitle(online, 3, 15, 3, "§c服务器即将于 §e" + i + " §c秒后关闭", "§e原因: 重启服务器");
-                    }
-                }
-                i--;
-            }
-        }.runTaskTimer(Main.getInstance(), 0L, 20L);
-        Method.createTask("reboot", task);
+        Bukkit.dispatchCommand(sender, "reboot confirm " + args[0] + " 重启服务器");
     }
 
     @Cmd(arg = "confirm <integer> <value>", perm = "ncs.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
@@ -103,13 +74,21 @@ public class Reboot extends CommandManager {
             @Override
             public void run() {
                 if(i <= 0){
-                    for (Player players : Bukkit.getOnlinePlayers()) {
-                        shutdown(players, args[2]);
+                    Bukkit.broadcastMessage("§c服务器已重启！");
+                    for (Player online : Bukkit.getOnlinePlayers()) {
+                        shutdown(online, args[2]);
                     }
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Bukkit.shutdown();
+                            cancel();
+                        }
+                    }.runTaskLater(Main.getInstance(), 40L);
                     this.cancel();
                 }else if(i % 10 == 0 || i <= 5) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
-                        online.playSound(online.getLocation(), Main.getNMS().NOTE_STICKS(), 2.0F, 1.0F);
+                        online.playSound(online.getLocation(), Sound.valueOf(Main.getNMS().NOTE_STICKS()), 2.0F, 1.0F);
                         TitleUtil.sendTitle(online, 3, 15, 3, "§c服务器即将于 §e" + i + " §c秒后关闭", "§e原因: " + args[2]);
                     }
                 }
@@ -119,22 +98,7 @@ public class Reboot extends CommandManager {
         Method.createTask("reboot", task);
     }
 
-    private void shutdown(Player players, String reach) {
-        Bukkit.broadcastMessage("§c服务器关闭中...");
-        ByteArrayDataOutput b = ByteStreams.newDataOutput();
-        players.sendMessage("\n§c你的网络连接出现一些问题，现已将你传送至 "
-                + BungeeConfig.cfg.getYml().getString("BungeeCord.ServerName")
-                + "\n \n§f原因： " + reach + "\n§f");
-        b.writeUTF("BACK_LOBBY");
-        b.writeUTF(BungeeConfig.cfg.getYml().getString("BungeeCord.LobbyServer"));
-        b.writeUTF(players.getName());
-        players.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                Bukkit.shutdown();
-                cancel();
-            }
-        }.runTaskLater(Main.getInstance(), 40L);
+    private void shutdown(Player p, String reason) {
+        SystemAPI.getApi().kickToLobby(Main.getInstance(), p, BungeeConfig.cfg.getYml().getString("settings.lobby-servers"), BungeeConfig.cfg.getYml().getString("settings.lobby-server-name"), reason);
     }
 }

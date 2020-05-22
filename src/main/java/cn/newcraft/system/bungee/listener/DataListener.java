@@ -64,17 +64,17 @@ public class DataListener implements Listener {
             data.refreshStaySecs();
             data.saveData(false);
         }
-        String nickskin = (String) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nick_skin");
-        int i = (int) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nicked");
-        SkinAPI.getApi().setSkin(e.getPlayer().getPendingConnection(), nickskin == null || nickskin.isEmpty() || i == 0 ? e.getPlayer().getPendingConnection().getName() : nickskin);
     }
 
     @EventHandler
     public void onConnect(ServerConnectEvent e){
+        SQLHelper sql = Main.getSQL();
+        String nickskin = (String) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nick_skin");
+        int i = (int) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nicked");
+        SkinAPI.getApi().setSkin(e.getPlayer().getPendingConnection(), nickskin == null || nickskin.isEmpty() || i == 0 ? e.getPlayer().getPendingConnection().getName() : nickskin);
         if(e.getTarget().getName().contains("login") || e.isCancelled()){
             return;
         }
-        SQLHelper sql = Main.getSQL();
         String pid = (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" );
         if(pid != null){
             PlayerData data = new PlayerData(pid);

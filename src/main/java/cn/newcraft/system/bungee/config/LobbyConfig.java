@@ -1,6 +1,7 @@
 package cn.newcraft.system.bungee.config;
 
 import cn.newcraft.system.bungee.Main;
+import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.util.List;
@@ -12,20 +13,22 @@ public class LobbyConfig extends ConfigManager {
     public LobbyConfig() {
         super("lobby");
     }
+
     public static void init(){
         LobbyConfig.cfg = new LobbyConfig();
-        List<String> mainList = cfg.getYml().getStringList("Lobby.MainLobby");
+        List<String> mainList = Lists.newArrayList();
         mainList.add("Lobby_01");
         mainList.add("Lobby_02");
-        cfg.addDefault("Lobby.MainLobby", mainList);
+        cfg.addDefault("lobby.mainLobby", mainList);
 
-        List<String> skyWarsList = cfg.getYml().getStringList("Lobby.SkyWarsLobby");
+        List<String> skyWarsList = Lists.newArrayList();
         skyWarsList.add("SWLOBBY_01");
-        cfg.addDefault("Lobby.SkyWarsLobby", skyWarsList);
+        cfg.addDefault("lobby.swLobby", skyWarsList);
 
-        List<String> bedWarsList = cfg.getYml().getStringList("Lobby.BedWarsLobby");
+        List<String> bedWarsList = Lists.newArrayList();
         bedWarsList.add("BWLOBBY_01");
-        cfg.addDefault("Lobby.BedWarsLobby", bedWarsList);
+        cfg.addDefault("lobby.bwLobby", bedWarsList);
         cfg.save();
+
     }
 }

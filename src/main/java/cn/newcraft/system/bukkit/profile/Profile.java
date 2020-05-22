@@ -2,6 +2,7 @@ package cn.newcraft.system.bukkit.profile;
 
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.command.CommandManager;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class Profile extends CommandManager implements Listener {
 
     @Cmd(coolDown = 5000, only = CommandOnly.PLAYER)
     public void profile(CommandSender sender, String[] args){
-        if(Main.getGameManager() == null){
+        if(Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME){
             new ProfileGui((Player) sender, sender.getName());
         }else{
             sender.sendMessage("§c请在大厅中查看玩家档案！");
@@ -29,7 +30,7 @@ public class Profile extends CommandManager implements Listener {
 
     @Cmd(coolDown = 5000, arg = "<value>", only = CommandOnly.PLAYER)
     public void profileOther(CommandSender sender, String[] args){
-        if(Main.getGameManager() == null) {
+        if(Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME) {
             new ProfileGui((Player) sender, args[0]);
         }else{
             sender.sendMessage("§c请在大厅中查看玩家档案！");

@@ -181,6 +181,10 @@ public class PlayerData {
         return null;
     }
 
+    public static void addPID(String data, String pid){
+        pidMap.put(data, pid);
+    }
+
     public static PlayerData initFromName(String name){
         String pid = (String) sql.getData("player_name", name, "player_data", "pid");
         if(pid != null) {

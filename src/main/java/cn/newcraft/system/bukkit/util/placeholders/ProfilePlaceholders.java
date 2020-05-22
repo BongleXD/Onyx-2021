@@ -2,6 +2,7 @@ package cn.newcraft.system.bukkit.util.placeholders;
 
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.util.Method;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderHook;
@@ -32,7 +33,7 @@ public class ProfilePlaceholders {
                         return profile.getRank().getDisplayName();
                     }
                     if (s.equals("color")) {
-                        if(Main.getGameManager() == null && !p.hasPermission("ncs.nick.staff")){
+                        if((Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME) && !p.hasPermission("ncs.nick.staff")){
                             return profile.getRank().getColor();
                         }
                         if(profile.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick") && !profile.getNickPrefix().equals("self")){
@@ -42,7 +43,7 @@ public class ProfilePlaceholders {
                         }
                     }
                     if (s.equals("prefix")) {
-                        if(Main.getGameManager() == null && !p.hasPermission("ncs.nick.staff")){
+                        if((Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME) && !p.hasPermission("ncs.nick.staff")){
                             return Main.getVault().getPlayerPrefix(p);
                         }
                         if(profile.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick")){
@@ -56,7 +57,7 @@ public class ProfilePlaceholders {
                         }
                     }
                     if (s.equals("suffix")) {
-                        if(Main.getGameManager() == null && !p.hasPermission("ncs.nick.staff")){
+                        if((Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME) && !p.hasPermission("ncs.nick.staff")){
                             return Main.getVault().getPlayerSuffix(p);
                         }
                         if(profile.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick")){

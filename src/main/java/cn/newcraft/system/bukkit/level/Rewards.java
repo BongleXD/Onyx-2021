@@ -3,6 +3,7 @@ package cn.newcraft.system.bukkit.level;
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.command.CommandManager;
 import cn.newcraft.system.bukkit.config.RewardConfig;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -29,7 +30,7 @@ public class Rewards extends CommandManager implements Listener {
 
     @Cmd(only = CommandOnly.PLAYER)
     public void onCommand(CommandSender sender, String[] args){
-        if(Main.getGameManager() != null){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME ){
             sender.sendMessage("§c请在大厅领取等级奖励！");
             return;
         }

@@ -3,6 +3,7 @@ package cn.newcraft.system.bukkit.api;
 import cn.newcraft.system.bukkit.api.event.PlayerLevelUPEvent;
 import cn.newcraft.system.bukkit.api.event.PlayerXpGainEvent;
 import cn.newcraft.system.bukkit.Main;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.rank.RankData;
 import cn.newcraft.system.bukkit.util.interact.ActionBarUtil;
 import cn.newcraft.system.bukkit.util.Method;
@@ -206,13 +207,13 @@ public class PlayerProfile {
     }
 
     public void checkStatus(){
-        if((isVanish() && isNicked() && Main.getGameManager() != null) || (isVanish() && isNicked() && Bukkit.getPlayer(uuid).hasPermission("ncs.nick.stuff"))){
+        if((isVanish() && isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (isVanish() && isNicked() && Bukkit.getPlayer(uuid).hasPermission("ncs.nick.stuff"))){
             ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
             ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f§l你目前§c§l已设置昵称, 隐身", -1);
         }else if(isVanish()){
             ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
             ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f§l你目前§c§l已隐身", -1);
-        }else if((isNicked() && Main.getGameManager() != null) || (isNicked() && Bukkit.getPlayer(uuid).hasPermission("ncs.nick.stuff"))){
+        }else if((isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME )) || (isNicked() && Bukkit.getPlayer(uuid).hasPermission("ncs.nick.stuff"))){
             ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
             ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f§l你目前§c§l已设置昵称", -1);
         }else{

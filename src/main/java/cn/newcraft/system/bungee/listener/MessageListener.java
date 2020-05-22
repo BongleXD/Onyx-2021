@@ -33,7 +33,7 @@ public class MessageListener implements Listener {
                 String channel = in.readUTF();
                 if (channel.equals("INFO")) {
                     String player = in.readUTF();
-                    List<String> whiteplayer = DataConfig.cfg.getYml().getStringList("Data.WhitePlayers");
+                    List<String> whiteplayer = DataConfig.cfg.getYml().getStringList("white-names");
                     if (whiteplayer.contains(player)) {
                         Main.getInstance().getProxy().getConsole().sendMessage("§e玩家 §b" + player + " §e拥有白名单已绕过IP检测！");
                         return;
@@ -54,19 +54,10 @@ public class MessageListener implements Listener {
                     String lobby = in.readUTF();
                     String playerName = in.readUTF();
                     Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
-                    if (lobby.equalsIgnoreCase("Main_Lobby")) {
-                        List<String> list = LobbyConfig.cfg.getYml().getStringList("Lobby.MainLobby");
+                    List<String> list = LobbyConfig.cfg.getYml().getStringList("lobby." + lobby);
+                    if(!list.isEmpty()){
                         serverInfo(playerName, servers, list);
                         return;
-                    }
-                    if (lobby.equalsIgnoreCase("SkyWars_Lobby")){
-                        List<String> list = LobbyConfig.cfg.getYml().getStringList("Lobby.SkyWarsLobby");
-                        serverInfo(playerName, servers, list);
-                        return;
-                    }
-                    if (lobby.equalsIgnoreCase("BedWars_Lobby")){
-                        List<String> list = LobbyConfig.cfg.getYml().getStringList("Lobby.BedWarsLobby");
-                        serverInfo(playerName, servers, list);
                     }
                 }
                 if (channel.equals("CHANGE_SKIN")) {
@@ -92,7 +83,6 @@ public class MessageListener implements Listener {
             onlines = Math.min(onlines, info.getPlayers().size());
         }
         if (server == null) {
-            //Main.getInstance().getProxy().getPlayer(playerName).sendMessage("§b§lNewCraft §c§l>> §a当前没有空闲的大厅，请稍后再试！");
             return;
         }
         Main.getInstance().getProxy().getPlayer(playerName).sendMessage("§a正在将你传送至大厅 §7" + server.getName());

@@ -4,12 +4,12 @@ import cn.newcraft.system.shared.PlayerData;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ProfileCreateEvent extends Event {
+public class PlayerDataCreateEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private PlayerData data;
 
-    public ProfileCreateEvent(PlayerData data) {
+    public PlayerDataCreateEvent(PlayerData data) {
         this.data = data;
     }
 

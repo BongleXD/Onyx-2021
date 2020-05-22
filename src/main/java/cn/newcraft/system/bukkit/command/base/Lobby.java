@@ -29,7 +29,7 @@ public class Lobby extends CommandManager {
         }, 5 * 20);
         ByteArrayDataOutput b = ByteStreams.newDataOutput();
         b.writeUTF("BACK_LOBBY");
-        b.writeUTF(BungeeConfig.cfg.getYml().getString("BungeeCord.LobbyServer"));
+        b.writeUTF(BungeeConfig.cfg.getYml().getString("settings.lobby-servers"));
         b.writeUTF(PlayerData.getDataFromUUID(p.getUniqueId()).getName());
         p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
     }

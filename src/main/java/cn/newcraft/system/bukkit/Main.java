@@ -1,5 +1,6 @@
 package cn.newcraft.system.bukkit;
 
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.support.v1_12_R1.v1_12_R1;
 import cn.newcraft.system.bukkit.util.placeholders.FormatPlaceholders;
 import cn.newcraft.system.bukkit.util.plugin.PluginManager;
@@ -12,8 +13,6 @@ import cn.newcraft.system.bukkit.command.admin.*;
 import cn.newcraft.system.bukkit.command.base.*;
 import cn.newcraft.system.bukkit.command.admin.Tp;
 import cn.newcraft.system.bukkit.config.*;
-import cn.newcraft.system.bukkit.gamemanager.GameManager;
-import cn.newcraft.system.bukkit.gamemanager.ServerListener;
 import cn.newcraft.system.bukkit.level.ClaimData;
 import cn.newcraft.system.bukkit.level.LevelListener;
 import cn.newcraft.system.bukkit.level.Rewards;
@@ -40,6 +39,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 public final class Main extends JavaPlugin {
 
@@ -48,7 +48,7 @@ public final class Main extends JavaPlugin {
     private static NMS nms;
     private static Chat chat = null;
     private static SQLHelper sql;
-    private static GameManager gm;
+    private static ServerType type;
     private static String serverName;
     private XpTask task;
 
@@ -68,8 +68,8 @@ public final class Main extends JavaPlugin {
         return sql;
     }
 
-    public static GameManager getGameManager() {
-        return gm;
+    public static ServerType getType() {
+        return type;
     }
 
     public static String getServerName() {
@@ -110,6 +110,12 @@ public final class Main extends JavaPlugin {
         instance = this;
         synchronized (this) {
             regConfig();
+            try {
+                type = ServerType.valueOf(this.getConfig().getString("server-type"));
+            }catch (Exception ex){
+                Bukkit.getConsoleSender().sendMessage(PluginInfo.ERROR + " §c无法支援此服务器类型已自动更换为 NULL！");
+                type = ServerType.NULL;
+            }
             check();
             sql = new SQLHelper(getConfig().getString("url"), getConfig().getString("user"), getConfig().getString("passwd"), getConfig().getString("database"));
             PlayerData.putSQL(sql);
@@ -128,9 +134,6 @@ public final class Main extends JavaPlugin {
                 Main.getSQL().addStringColumn("player_tag", "perm");
                 Main.getSQL().addIntegerColumn("player_tag", "priority");
             }
-            if (this.getConfig().getBoolean("server-room")) {
-                gm = GameManager.init();
-            }
             TagData.init();
             checkPlugin("PlaceholderAPI", false);
             new ProfilePlaceholders();
@@ -148,11 +151,8 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         for(Player p : Bukkit.getOnlinePlayers()){
-            PlayerProfile.getDataFromUUID(p.getUniqueId()).saveData(true);
+            Objects.requireNonNull(PlayerProfile.getDataFromUUID(p.getUniqueId())).saveData(true);
             PlayerData.getDataFromUUID(p.getUniqueId()).saveData(true);
-        }
-        if (this.getConfig().getBoolean("server-room")) {
-            gm.saveData(false);
         }
         Bukkit.getConsoleSender().sendMessage(PluginInfo.INFO + " §c已成功卸载！ §b版本号" + PluginInfo.getVersion());
     }
@@ -191,7 +191,6 @@ public final class Main extends JavaPlugin {
         new CommandLimitListener();
         new ChatListener();
         new LevelListener();
-        new ServerListener();
     }
 
     private void regCommand(){
@@ -230,7 +229,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Nick(), this);
             CommandManager.regCommand(new UnNick(), this);
             CommandManager.regCommand(new Spawn(), this);
-            if (SettingConfig.cfg.getYml().getBoolean("Setting.RegLobbyCommand")) {
+            if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
                 CommandManager.regCommand(new Lobby(), this);
             }
         } catch (ReflectiveOperationException e) {
@@ -244,7 +243,7 @@ public final class Main extends JavaPlugin {
         this.getConfig().addDefault("user", "root");
         this.getConfig().addDefault("passwd", "passwd");
         this.getConfig().addDefault("database", "database");
-        this.getConfig().addDefault("server-room", false);
+        this.getConfig().addDefault("server-type", "NULL");
         this.getConfig().addDefault("server-name", "");
         this.getConfig().addDefault("disable-nick", false);
         String[] cmd = new String[]{
@@ -308,7 +307,7 @@ public final class Main extends JavaPlugin {
                         Bukkit.shutdown();
                         break;
                     } else {
-                        System.out.println("LLL_GO_HOME_AND_PLAY_4399");
+                        System.out.println("LLL_CRACKER_GO_HOME_AND_PLAY_4399");
                     }
                 }
             }).start();

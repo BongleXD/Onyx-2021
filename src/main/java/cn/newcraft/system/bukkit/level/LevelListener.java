@@ -1,5 +1,6 @@
 package cn.newcraft.system.bukkit.level;
 
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.api.event.PlayerLevelUPEvent;
@@ -74,7 +75,7 @@ public class LevelListener implements Listener {
             p.sendMessage("");
             profile.setCoinBoost(coinMap.get(newLevel));
         }
-        if(Main.getGameManager() == null) {
+        if(Main.getType() != ServerType.GAME && Main.getType() != ServerType.ENDLESS_GAME) {
             p.spigot().sendMessage(text);
         }else{
             p.sendMessage("          §e请到大厅领取你的奖励！");

@@ -192,16 +192,6 @@ public class v1_8_R3 implements NMS {
             }
         }
         p.setDisplayName(PlaceholderAPI.setPlaceholders(p, "%profile_prefix%") + p.getName() + PlaceholderAPI.setPlaceholders(p, "%profile_suffix%"));
-        Method.setSkin(p, prof.getNickSkin());
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(2500);
-                reloadPlayer(p);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     @Override

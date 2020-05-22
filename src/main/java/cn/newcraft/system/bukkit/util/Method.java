@@ -67,13 +67,13 @@ public class Method {
         return s.replaceAll("&", "§");
     }
 
-    public static String toTrisection(double d){
-        if(d == 0){
+    public static String toTrisection(double d) {
+        if (d == 0) {
             return "0";
         }
         DecimalFormat df = new DecimalFormat("#,###.00");
         String result = df.format(d).replace(".00", "");
-        return result.endsWith(".0") ? result.replace(".0", "") : result;
+        return result.endsWith(".0") ? result.replace(".0", "") : result.contains(".") && result.endsWith("0") ? result.substring(0, result.length() - 1) : result;
     }
 
     public static String toKilo(int number){

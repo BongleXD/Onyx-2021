@@ -1,6 +1,8 @@
 package cn.newcraft.system.bukkit.nick;
 
 import cn.newcraft.system.bukkit.config.SkinConfig;
+import cn.newcraft.system.bukkit.proxy.ServerType;
+import cn.newcraft.system.bukkit.util.Method;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
@@ -29,7 +31,7 @@ public class Nick extends CommandManager {
     @Cmd(coolDown = 5000, perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void rank(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
@@ -43,7 +45,7 @@ public class Nick extends CommandManager {
     @Cmd(coolDown = 5000, arg = "<value>", perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void skin(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME  || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
@@ -104,7 +106,7 @@ public class Nick extends CommandManager {
     @Cmd(coolDown = 5000, arg = "<value> <value>", perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void name(CommandSender sender, String[] args) {
         Player p = (Player) sender;
-        if (Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")) {
+        if (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME  || Main.getInstance().getConfig().getBoolean("disable-nick")) {
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
@@ -116,6 +118,7 @@ public class Nick extends CommandManager {
                 p.sendMessage("§a你的皮肤已设置为 " + args[1] + "！");
                 break;
         }
+        Method.setSkin(p, args[1]);
         if (!p.hasPermission("ncs.nick.staff")) {
             p.chat("/nick " + args[0] + " " + args[1] + " random");
             return;
@@ -138,7 +141,7 @@ public class Nick extends CommandManager {
     @Cmd(arg = "<value> <value> enter", perm = "ncs.nick.staff", only = CommandOnly.PLAYER)
     public void enter(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME ){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
@@ -153,7 +156,7 @@ public class Nick extends CommandManager {
     @Cmd(arg = "<value> <value> enter <value>", perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void checkName(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME  || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
@@ -245,6 +248,14 @@ public class Nick extends CommandManager {
             prof.setNickPrefix(prefix);
             Main.getNMS().changeName(p, name);
             p.sendMessage("§a你已完成昵称设置！");
+            new Thread(() -> {
+                try {
+                    Thread.sleep(1000);
+                    Main.getNMS().reloadPlayer(p);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
         }else{
             prof.setNickSkin(args[1]);
             prof.setNickName(name);
@@ -262,7 +273,7 @@ public class Nick extends CommandManager {
     @Cmd(arg = "<value> <value> random", perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void random(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")){
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME  || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }

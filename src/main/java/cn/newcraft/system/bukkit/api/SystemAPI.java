@@ -1,10 +1,10 @@
 package cn.newcraft.system.bukkit.api;
 
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.Main;
-import cn.newcraft.system.bukkit.api.event.ProfileCreateEvent;
+import cn.newcraft.system.bukkit.api.event.PlayerDataCreateEvent;
 import cn.newcraft.system.bukkit.config.TagConfig;
-import cn.newcraft.system.bukkit.gamemanager.GameManager;
 import cn.newcraft.system.bukkit.support.NMS;
 import cn.newcraft.system.bukkit.util.TeamAction;
 import cn.newcraft.system.shared.util.SQLHelper;
@@ -40,14 +40,14 @@ public class SystemAPI {
         return Main.getServerName();
     }
 
-    public GameManager getGameManager(){
-        return Main.getGameManager();
+    public ServerType getType(){
+        return Main.getType();
     }
 
-    public void KickLobby(Plugin plugin, Player p, String server, String name, String reason){
+    public void kickToLobby(Plugin plugin, Player p, String server, String name, String reason){
         p.sendMessage("");
         p.sendMessage("§c你的网络连接出现小问题，所以你被传到 §e" + name + " §c中！");
-        p.sendMessage(reason);
+        p.sendMessage("§f原因: " + reason);
         p.sendMessage("");
         ByteArrayDataOutput b = ByteStreams.newDataOutput();
         b.writeUTF("BACK_LOBBY");
@@ -84,40 +84,46 @@ public class SystemAPI {
     }
 
     public void createPIDExists(String pid, UUID uuid, String name){
-        PlayerData data = new PlayerData(
-                pid,
-                uuid.toString(),
-                name,
-                "",
-                "",
-                "",
-                "",
-                "OFFLINE",
-                "NULL",
-                0);
-        data.setJoinTime(System.currentTimeMillis());
-        Main.getSQL().putFlag("player_data", "pid", pid);
-        data.saveData(false);
-        Bukkit.getPluginManager().callEvent(new ProfileCreateEvent(data));
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            PlayerData data = new PlayerData(
+                    pid,
+                    uuid.toString(),
+                    name,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "OFFLINE",
+                    "NULL",
+                    0);
+            data.setJoinTime(System.currentTimeMillis());
+            Main.getSQL().putFlag("player_data", "pid", pid);
+            data.saveData(false);
+            Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
+        });
     }
 
     public void createNewData(UUID uuid, String name){
-        String newPid = spawnUniquePID();
-        PlayerData data = new PlayerData(
-                newPid,
-                uuid.toString(),
-                name,
-                "",
-                "",
-                "",
-                "",
-                "OFFLINE",
-                "NULL",
-                0);
-        data.setJoinTime(System.currentTimeMillis());
-        Main.getSQL().putFlag("player_data", "pid", newPid);
-        data.saveData(false);
-        Bukkit.getPluginManager().callEvent(new ProfileCreateEvent(data));
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            String newPid = spawnUniquePID();
+            PlayerData data = new PlayerData(
+                    newPid,
+                    uuid.toString(),
+                    name,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "OFFLINE",
+                    "NULL",
+                    0);
+            PlayerData.addPID(uuid.toString(), newPid);
+            PlayerData.addPID(name, newPid);
+            data.setJoinTime(System.currentTimeMillis());
+            Main.getSQL().putFlag("player_data", "pid", newPid);
+            data.saveData(false);
+            Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
+        });
     }
 
     private String[] randomLetters = new String[]{
@@ -149,7 +155,7 @@ public class SystemAPI {
     }
 
     public String getApiVersion(){
-        return "1.5";
+        return "1.6";
     }
 
 }

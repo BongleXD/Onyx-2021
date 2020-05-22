@@ -3,6 +3,7 @@ package cn.newcraft.system.bukkit.nick;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.command.CommandManager;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.util.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,7 @@ public class UnNick extends CommandManager {
     @Cmd(coolDown = 5000, perm = "ncs.command.nick", only = CommandOnly.PLAYER)
     public void nick(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        if(Main.getGameManager() != null || Main.getInstance().getConfig().getBoolean("disable-nick")){
+        if((Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME) || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }

@@ -2,8 +2,8 @@ package cn.newcraft.system.bukkit.chat;
 
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
-import cn.newcraft.system.bukkit.api.event.PacketReceiveEvent;
 import cn.newcraft.system.bukkit.config.ChatConfig;
+import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.util.JSONUtil;
 import cn.newcraft.system.bukkit.util.Method;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
                 }
             }
             if(!b){
-                if(prof.isNicked() && (Main.getGameManager() != null || p.hasPermission("ncs.nick.staff")) && !prof.getNickPrefix().equals("self")){
+                if(prof.isNicked() && ((Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME) || p.hasPermission("ncs.nick.staff")) && !prof.getNickPrefix().equals("self")){
                     if(prof.getNickPrefix().equals("§6[MVP§c++§6] ")){
                         message = Method.transColor(e.getMessage());
                     } else if(!prof.getNickPrefix().contains("§7")){
