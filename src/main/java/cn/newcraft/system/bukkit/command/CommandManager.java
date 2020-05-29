@@ -242,8 +242,8 @@ public class CommandManager extends BukkitCommand {
         command.clazz = command;
         Method commandMap = plugin.getServer().getClass().getMethod("getCommandMap", null);
         Object cmdmap = commandMap.invoke(plugin.getServer(), null);
-        Method register = cmdmap.getClass().getMethod("register", String.class, Command.class);
-        register.invoke(cmdmap, command.getName(),command);
+        Method register = cmdmap.getClass().getMethod("register", String.class, String.class, Command.class);
+        register.invoke(cmdmap, command.getName(), plugin.getDescription().getName(), command);
     }
 
     public enum CommandOnly{

@@ -25,10 +25,10 @@ public class Vanish extends CommandManager implements Listener {
             vanishPlayer(p, online, !profile.isVanish());
         }
         profile.setVanish(!profile.isVanish());
-        if(PlayerProfile.vanishs.contains(p.getUniqueId())){
-            PlayerProfile.vanishs.remove(p.getUniqueId());
+        if(PlayerProfile.getVanishs().contains(p.getUniqueId())){
+            PlayerProfile.getVanishs().remove(p.getUniqueId());
         }else{
-            PlayerProfile.vanishs.add(p.getUniqueId());
+            PlayerProfile.getVanishs().add(p.getUniqueId());
         }
         new BukkitRunnable() {
             @Override

@@ -53,8 +53,8 @@ public final class Main extends JavaPlugin {
     private XpTask task;
 
     public static Main getInstance() {
-        return instance;
-    }
+            return instance;
+        }
 
     public static String getBukkitVer() {
         return bukkitVer;

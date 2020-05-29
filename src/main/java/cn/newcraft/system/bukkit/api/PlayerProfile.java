@@ -32,7 +32,7 @@ public class PlayerProfile {
     private String secondPasswd;
     private static HashMap<String, PlayerProfile> dataMap = new HashMap<>();
     private static SQLHelper sql = Main.getSQL();
-    public static List<UUID> vanishs = Lists.newArrayList();
+    private static List<UUID> vanishs = Lists.newArrayList();
 
     public PlayerProfile(String pid, UUID uuid, int level, int xp, double xpBoost, double coinBoost, boolean vanish, boolean nicked, String nickName, String nickPrefix, String nickSkin, String secondPasswd) {
         this.pid = pid;
@@ -219,6 +219,20 @@ public class PlayerProfile {
         }else{
             ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
         }
+    }
+
+    public static List<UUID> getVanishs(){
+        return vanishs;
+    }
+
+    public static void addVanishPlayer(UUID uuid){
+        if(!vanishs.contains(uuid)){
+            vanishs.add(uuid);
+        }
+    }
+
+    public static void removeVanishPlayer(UUID uuid){
+        vanishs.remove(uuid);
     }
 
     public static PlayerProfile getData(String pid){

@@ -21,6 +21,7 @@ public class PluginInfo {
     public static String getVersion() {
         return ver;
     }
+
     public static String getAuthor() {
         return "Hello_Han, May_Block";
     }

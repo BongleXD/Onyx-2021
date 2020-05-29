@@ -1,5 +1,6 @@
 package cn.newcraft.system.bungee;
 
+import cn.newcraft.system.bungee.command.Skin;
 import cn.newcraft.system.bungee.config.SkinConfig;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.shared.PluginInfo;
@@ -41,7 +42,8 @@ public class Main extends Plugin {
         PlayerData.putSQL(sql);
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
         getProxy().getPluginManager().registerCommand(this, new Glist());
-        getProxy().getPluginManager().registerCommand(this, new TpTo());
+        getProxy().getPluginManager().registerCommand(this, new Skin());
+        getProxy().getPluginManager().registerCommand(this, new TpTo());getProxy().getPluginManager().registerCommand(this, new Glist());
         BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(PluginInfo.BUNGEE_INFO + " §a加载中..."));
         regListener();
         getProxy().getConsole().sendMessage(PluginInfo.BUNGEE_INFO + " §a已成功加载！ §b版本号" + PluginInfo.getVersion());

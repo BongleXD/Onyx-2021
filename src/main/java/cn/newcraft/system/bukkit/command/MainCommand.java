@@ -21,7 +21,7 @@ public class MainCommand extends CommandManager{
 
     @Cmd(perm = "ncs.command.main")
     public void mainCommand(CommandSender sender, String[] args){
-        sender.sendMessage("§9" + PluginInfo.getPlugin() + " §cPlugin §aAnthor By: §e" + PluginInfo.getAuthor() + " §cVersion: §e" + PluginInfo.getVersion());
+        sender.sendMessage("§9" + PluginInfo.getPlugin() + " §cPlugin §aCoded By: §e" + PluginInfo.getAuthor() + " §cCurrent Plugin Version: §e" + PluginInfo.getVersion());
     }
 
     @Cmd(arg = "help", perm = "ncs.command.main.help")

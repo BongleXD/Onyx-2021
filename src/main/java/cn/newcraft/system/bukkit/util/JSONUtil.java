@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.util;
 
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 public class JSONUtil {
 
@@ -11,6 +12,7 @@ public class JSONUtil {
     public static String toJSON(String message) {
         if (message == null || message.isEmpty())
             return null;
+        message = message.replace("\\", "\\\\").replace("\"", "\\\"");
         if (JSON_BUILDER.length() > RETAIN)
             JSON_BUILDER.delete(RETAIN, JSON_BUILDER.length());
         String[] parts = message.split(Character.toString(ChatColor.COLOR_CHAR));
@@ -22,7 +24,6 @@ public class JSONUtil {
             if (part.isEmpty()) {
                 continue;
             }
-
             String newStyle = null;
             if (!ignoreFirst) {
                 newStyle = getStyle(part.charAt(0));
@@ -37,6 +38,7 @@ public class JSONUtil {
                 else
                     format = newStyle;
             }
+
             if (!part.isEmpty()) {
                 if (first)
                     first = false;
