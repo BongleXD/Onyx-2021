@@ -22,7 +22,7 @@ public class ReflectUtils {
         f.setAccessible(false);
     }
 
-    private static Method getMethod(Class<?> clazz, String mname) {
+    public static Method getMethod(Class<?> clazz, String mname) {
         Method m;
         try {
             m = clazz.getDeclaredMethod(mname);

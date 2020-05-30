@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.support;
 
 import cn.newcraft.system.bukkit.util.TeamAction;
+import io.netty.channel.Channel;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,6 +13,8 @@ import java.util.UUID;
 public interface NMS {
 
     void sendActionBar(Player p, String message);
+
+    Channel getChannel(Player p);
 
     String levelUP();
 

@@ -10,6 +10,7 @@ import cn.newcraft.system.bukkit.util.ReflectUtils;
 import cn.newcraft.system.bukkit.util.TeamAction;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
@@ -36,6 +37,12 @@ public class v1_8_R3 implements NMS {
                 ChatColor.translateAlternateColorCodes('&', message) + "\"}");
         PacketPlayOutChat bar = new PacketPlayOutChat(icbc, (byte)2);
         ((CraftPlayer)p).getHandle().playerConnection.sendPacket(bar);
+    }
+
+    @Override
+    public Channel getChannel(Player p) {
+        EntityPlayer ep = ((CraftPlayer) p).getHandle();
+        return ep.playerConnection.networkManager.channel;
     }
 
     @Override

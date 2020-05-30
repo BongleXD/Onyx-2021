@@ -1,5 +1,7 @@
 package cn.newcraft.system.bukkit;
 
+import cn.newcraft.system.bukkit.packet.PacketProtocol;
+import cn.newcraft.system.bukkit.packet.AntiCrash;
 import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.support.v1_12_R1.v1_12_R1;
 import cn.newcraft.system.bukkit.util.placeholders.FormatPlaceholders;
@@ -108,6 +110,8 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        new PacketProtocol();
+        new AntiCrash();
         synchronized (this) {
             regConfig();
             try {

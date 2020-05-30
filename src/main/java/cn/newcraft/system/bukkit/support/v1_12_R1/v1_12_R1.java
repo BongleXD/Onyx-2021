@@ -9,6 +9,7 @@ import cn.newcraft.system.bukkit.util.ReflectUtils;
 import cn.newcraft.system.bukkit.util.TeamAction;
 import cn.newcraft.system.shared.PlayerData;
 import com.mojang.authlib.GameProfile;
+import io.netty.channel.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,6 +33,12 @@ public class v1_12_R1 implements NMS {
     @Override
     public void sendActionBar(Player p, String message) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+    }
+
+    @Override
+    public Channel getChannel(Player p) {
+        EntityPlayer ep = ((CraftPlayer) p).getHandle();
+        return ep.playerConnection.networkManager.channel;
     }
 
     @Override
