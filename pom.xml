@@ -6,7 +6,7 @@
 
     <groupId>cn.newcraft</groupId>
     <artifactId>NewCraftSystem</artifactId>
-    <version>0.2.10</version>
+    <version>0.2.14</version>
     <packaging>jar</packaging>
 
     <name>NewCraftSystem</name>
@@ -112,14 +112,14 @@
             <systemPath>${basedir}/lib/Paper-1.12.2-b1618.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>cn.newcraft.newcraftspigot</groupId>
+            <groupId>cn.newcraft.spigot</groupId>
             <artifactId>newcraftspigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${basedir}/lib/NewCraftSpigot-1.8.8.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>cn.newcraft.newcraftspigot</groupId>
+            <groupId>cn.newcraft.spigot</groupId>
             <artifactId>newcraftspigot-server</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>

@@ -1,7 +1,8 @@
 package cn.newcraft.system.bukkit.profile;
 
-import cn.newcraft.newcraftspigot.event.PlayerPreConnectEvent;
+import cn.newcraft.spigot.event.PlayerPreConnectEvent;
 import cn.newcraft.system.bukkit.proxy.ServerType;
+import cn.newcraft.system.bukkit.util.interact.SoundUtil;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.api.SystemAPI;
@@ -65,9 +66,12 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler
     public void onJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
+        for(Player online : Bukkit.getOnlinePlayers()){
+            online.hidePlayer(p);
+        }
         for (UUID uuid : PlayerProfile.getVanishs()) {
             PlayerProfile prof = PlayerProfile.getDataFromUUID(uuid);
             if (prof.isVanish()) {
@@ -77,6 +81,11 @@ public class ProfileListener implements Listener {
         //check data exists
         String pid = (String) Main.getSQL().getData("uuid", p.getUniqueId().toString(), "player_data", "pid");
         if(pid == null){
+            if(p.isOnline()) {
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    online.showPlayer(p);
+                }
+            }
             if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
                 for (Player online : Bukkit.getOnlinePlayers()) {
                     PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
@@ -106,6 +115,11 @@ public class ProfileListener implements Listener {
             @Override
             public void run() {
                 if(error >= 10){
+                    if(p.isOnline()) {
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.showPlayer(Main.getInstance(), p);
+                        }
+                    }
                     this.cancel();
                     return;
                 }
@@ -118,6 +132,21 @@ public class ProfileListener implements Listener {
                     error++;
                     return;
                 }
+
+                //vanish check
+                if (prof.isVanish()) {
+                    PlayerProfile.addVanishPlayer(p.getUniqueId());
+                    for(Player online : Bukkit.getOnlinePlayers()){
+                        vanishPlayer(p, online, true);
+                    }
+                }else{
+                    if(p.isOnline()) {
+                        for (Player online : Bukkit.getOnlinePlayers()) {
+                            online.showPlayer(p);
+                        }
+                    }
+                }
+
                 if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
                         PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
@@ -170,15 +199,11 @@ public class ProfileListener implements Listener {
                                 .replace("{name}", p.getName());
                         for (Player online : Bukkit.getOnlinePlayers()) {
                             online.sendMessage(message);
-                            online.playSound(p.getLocation(), Sound.valueOf(Main.getNMS().joinSound()), 3.0F, 1.3F);
+                            online.playSound(p.getLocation(), SoundUtil.NOTE_PLING, 3.0F, 1.3F);
                         }
                     }
                 }
 
-                //vanish check
-                if (prof.isVanish()) {
-                    PlayerProfile.addVanishPlayer(p.getUniqueId());
-                }
                 prof.checkStatus();
                 this.cancel();
             }
@@ -258,7 +283,7 @@ public class ProfileListener implements Listener {
                         .replace("{displayname}", p.getDisplayName())
                         .replace("{name}", p.getName()));
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    players.playSound(p.getLocation(), Sound.valueOf(Main.getNMS().quitSound()), 3.0F, 1.0F);
+                    players.playSound(p.getLocation(), SoundUtil.NOTE_BASS, 3.0F, 1.0F);
                 }
             } else {
                 e.setQuitMessage(null);

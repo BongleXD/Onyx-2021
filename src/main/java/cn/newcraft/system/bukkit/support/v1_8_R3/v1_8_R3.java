@@ -18,13 +18,16 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
 
 import static cn.newcraft.system.bukkit.util.Method.getTagData;
 import static cn.newcraft.system.bukkit.util.Method.vanishPlayer;
@@ -43,26 +46,6 @@ public class v1_8_R3 implements NMS {
     public Channel getChannel(Player p) {
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
         return ep.playerConnection.networkManager.channel;
-    }
-
-    @Override
-    public String levelUP() {
-        return "LEVEL_UP";
-    }
-
-    @Override
-    public String joinSound(){
-        return "NOTE_PLING";
-    }
-
-    @Override
-    public String quitSound(){
-        return "NOTE_BASS";
-    }
-
-    @Override
-    public String NOTE_STICKS(){
-        return "NOTE_STICKS";
     }
 
     @Override
@@ -85,25 +68,22 @@ public class v1_8_R3 implements NMS {
         if(teamName.length() >= 16){
             teamName = teamName.substring(0, 16);
         }
-        PacketPlayOutScoreboardTeam packet = new PacketPlayOutScoreboardTeam();
-        try {
-            ReflectUtils.setField(packet, "a", teamName);
-            ReflectUtils.setField(packet,"b", p.getName());
-            ReflectUtils.setField(packet,"c", prefix);
-            ReflectUtils.setField(packet,"d", suffix);
-            ReflectUtils.setField(packet,"e", ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS.e);
-            switch (action) {
-                case CREATE:
-                    ReflectUtils.setField(packet, "g", Collections.singleton(p.getName()));
-                    break;
-                case UPDATE:
-                    ReflectUtils.setField(packet, "h", 2);
-                    break;
-                case DESTROY:
-                    ReflectUtils.setField(packet, "h", 1);
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        ScoreboardTeam team = new Scoreboard().createTeam(teamName);
+        team.setDisplayName(p.getName());
+        team.setPrefix(prefix);
+        team.setSuffix(suffix);
+        team.setNameTagVisibility(ScoreboardTeamBase.EnumNameTagVisibility.ALWAYS);
+        PacketPlayOutScoreboardTeam packet = null;
+        switch (action) {
+            case CREATE:
+                team.getPlayerNameSet().add(p.getName());
+                packet = new PacketPlayOutScoreboardTeam(team, 0);
+                break;
+            case UPDATE:
+                packet = new PacketPlayOutScoreboardTeam(team, 2);
+                break;
+            case DESTROY:
+                packet = new PacketPlayOutScoreboardTeam(team, 1);
         }
         ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
     }
@@ -164,10 +144,29 @@ public class v1_8_R3 implements NMS {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        /*CraftServer server = (CraftServer) Bukkit.getServer();
-        Object list = ReflectUtils.getField(server.getClass(), "playerList");
-        
-         */
+
+        //update list
+        try {
+            MinecraftServer server = MinecraftServer.getServer();
+            PlayerList list = server.getPlayerList();
+            Field f = ReflectUtils.getNMSClass("PlayerList").getDeclaredField("playersByName");
+            f.setAccessible(true);
+            Map<String, Object> map = (Map<String, Object>) f.get(list);
+            ArrayList<String> toRemove = new ArrayList<>();
+            for (String cachedName : map.keySet()) {
+                if(cachedName != null) {
+                    Object entityPlayer = map.get(cachedName);
+                    if((entityPlayer == null) || entityPlayer.getClass().getMethod("getUniqueID").invoke(entityPlayer).equals(p.getUniqueId()))
+                        toRemove.add(cachedName);
+                }
+            }
+            for (String string : toRemove) map.remove(string);
+            map.put(p.getName(), p.getClass().getMethod("getHandle").invoke(p));
+            f.set(list, map);
+            f.setAccessible(false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         //add player
         PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
@@ -210,6 +209,7 @@ public class v1_8_R3 implements NMS {
     public void restoreName(Player p) {
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
+        String name = PlayerData.getDataFromUUID(p.getUniqueId()).getName();
 
         if(!p.hasPermission("ncs.nick.staff")){
             Method.setSkin(p, p.getName());
@@ -252,9 +252,32 @@ public class v1_8_R3 implements NMS {
         try {
             Field bH = entityHuman.getDeclaredField("bH");
             bH.setAccessible(true);
-            bH.set(ep, new GameProfile(p.getUniqueId(), PlayerData.getDataFromUUID(p.getUniqueId()).getName()));
+            bH.set(ep, new GameProfile(p.getUniqueId(), name));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
+        }
+
+        //update list
+        try {
+            MinecraftServer server = MinecraftServer.getServer();
+            PlayerList list = server.getPlayerList();
+            Field f = ReflectUtils.getNMSClass("PlayerList").getDeclaredField("playersByName");
+            f.setAccessible(true);
+            Map<String, Object> map = (Map<String, Object>) f.get(list);
+            ArrayList<String> toRemove = new ArrayList<>();
+            for (String cachedName : map.keySet()) {
+                if(cachedName != null) {
+                    Object entityPlayer = map.get(cachedName);
+                    if((entityPlayer == null) || entityPlayer.getClass().getMethod("getUniqueID").invoke(entityPlayer).equals(p.getUniqueId()))
+                        toRemove.add(cachedName);
+                }
+            }
+            for (String string : toRemove) map.remove(string);
+            map.put(p.getName(), p.getClass().getMethod("getHandle").invoke(p));
+            f.set(list, map);
+            f.setAccessible(false);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         //add player

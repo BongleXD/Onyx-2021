@@ -5,6 +5,7 @@ import cn.newcraft.system.bukkit.api.SystemAPI;
 import cn.newcraft.system.bukkit.command.CommandManager;
 import cn.newcraft.system.bukkit.config.BungeeConfig;
 import cn.newcraft.system.bukkit.util.Method;
+import cn.newcraft.system.bukkit.util.interact.SoundUtil;
 import cn.newcraft.system.bukkit.util.interact.TitleUtil;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -88,7 +89,7 @@ public class Reboot extends CommandManager {
                     this.cancel();
                 }else if(i % 10 == 0 || i <= 5) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
-                        online.playSound(online.getLocation(), Sound.valueOf(Main.getNMS().NOTE_STICKS()), 2.0F, 1.0F);
+                        online.playSound(online.getLocation(), SoundUtil.NOTE_STICKS, 2.0F, 1.0F);
                         TitleUtil.sendTitle(online, 3, 15, 3, "§c服务器即将于 §e" + i + " §c秒后关闭", "§e原因: " + args[2]);
                     }
                 }

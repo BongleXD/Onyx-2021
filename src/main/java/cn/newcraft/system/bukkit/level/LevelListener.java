@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.level;
 
 import cn.newcraft.system.bukkit.proxy.ServerType;
+import cn.newcraft.system.bukkit.util.interact.SoundUtil;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.api.event.PlayerLevelUPEvent;
@@ -12,7 +13,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -81,7 +81,7 @@ public class LevelListener implements Listener {
             p.sendMessage("          §e请到大厅领取你的奖励！");
         }
         p.sendMessage("§9▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃");
-        p.playSound(p.getLocation(), Sound.valueOf(Main.getNMS().levelUP()), 1, 1);
+        p.playSound(p.getLocation(), SoundUtil.LEVEL_UP, 1, 1);
         TitleUtil.sendTitle(p, 10, 10, 10, "", "§6升级");
     }
 

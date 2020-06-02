@@ -59,12 +59,14 @@ public class PacketProtocol implements Listener {
 
             @Override
             public void channelRead(ChannelHandlerContext ctx, Object packet) throws Exception {
+                boolean cancelled = false;
                 for(PacketReadEvent e : readListeners){
+                    e.setCancelled(cancelled);
                     e.onRead(p, new Packet(packet));
-                    if(e.isCancelled()){
-                        e.setCancelled(false);
-                        return;
-                    }
+                    cancelled = e.isCancelled();
+                }
+                if(cancelled){
+                    return;
                 }
                 super.channelRead(ctx, packet);
             }
@@ -73,6 +75,7 @@ public class PacketProtocol implements Listener {
             public void write(ChannelHandlerContext ctx, Object packet, ChannelPromise promise) throws Exception {
                 boolean cancelled = false;
                 for(PacketSendEvent e : writeListeners){
+                    e.setCancelled(cancelled);
                     e.onWrite(p, new Packet(packet));
                     cancelled = e.isCancelled();
                 }
