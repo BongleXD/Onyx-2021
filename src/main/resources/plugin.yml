@@ -4,5 +4,7 @@ main: cn.newcraft.system.bukkit.Main
 prefix: NewCraftSystem
 softdepend:
   - PlaceholderAPI
-authors: [Hello_Han]
+authors:
+  - Hello_Han
+  - May_Block
 description: NewCraft 核心

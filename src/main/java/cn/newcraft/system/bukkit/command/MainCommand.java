@@ -17,9 +17,10 @@ public class MainCommand extends CommandManager{
 
     public MainCommand() {
         super("newcraftsystem", "NewCraftSystem 主命令", "/newcraftsystem help", "ncs", "core");
+        this.setPermission(null);
     }
 
-    @Cmd(perm = "ncs.command.main")
+    @Cmd
     public void mainCommand(CommandSender sender, String[] args){
         sender.sendMessage("§9" + PluginInfo.getPlugin() + " §cPlugin §aCoded By: §e" + PluginInfo.getAuthor() + " §cCurrent Plugin Version: §e" + PluginInfo.getVersion());
     }
@@ -47,17 +48,17 @@ public class MainCommand extends CommandManager{
 
     @Cmd(arg = "plugin list", perm = "ncs.command.main.plugin.list")
     public void mainPluginList(CommandSender sender, String[] args) {
-        boolean includeVersions = Method.hasFlag(args, 'v');
-        List<String> list = Lists.newArrayList();
+        //boolean includeVersions = Method.hasFlag(args, 'v');
+        List<Plugin> list = Lists.newArrayList();
         for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-            list.add(PluginManager.getFormattedName(plugin, includeVersions));
+            list.add(plugin);
         }
-        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
-        String plugins = Joiner.on("§c, §a").join(list);
-        sender.sendMessage("§6------§c服务器已加载中的插件§6------");
-        sender.sendMessage("§c总数： §a" + list.size());
-        sender.sendMessage("§c插件： §a" + plugins);
-        sender.sendMessage("§6----------------------------");
+        sender.sendMessage("§9§m----------------------------");
+        sender.sendMessage("§e总数： §a" + list.size());
+        list.forEach(plugin -> {
+            sender.sendMessage((plugin.isEnabled() ? "§a" : "§c") + plugin.getDescription().getName() + "§e, 作者: §a" + Joiner.on("§e, §a").join(plugin.getDescription().getAuthors()) + "§e, 版本: §a" + plugin.getDescription().getVersion());
+        });
+        sender.sendMessage("§9§m----------------------------");
     }
 
     @Cmd(arg = "plugin enable <value>", perm = "ncs.command.main.plugin.enable")
@@ -134,7 +135,7 @@ public class MainCommand extends CommandManager{
         try {
             sender.sendMessage(PluginInfo.INFO + " §e插件 " + target + " §e开始从服务器中重载...");
             PluginManager.reload(target);
-            sender.sendMessage(PluginInfo.INFO + "§7[§9EraWorldCore§7] §a插件 " + target + " §a已成功从服务器中重载！");
+            sender.sendMessage(PluginInfo.INFO + "§a插件 " + target + " §a已成功从服务器中重载！");
         } catch (Exception e) {
             sender.sendMessage(PluginInfo.ERROR + " §c插件 " + target + " §c因为未知原因导致插件重载失败！");
         }
@@ -145,7 +146,7 @@ public class MainCommand extends CommandManager{
         sender.sendMessage("§2=====================================");
         sender.sendMessage("§9" + PluginInfo.getPlugin() + " §6Version: §c" + PluginInfo.getVersion());
         sender.sendMessage("§9Author: §6" + PluginInfo.getAuthor());
-        sender.sendMessage("§9Description: §6This is made by " + PluginInfo.getAuthor() + " " + PluginInfo.getPlugin() + " of development.");
+        sender.sendMessage("§9Description: §6This plugin is made by " + PluginInfo.getAuthor());
         sender.sendMessage("§9Commands: §6Use '/newcraftsystem help' Type for help!");
         sender.sendMessage("§2=====================================");
     }
@@ -162,4 +163,5 @@ public class MainCommand extends CommandManager{
         PluginManager.reload(Main.getInstance());
         sender.sendMessage(PluginInfo.INFO + " §a已完成热重载！");
     }
+
 }

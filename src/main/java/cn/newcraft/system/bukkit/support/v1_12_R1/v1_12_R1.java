@@ -214,24 +214,6 @@ public class v1_12_R1 implements NMS {
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
         String name = PlayerData.getDataFromUUID(p.getUniqueId()).getName();
-
-        if(!p.hasPermission("ncs.nick.staff")){
-            Method.setSkin(p, p.getName());
-            new Thread(() -> {
-                try {
-                    Thread.sleep(500);
-                    Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                        if (!p.isOnline()) {
-                            return;
-                        }
-                        ep.server.getPlayerList().moveToWorld(ep, ep.dimension, false, p.getLocation(), false);
-                    }, 5L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-            return;
-        }
         //remove vanish
         if(prof.isVanish()){
             for(Player online : Bukkit.getOnlinePlayers()) {

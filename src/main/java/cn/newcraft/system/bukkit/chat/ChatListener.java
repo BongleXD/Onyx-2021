@@ -4,14 +4,12 @@ import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.config.ChatConfig;
 import cn.newcraft.system.bukkit.proxy.ServerType;
-import cn.newcraft.system.bukkit.util.JSONUtil;
-import cn.newcraft.system.bukkit.util.Method;
+import cn.newcraft.system.bukkit.util.JsonMessageUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Golem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -67,7 +65,7 @@ public class ChatListener implements Listener {
                 message =  ChatColor.translateAlternateColorCodes('&', message);
             }
             for (Player online : Bukkit.getOnlinePlayers()) {
-                online.spigot().sendMessage(text, ComponentSerializer.parse(JSONUtil.toJSON(color.toString() + message))[0]);
+                online.spigot().sendMessage(text, ComponentSerializer.parse(JsonMessageUtil.toJson(color.toString() + message))[0]);
             }
             Bukkit.getConsoleSender().sendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(), ChatConfig.cfg.getString("format")) + message);
         }

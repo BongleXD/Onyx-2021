@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.command.base;
 
 import cn.newcraft.system.bukkit.Main;
+import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.command.CommandManager;
 import cn.newcraft.system.bukkit.config.BungeeConfig;
 import cn.newcraft.system.shared.PlayerData;
@@ -21,16 +22,24 @@ public class Lobby extends CommandManager {
 
     @Cmd(only = CommandOnly.PLAYER)
     public void onLobby(CommandSender sender, String[] args){
-        Player p = (Player)sender;
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
-            if(p.isOnline()){
-                p.sendMessage("§c发生错误！ §7无法连接到主大厅！");
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            synchronized (this) {
+                Player p = (Player) sender;
+                Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
+                    if (p.isOnline()) {
+                        p.sendMessage("§c发生错误！ §7无法连接到主大厅！");
+                    }
+                }, 5 * 20);
+                PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
+                if (prof != null) {
+                    prof.saveData(false);
+                }
+                ByteArrayDataOutput b = ByteStreams.newDataOutput();
+                b.writeUTF("BACK_LOBBY");
+                b.writeUTF(BungeeConfig.cfg.getYml().getString("settings.lobby-servers"));
+                b.writeUTF(PlayerData.getDataFromUUID(p.getUniqueId()).getName());
+                p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
             }
-        }, 5 * 20);
-        ByteArrayDataOutput b = ByteStreams.newDataOutput();
-        b.writeUTF("BACK_LOBBY");
-        b.writeUTF(BungeeConfig.cfg.getYml().getString("settings.lobby-servers"));
-        b.writeUTF(PlayerData.getDataFromUUID(p.getUniqueId()).getName());
-        p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
+        });
     }
 }

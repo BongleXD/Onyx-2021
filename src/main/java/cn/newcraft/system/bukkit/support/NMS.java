@@ -3,12 +3,8 @@ package cn.newcraft.system.bukkit.support;
 import cn.newcraft.system.bukkit.util.TeamAction;
 import io.netty.channel.Channel;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 public interface NMS {
 

@@ -14,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class ProfileGui extends PlayerGui {
@@ -28,20 +29,26 @@ public class ProfileGui extends PlayerGui {
 
     @Override
     public void open(Player p) {
-        UUID uuid = sql.getData("player_name", owner, "player_data", "uuid") == null ? null : UUID.fromString((String) sql.getData("player_name", owner, "player_data", "uuid"));
+        UUID uuid = sql.getData("player_data", "player_name", owner, "uuid") == null ? null : UUID.fromString((String) sql.getData("player_data", "player_name", owner, "uuid").get(0));
         if(uuid == null) {
             p.sendMessage("§c玩家 §e" + owner + " §c不是一个 §bNewCraft §c玩家！");
             return;
         }
-        String name = (String) sql.getData("uuid", uuid.toString(), "player_data", "player_name");
+        String name = (String) sql.getData("player_data", "uuid", uuid.toString(), "player_name").get(0);
         p.sendMessage("§e正在获取数据。。。");
         new BukkitRunnable() {
             @Override
             public void run() {
-                int netLevel = (int) Main.getSQL().getData("uuid", uuid.toString(), "player_profile", "net_level");
-                int netXp = (int) Main.getSQL().getData("uuid", uuid.toString(), "player_profile", "net_xp");
-                String status = (String) Main.getSQL().getData("uuid", uuid.toString(), "player_data", "status");
-                long lastLeave = Long.parseLong((String) Main.getSQL().getData("uuid", uuid.toString(), "player_data", "last_leave_mills"));
+                List prof = Main.getSQL().getData("player_profile", "uuid", uuid.toString(),
+                        "net_level",
+                        "net_xp");
+                List pData = Main.getSQL().getData("player_data", "uuid", uuid.toString(),
+                        "status",
+                        "last_leave_mills");
+                int netLevel = (int) prof.get(0);
+                int netXp = (int) prof.get(1);
+                String status = (String) pData.get(0);
+                long lastLeave = ((String) pData.get(1)).isEmpty() ? -1 : Long.parseLong((String) pData.get(1));
                 Inventory inv = Bukkit.createInventory(null, 54, name + " 的游戏档案");
                 initInv(inv);
                 ItemStack party = Method.getSkull("http://textures.minecraft.net/texture/345b2edd9ec69a350a867db0e5b0b87551aff498a88e01e2bd6a036ff4d39");
@@ -96,15 +103,12 @@ public class ProfileGui extends PlayerGui {
         return new ItemBuilder(Material.DIAMOND_SWORD)
                 .setName("§a竞技场排行信息")
                 .addLoreLine("§7无减益模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_nodebuffelo")))
-                .addLoreLine("§7减益模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_debuffelo")))
                 .addLoreLine("§7UHC 模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_builduhcelo")))
                 .addLoreLine("§7金苹果模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_gappleelo")))
-                .addLoreLine("§7蘑菇煲模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_soupelo")))
                 .addLoreLine("§7连击模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_comboelo")))
                 .addLoreLine("§7空手道模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_sumoelo")))
-                .addLoreLine("§7钻石斧模式: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "elo_axepvpelo")))
                 .addLoreLine("§7全部: §a" + Method.toTrisection(sql.getOrder("stats", "uuid", uuid.toString(), "global_elo")))
-                .addLoreLine("§7段位: §a" + getRank((int) sql.getData("uuid", uuid.toString(), "stats", "elo_nodebuffelo")))
+                .addLoreLine("§7段位: §a" + getRank((int) sql.getData("stats", "uuid", uuid.toString(), "elo_nodebuffelo").get(0)))
                 .toItemStack();
     }
 
@@ -112,11 +116,11 @@ public class ProfileGui extends PlayerGui {
         SQLHelper sql = new SQLHelper("localhost:36109", "root", "Mysql_r53Era_2686chen.", "bridgeleveling");
         return new ItemBuilder(Material.SANDSTONE)
                 .setName("§a搭路练习信息")
-                .addLoreLine("§7等级: " + Method.transColor((String) sql.getData("uuid", uuid.toString(), "player_levels", "pattern_2")))
-                .addLoreLine("§7经验: §b" + Method.toTrisection((int) sql.getData("uuid", uuid.toString(), "player_levels", "xp")))
-                .addLoreLine("§7总方块放置: §a" + Method.toTrisection((int) sql.getData("uuid", uuid.toString(), "player_levels", "totalBlockPlaced")))
-                .addLoreLine("§7最高连杀: §6" + Method.toTrisection((int) sql.getData("uuid", uuid.toString(), "player_levels", "maxKillStreaks")))
-                .addLoreLine("§7总击杀: §a" + Method.toTrisection((int) sql.getData("uuid", uuid.toString(), "player_levels", "totalKill")))
+                .addLoreLine("§7等级: " + Method.transColor((String) sql.getData("player_levels", "uuid", uuid.toString(), "pattern_2").get(0)))
+                .addLoreLine("§7经验: §b" + Method.toTrisection((int) sql.getData("player_levels", "uuid", uuid.toString(), "xp").get(0)))
+                .addLoreLine("§7总方块放置: §a" + Method.toTrisection((int) sql.getData("player_levels", "uuid", uuid.toString(), "totalBlockPlaced").get(0)))
+                .addLoreLine("§7最高连杀: §6" + Method.toTrisection((int) sql.getData("player_levels", "uuid", uuid.toString(), "maxKillStreaks").get(0)))
+                .addLoreLine("§7总击杀: §a" + Method.toTrisection((int) sql.getData("player_levels", "uuid", uuid.toString(), "totalKill").get(0)))
                 .addLoreLine("§7排行: §c" + Method.toTrisection(sql.getOrder("player_levels", "uuid", uuid.toString(), "level")))
                 .toItemStack();
     }
@@ -126,6 +130,9 @@ public class ProfileGui extends PlayerGui {
     }
 
     private String getStatus(String status, long lastLeave){
+        if(lastLeave == -1){
+            return "§c未知";
+        }
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = dateformat.format(lastLeave);
         if(status.equals("ONLINE")){
@@ -135,7 +142,7 @@ public class ProfileGui extends PlayerGui {
         }else if(status.equals("OFFLINE")){
             return "§7最后一次游玩: §b" + dateStr;
         }
-        return "未知";
+        return "§c未知";
     }
 
     private void initInv(Inventory inv){

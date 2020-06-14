@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.command.base;
 
 import cn.newcraft.system.bukkit.command.CommandManager;
+import cn.newcraft.system.bukkit.util.ReflectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,7 +18,13 @@ public class Ping extends CommandManager {
     public void ping(CommandSender sender, String[] args){
         Player p = (Player) sender;
         int ms = pingPlayer(p);
-        p.sendMessage("§6你当前的延迟是 §a§l" + ms + "ms");
+        String color = "§a";
+        if(ms <= 150 && ms > 100){
+            color = "§e";
+        }else if(ms > 150){
+            color = "§c";
+        }
+        p.sendMessage("§e你当前的延迟是 " + color + ms + " 毫秒");
     }
 
 
@@ -25,18 +32,24 @@ public class Ping extends CommandManager {
     public void pingOther(CommandSender sender, String[] args){
         Player target = Bukkit.getPlayer(args[0]);
         int ms = pingPlayer(target);
-        sender.sendMessage("§6玩家 " + target.getDisplayName() + " 的延迟是 §a§l" + ms + "ms");
+        String color = "§a";
+        if(ms <= 150 && ms > 100){
+            color = "§e";
+        }else if(ms > 150){
+            color = "§c";
+        }
+        sender.sendMessage("§e玩家 " + target.getDisplayName() + " §e的延迟是 " + color + ms + " 毫秒");
     }
 
     private int pingPlayer(Player p) {
         try {
-            String bukkitversion = Bukkit.getServer().getClass().getPackage().getName().substring(23);
-            Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit." + bukkitversion + ".entity.CraftPlayer");
-            Object handle = craftPlayer.getMethod("getHandle", new Class[0]).invoke(p);
-            Integer a = (Integer)handle.getClass().getDeclaredField("ping").get(handle);
-            return a;
+            Object entityPlayer = ReflectUtils.getCraftClass("entity.CraftPlayer").getMethod("getHandle", new Class[0]).invoke(p);
+            int ping = (int) entityPlayer.getClass().getDeclaredField("ping").get(entityPlayer);
+            return ping;
         }
-        catch (ClassNotFoundException|IllegalAccessException|IllegalArgumentException| InvocationTargetException |NoSuchMethodException|SecurityException|NoSuchFieldException ignored) {}
-        return -1;
+        catch (Exception ex) {
+            return -1;
+        }
     }
+
 }

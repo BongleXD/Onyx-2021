@@ -12,13 +12,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 public class Tpa extends CommandManager implements Listener {
 
     private HashMap<UUID, List<UUID>> requests = new HashMap<>();
+    private HashMap<UUID, BukkitTask> teleportMap = new HashMap<>();
 
     public Tpa() {
         super("tpa", "传送", "/tpa <玩家> 或 /tpa <accept/deny>");
@@ -30,10 +34,19 @@ public class Tpa extends CommandManager implements Listener {
         Player p = (Player) sender;
         if(requests.containsKey(p.getUniqueId()) && !requests.get(p.getUniqueId()).isEmpty()) {
             Player requester = Bukkit.getPlayer(args[1]);
-            requester.teleport(p.getLocation());
             p.sendMessage("§a你接受了请求！");
+            requester.sendMessage("§a对方接受了请求！请勿移动即将在 §e3 §a秒后执行传送！");
             requests.get(p.getUniqueId()).remove(requester.getUniqueId());
-            requester.sendMessage("§a正在将你传送至 " + p.getDisplayName());
+            teleportMap.put(requester.getUniqueId(), new BukkitRunnable(){
+                @Override
+                public void run() {
+                    requester.teleport(p.getLocation());
+                    requester.sendMessage("§a正在将你传送至 " + p.getDisplayName());
+                    Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
+                        teleportMap.remove(requester.getUniqueId());
+                    });
+                }
+            }.runTaskLaterAsynchronously(Main.getInstance(), 60));
         }else{
             p.sendMessage("§c你目前未接受到任何请求！");
         }
@@ -95,7 +108,19 @@ public class Tpa extends CommandManager implements Listener {
     }
 
     @EventHandler
-    public void onLogout(PlayerQuitEvent e){
+    public void onMove(PlayerMoveEvent e){
+        Player p = e.getPlayer();
+        if(e.getTo().getX() != e.getFrom().getX() || e.getTo().getY() != e.getFrom().getY() || e.getTo().getZ() != e.getFrom().getZ()){
+            if(teleportMap.containsKey(p.getUniqueId())){
+                teleportMap.get(p.getUniqueId()).cancel();
+                teleportMap.remove(p.getUniqueId());
+                p.sendMessage("§c请勿在传送时移动！");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
         for(UUID uuid : requests.keySet()){
             if(!requests.get(uuid).isEmpty()){
                 requests.get(uuid).remove(e.getPlayer().getUniqueId());

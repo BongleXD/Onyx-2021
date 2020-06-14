@@ -2,7 +2,6 @@ package cn.newcraft.system.bukkit.util.interact;
 
 import java.lang.reflect.Constructor;
 
-import cn.newcraft.system.bukkit.util.event.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -45,11 +44,6 @@ public class TitleUtil {
 	}
 
 	public static void sendTitle(Player p, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
-		TitleEvent titleevent = new TitleEvent(p, title, subtitle);
-		Bukkit.getPluginManager().callEvent(titleevent);
-		if (titleevent.isCancelled()) {
-			return;
-		}
 		try {
 			if (title != null) {
 				title = ChatColor.translateAlternateColorCodes('&', title);

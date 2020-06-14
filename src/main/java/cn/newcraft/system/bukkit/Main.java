@@ -130,14 +130,6 @@ public final class Main extends JavaPlugin {
             RankData.init();
             regCommand();
             regListener();
-            if (TagConfig.cfg.getBoolean("mysql")) {
-                Main.getSQL().create("player_tag");
-                Main.getSQL().addStringColumn("player_tag", "name");
-                Main.getSQL().addStringColumn("player_tag", "prefix");
-                Main.getSQL().addStringColumn("player_tag", "suffix");
-                Main.getSQL().addStringColumn("player_tag", "perm");
-                Main.getSQL().addIntegerColumn("player_tag", "priority");
-            }
             TagData.init();
             checkPlugin("PlaceholderAPI", false);
             new ProfilePlaceholders();
@@ -207,6 +199,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Firework(), this);
             CommandManager.regCommand(new Freeze(), this);
             CommandManager.regCommand(new Gamemode(), this);
+            CommandManager.regCommand(new Echo(), this);
             CommandManager.regCommand(new God(), this);
             CommandManager.regCommand(new Hat(), this);
             CommandManager.regCommand(new Heal(), this);
@@ -233,6 +226,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Nick(), this);
             CommandManager.regCommand(new UnNick(), this);
             CommandManager.regCommand(new Spawn(), this);
+            CommandManager.regCommand(new Wget(), this);
             if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
                 CommandManager.regCommand(new Lobby(), this);
             }

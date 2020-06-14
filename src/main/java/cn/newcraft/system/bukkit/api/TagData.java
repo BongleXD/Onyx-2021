@@ -2,9 +2,11 @@ package cn.newcraft.system.bukkit.api;
 
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.config.TagConfig;
+import cn.newcraft.system.shared.util.SQLHelper;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class TagData {
@@ -30,27 +32,37 @@ public class TagData {
         dataMap.put(name, this);
     }
 
+    private static void create() {
+        Main.getSQL().create("player_tag",
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "name"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "prefix"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "suffix"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "perm"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "priority"));
+    }
+
     public static void init(){
         if(TagConfig.cfg.getBoolean("enabled")){
             if(TagConfig.cfg.getBoolean("mysql")) {
+                create();
                 new BukkitRunnable(){
                     @Override
                     public void run() {
                         if (!Main.getSQL().checkDataExists("player_tag", "name", "default")) {
-                            Main.getSQL().putFlag("player_tag", "name", "default");
-                            Main.getSQL().putData("player_tag", "name", "default", "prefix", "%profile_prefix%");
-                            Main.getSQL().putData("player_tag", "name", "default", "suffix", "%profile_suffix%");
-                            Main.getSQL().putData("player_tag", "name", "default", "perm", "");
-                            Main.getSQL().putData("player_tag", "name", "default", "priority", 1);
+                            Main.getSQL().putData("player_tag", "name", "default",
+                                    new SQLHelper.SqlValue("prefix", "%profile_prefix%"),
+                                    new SQLHelper.SqlValue("suffix", "%profile_suffix%"),
+                                    new SQLHelper.SqlValue("perm", ""),
+                                    new SQLHelper.SqlValue("priority", 1));
                         }
                         int i = 1;
                         while (true) {
-                            Object[] array = Main.getSQL().getAllData("player_tag", i, 5);
-                            if(array[0] == null){
+                            List list = Main.getSQL().getRowData("player_tag", i);
+                            if(list == null || list.isEmpty()){
                                 break;
                             }
-                            setMaxLength(Math.max(maxLength, String.valueOf((int) array[4]).length()));
-                            new TagData((String) array[0], (String) array[1], (String) array[2], (String) array[3], (int) array[4]);
+                            setMaxLength(Math.max(maxLength, String.valueOf((int) list.get(4)).length()));
+                            new TagData((String) list.get(0), (String) list.get(1), (String) list.get(2), (String) list.get(3), (int) list.get(4));
                             i++;
                         }
                     }

@@ -36,18 +36,46 @@ public class SQLHelper {
         }
     }
 
-    public void create(String table) {
+    public void create(String table, Value... values) {
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
+            StringBuilder sb = new StringBuilder();
+            boolean first = true;
+            for(Value value : values){
+                if(!first){
+                    sb.append(", ");
+                }else{
+                    first = false;
+                }
+                sb.append(value.getName() + " " + value.getType().getStatement());
+            }
+            conn.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + "(" + sb.toString() + ");");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addDoubleColumn(String table, String name) {
         try {
-            conn.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + "(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY);");
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if (conn.isClosed()) {
+                exeConn();
+            }
+            Statement s = conn.createStatement();
+            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " DOUBLE;");
+        } catch (SQLException ignored) {
+        }
+    }
+
+    public void addIntegerColumn(String table, String name) {
+        try {
+            if (conn.isClosed()) {
+                exeConn();
+            }
+            Statement s = conn.createStatement();
+            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " INTEGER;");
+        } catch (SQLException ignored) {
         }
     }
 
@@ -56,24 +84,9 @@ public class SQLHelper {
             if (conn.isClosed()) {
                 exeConn();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             Statement s = conn.createStatement();
             s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " VARCHAR(200) CHARACTER SET utf8;");
         } catch (SQLException ignored) {
-        }
-    }
-
-    public void putFlag(String table, String flag, String flagData) {
-        try {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " SET " + flag + " = ?;");
-            stmt.setObject(1, flagData);
-            stmt.executeUpdate();
-            stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
@@ -82,10 +95,6 @@ public class SQLHelper {
             if (conn.isClosed()) {
                 exeConn();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("select data_order from (SELECT t.*, @rownum := @rownum + 1 AS data_order FROM (select * from " + table + " order by " + data + " desc) t, (SELECT @rownum := 0) r) b where " + flag + " = '" + flagData + "';");
             if (rs.next()) {
@@ -97,16 +106,13 @@ public class SQLHelper {
         return 0;
     }
 
-    public List getAllData(String table, String flag, String flagData, int line){
+
+    public List getColumnData(String table, String flag, String flagData, int line){
         List list = Lists.newArrayList();
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM " + table + " WHERE " + flag + " = '" + flagData + "';");
             while (rs.next()) {
@@ -118,23 +124,25 @@ public class SQLHelper {
         return list;
     }
 
-    public Object[] getAllData(String table, int line, int length) {
-        Object[] array = new Object[length];
+    public List getRowData(String table, int line) {
+        List list = Lists.newArrayList();
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM " + table + ";");
             int j = 1;
             while (rs.next()) {
                 if (j == line) {
-                    for (int i = 0; i < length; i++) {
-                        array[i] = rs.getObject(i + 2);
+                    int i = 1;
+                    while(true) {
+                        try {
+                            list.add(rs.getObject(i + 1));
+                        }catch (SQLException ex){
+                            break;
+                        }
+                        i++;
                     }
                     break;
                 }
@@ -143,7 +151,7 @@ public class SQLHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return array;
+        return list;
     }
 
     public boolean checkDataExists(String table, String flag, String data){
@@ -164,78 +172,76 @@ public class SQLHelper {
         return b;
     }
 
-    public void addDoubleColumn(String table, String name) {
+    public List getData(String table, String flag, String flagData, String... datas) {
+        List list = Lists.newArrayList();
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < datas.length; i++) {
+                if (i != 0)
+                    sb.append(", ");
+                sb.append(datas.clone()[i]);
+            }
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery("SELECT " + sb.toString() + " FROM " + table + " WHERE " + flag + " = '" + flagData + "';");
+            if (rs.next()) {
+                for (int i = 0; i < datas.length; i++) {
+                    Object obj = rs.getObject(i + 1);
+                    list.add(obj == null ? "" : obj);
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        try {
-            Statement s = conn.createStatement();
-            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " DOUBLE;");
-        } catch (SQLException ignored) {
-        }
+        return list;
     }
 
-
-    public Object getData(String flag, String flagData, String table, String data) {
+    public void putData(String table, String flag, String flagData, SqlValue... values) {
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            Statement s = conn.createStatement();
-            ResultSet rs = s.executeQuery("SELECT " + data + " FROM " + table + " WHERE " + flag + " = '" + flagData + "';");
-            while (rs.next()) {
-                return rs.getObject(1);
+            StringBuilder datas = new StringBuilder();
+            datas.append(flag + ", ");
+            for (int i = 0; i < values.length; i++) {
+                if (i != 0)
+                    datas.append(", ");
+                datas.append(values.clone()[i].data);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    public void putData(String table, String flag, String flagData, String data, Object value) {
-        try {
-            if (!conn.prepareStatement("SELECT id FROM " + table + " WHERE " + flag + " = '" + flagData + "';").executeQuery().next()) {
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + data + ") " + " VALUE(?);");
-                stmt.setObject(1, value);
+            StringBuilder sqlValues = new StringBuilder();
+            sqlValues.append("'" + flagData + "', ");
+            for (int i = 0; i < values.length; i++) {
+                if (i != 0)
+                    sqlValues.append(", ");
+                sqlValues.append("'" + values.clone()[i].value + "'");
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < values.length; i++) {
+                if (i != 0)
+                    sb.append(", ");
+                sb.append(values.clone()[i].data).append(" = '" + values.clone()[i].value + "'");
+            }
+            if (!checkDataExists(table, flag, flagData)) {
+                PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + datas.toString() + ") VALUES(" + sqlValues.toString() + ");");
                 stmt.executeUpdate();
                 stmt.close();
             } else {
-                PreparedStatement stmt = conn.prepareStatement("UPDATE " + table + " SET " + data + " = ? WHERE " + flag + " = '" + flagData + "';");
-                stmt.setObject(1, value);
+                PreparedStatement stmt = conn.prepareStatement("UPDATE " + table + " SET " + sb.toString() + " WHERE " + flag + " = '" + flagData + "';");
                 stmt.executeUpdate();
                 stmt.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void addIntegerColumn(String table, String name) {
-        try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            Statement s = conn.createStatement();
-            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " INTEGER;");
-        } catch (SQLException ignored) {
         }
     }
 
     public void insertData(String table, Object[] data, Object[] value) {
         try {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + Arrays.toString(data).replace("[", "").replace("]", "") + ") " + " VALUES (" +  Arrays.toString(value)
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + Arrays.toString(data).replace("[", "").replace("]", "") + ") VALUES (" +  Arrays.toString(value)
                     .replace("[", "'")
                     .replace("]", "'")
                     .replace(", ", "', '") + ");");
@@ -246,21 +252,65 @@ public class SQLHelper {
         }
     }
 
-    public void putData(String table, String pid, String data, Object value) {
-        try {
-            if (!conn.prepareStatement("SELECT id FROM " + table + " WHERE pid = '" + pid + "';").executeQuery().next()) {
-                PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + data + ") " + " VALUE(?);");
-                stmt.setObject(1, value);
-                stmt.executeUpdate();
-                stmt.close();
-            } else {
-                PreparedStatement stmt = conn.prepareStatement("UPDATE " + table + " SET " + data + " = ? WHERE pid = '" + pid + "';");
-                stmt.setObject(1, value);
-                stmt.executeUpdate();
-                stmt.close();
+    public static class SqlValue{
+
+        private String data;
+        private Object value;
+
+        public SqlValue(String data, Object value) {
+            this.data = data;
+            this.value = value;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+    }
+
+    public static class Value{
+
+        private ValueType type;
+        private String name;
+
+        public Value(ValueType type, String name) {
+            this.type = type;
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ValueType getType() {
+            return type;
+        }
+
+    }
+
+    public enum ValueType{
+
+        ID,
+        STRING,
+        DECIMAL,
+        INTEGER;
+
+        public String getStatement(){
+            switch (this){
+                case ID:
+                    return "INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
+                case STRING:
+                    return "VARCHAR(200) CHARACTER SET utf8";
+                case DECIMAL:
+                    return "DOUBLE";
+                case INTEGER:
+                    return "INTEGER";
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return null;
         }
     }
 

@@ -48,7 +48,6 @@ public class PlayerProfile {
         this.nickSkin = nickSkin;
         this.secondPasswd = secondPasswd;
         dataMap.put(pid, this);
-        sql.putFlag("player_profile", "pid", this.pid);
     }
 
     public PlayerProfile(String pid){
@@ -58,33 +57,34 @@ public class PlayerProfile {
     }
 
     private void putData(){
-        this.uuid = UUID.fromString((String) sql.getData("pid", pid, "player_profile", "uuid"));
-        this.level = (int) sql.getData("pid", pid, "player_profile", "net_level");
-        this.xp = (int) sql.getData("pid", pid, "player_profile", "net_xp");
-        this.xpBoost = (double) sql.getData("pid", pid, "player_profile", "xp_boost");
-        this.coinBoost = (double) sql.getData("pid", pid, "player_profile", "coin_boost");
-        this.vanish = (int) sql.getData("pid", pid, "player_profile", "vanish") != 0;
-        this.nicked = (int) sql.getData("pid", pid, "player_profile", "nicked") != 0;
-        this.nickName = (String) sql.getData("pid", pid, "player_profile", "nick_name");
-        this.nickPrefix = (String) sql.getData("pid", pid, "player_profile", "nick_prefix");
-        this.nickSkin = (String) sql.getData("pid", pid, "player_profile", "nick_skin");
-        this.secondPasswd = (String) sql.getData("pid", pid, "player_profile", "second_passwd");
+        List list = sql.getData("player_profile", "pid", pid, "uuid", "net_level", "net_xp", "xp_boost", "coin_boost", "vanish", "nicked", "nick_name", "nick_prefix", "nick_skin", "second_passwd");
+        this.uuid = UUID.fromString((String) list.get(0));
+        this.level = (int) list.get(1);
+        this.xp = (int) list.get(2);
+        this.xpBoost = (double) list.get(3);
+        this.coinBoost = (double) list.get(4);
+        this.vanish = (int) list.get(5) != 0;
+        this.nicked = (int) list.get(6) != 0;
+        this.nickName = (String) list.get(7);
+        this.nickPrefix = (String) list.get(8);
+        this.nickSkin = (String) list.get(9);
+        this.secondPasswd = (String) list.get(10);
     }
 
     public static void init(){
-        sql.create("player_profile");
-        sql.addStringColumn("player_profile", "pid");
-        sql.addStringColumn("player_profile", "uuid");
-        sql.addIntegerColumn("player_profile", "net_level");
-        sql.addIntegerColumn("player_profile", "net_xp");
-        sql.addDoubleColumn("player_profile", "xp_boost");
-        sql.addDoubleColumn("player_profile", "coin_boost");
-        sql.addIntegerColumn("player_profile", "vanish");
-        sql.addIntegerColumn("player_profile", "nicked");
-        sql.addStringColumn("player_profile", "nick_name");
-        sql.addStringColumn("player_profile", "nick_prefix");
-        sql.addStringColumn("player_profile", "nick_skin");
-        sql.addStringColumn("player_profile", "second_passwd");
+        sql.create("player_profile",
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "uuid"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "net_level"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "net_xp"),
+                new SQLHelper.Value(SQLHelper.ValueType.DECIMAL, "xp_boost"),
+                new SQLHelper.Value(SQLHelper.ValueType.DECIMAL, "coin_boost"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "vanish"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "nicked"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_name"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_prefix"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_skin"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "second_passwd"));
     }
 
     public String getPID(){
@@ -122,6 +122,14 @@ public class PlayerProfile {
 
     public void setXp(int xp) {
         this.xp = xp;
+        checkLevelUp();
+    }
+
+    public void addXpWithNoEvent(int value) {
+        double d = (double) value * xpBoost;
+        value = (int) d;
+        this.xp = value + xp;
+        checkLevelUp();
     }
 
     public void addXp(int value){
@@ -246,17 +254,18 @@ public class PlayerProfile {
     }
 
     public void saveData(boolean destroy){
-        sql.putData("player_profile", this.pid, "uuid", this.uuid.toString());
-        sql.putData("player_profile", this.pid, "net_level", this.level);
-        sql.putData("player_profile", this.pid, "net_xp", this.xp);
-        sql.putData("player_profile", this.pid, "xp_boost", this.xpBoost);
-        sql.putData("player_profile", this.pid, "coin_boost", this.coinBoost);
-        sql.putData("player_profile", this.pid, "vanish", this.vanish ? 1 : 0);
-        sql.putData("player_profile", this.pid, "nicked", this.nicked ? 1 : 0);
-        sql.putData("player_profile", this.pid, "nick_name", this.nickName);
-        sql.putData("player_profile", this.pid, "nick_prefix", this.nickPrefix);
-        sql.putData("player_profile", this.pid, "nick_skin", this.nickSkin);
-        sql.putData("player_profile", this.pid, "second_passwd", this.secondPasswd);
+        sql.putData("player_profile", "pid", this.pid,
+                new SQLHelper.SqlValue("uuid", this.uuid),
+                new SQLHelper.SqlValue("net_level", this.level),
+                new SQLHelper.SqlValue("net_xp", this.xp),
+                new SQLHelper.SqlValue("xp_boost", this.xpBoost),
+                new SQLHelper.SqlValue("coin_boost", this.coinBoost),
+                new SQLHelper.SqlValue("vanish", this.vanish ? 1 : 0),
+                new SQLHelper.SqlValue("nicked", this.nicked ? 1 : 0),
+                new SQLHelper.SqlValue("nick_name", this.nickName),
+                new SQLHelper.SqlValue("nick_prefix", this.nickPrefix),
+                new SQLHelper.SqlValue("nick_skin", this.nickSkin),
+                new SQLHelper.SqlValue("second_passwd", this.secondPasswd));
         if(destroy){
             dataMap.remove(pid);
         }

@@ -13,20 +13,16 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.minecraft.server.v1_8_R3.*;
+import net.minecraft.server.v1_8_R3.Scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 
 import static cn.newcraft.system.bukkit.util.Method.getTagData;
@@ -210,24 +206,6 @@ public class v1_8_R3 implements NMS {
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
         String name = PlayerData.getDataFromUUID(p.getUniqueId()).getName();
-
-        if(!p.hasPermission("ncs.nick.staff")){
-            Method.setSkin(p, p.getName());
-            new Thread(() -> {
-                try {
-                    Thread.sleep(500);
-                    Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                        if (!p.isOnline()) {
-                            return;
-                        }
-                        ep.server.getPlayerList().moveToWorld(ep, ep.dimension, false, p.getLocation(), false);
-                    }, 5L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }).start();
-            return;
-        }
         //remove vanish
         if(prof.isVanish()){
             for(Player online : Bukkit.getOnlinePlayers()) {

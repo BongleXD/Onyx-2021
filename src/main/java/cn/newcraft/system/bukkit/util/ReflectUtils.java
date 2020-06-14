@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import cn.newcraft.system.bukkit.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 public class ReflectUtils {
 
@@ -124,6 +125,18 @@ public class ReflectUtils {
                 return field;
         }
         return null;
+    }
+
+    public static Object getConnection(Player p) throws Exception {
+        Object nmsPlayer = ReflectUtils.invokeMethod(p, "getHandle");
+        Field f = nmsPlayer.getClass().getField("playerConnection");
+        Object conn = f.get(nmsPlayer);
+        return conn;
+    }
+
+    public static void sendPacket(Player p, Object packet) throws Exception {
+        Method sendPacket = getNMSClass("PlayerConnection").getMethod("sendPacket", getNMSClass("Packet"));
+        sendPacket.invoke(getConnection(p), packet);
     }
 
     public static Field getField(Class<?> clazz, String fieldName) {

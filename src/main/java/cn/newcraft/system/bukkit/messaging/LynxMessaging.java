@@ -2,14 +2,12 @@ package cn.newcraft.system.bukkit.messaging;
 
 import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.config.SettingConfig;
-import cn.newcraft.system.bukkit.util.IRCUtils;
+import cn.newcraft.system.bukkit.util.IrcUtil;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class LynxMessaging implements PluginMessageListener {
 
@@ -29,10 +27,11 @@ public class LynxMessaging implements PluginMessageListener {
         String subChannel = in.readUTF();
         if (subChannel.equalsIgnoreCase("CheckLynx")){
             if (p.hasPermission("Lynx.staff")){
-                IRCUtils.sendIRCMessage(p.getDisplayName() + " §e加入了NewCraft服务器！");
+                IrcUtil.sendIRCMessage(p.getDisplayName() + " §e加入了NewCraft服务器！");
             } else {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Main.getInstance(), () -> {
-                    IRCUtils.sendIRCMessage(p.getDisplayName() + " §c由于非法安装了Lynx已经被崩溃客户端，请及时调查！");
+                Main.getNMS().crashClient(p);
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                    IrcUtil.sendIRCMessage(p.getDisplayName() + " §c由于非法安装了Lynx已经被崩溃客户端，请及时调查！");
                     p.kickPlayer("与服务器断开连接");
                 }, 30L);
             }

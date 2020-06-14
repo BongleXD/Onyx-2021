@@ -31,7 +31,6 @@ public class Reboot extends CommandManager {
         if(Method.getTask("reboot") != null){
             Method.removeTask("reboot");
             sender.sendMessage("§c关闭服务器操作被强行终止！");
-            String stopper = sender instanceof Player ? ((Player) sender).getDisplayName() : sender.getName();
             for(Player online : Bukkit.getOnlinePlayers()){
                 TitleUtil.sendTitle(online, 3, 15, 3, "§c关闭操作被终止", "");
             }

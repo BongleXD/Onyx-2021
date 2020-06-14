@@ -1,6 +1,8 @@
 package cn.newcraft.system.bukkit.profile;
 
 import cn.newcraft.spigot.event.PlayerPreConnectEvent;
+import cn.newcraft.system.bukkit.api.event.PlayerInitEvent;
+import cn.newcraft.system.bukkit.config.BungeeConfig;
 import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.util.interact.SoundUtil;
 import cn.newcraft.system.shared.PlayerData;
@@ -79,7 +81,7 @@ public class ProfileListener implements Listener {
             }
         }
         //check data exists
-        String pid = (String) Main.getSQL().getData("uuid", p.getUniqueId().toString(), "player_data", "pid");
+        String pid = (String) Main.getSQL().getData("player_data", "uuid", p.getUniqueId().toString(), "pid").get(0);
         if(pid == null){
             if(p.isOnline()) {
                 for (Player online : Bukkit.getOnlinePlayers()) {
@@ -117,9 +119,10 @@ public class ProfileListener implements Listener {
                 if(error >= 10){
                     if(p.isOnline()) {
                         for (Player online : Bukkit.getOnlinePlayers()) {
-                            online.showPlayer(Main.getInstance(), p);
+                            online.showPlayer(p);
                         }
                     }
+                    p.kickPlayer("§c数据加载失败， 请重新加入此服务器！");
                     this.cancel();
                     return;
                 }
@@ -174,10 +177,10 @@ public class ProfileListener implements Listener {
                 }
 
                 //nick check
-                if(((prof.isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (prof.isNicked() && p.hasPermission("ncs.nick.staff"))) && !Main.getInstance().getConfig().getBoolean("disable-nick")){
-                    if(!Main.getSQL().checkDataExists("player_data", "player_name", prof.getNickName())) {
+                if(((prof.isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (prof.isNicked() && p.hasPermission("ncs.nick.staff"))) && !Main.getInstance().getConfig().getBoolean("disable-nick")) {
+                    if (!Main.getSQL().checkDataExists("player_data", "player_name", prof.getNickName())) {
                         Main.getNMS().changeName(p, prof.getNickName());
-                    }else {
+                    } else {
                         prof.setNicked(false);
                         prof.setNickSkin("");
                         prof.setNickName("");
@@ -186,8 +189,6 @@ public class ProfileListener implements Listener {
                         p.sendMessage("§c有玩家使用了此昵称所以已经将你的昵称还原！");
                         SystemAPI.getApi().refreshTag(p);
                     }
-                }else if(prof.isNicked() && !Main.getInstance().getConfig().getBoolean("disable-nick")) {
-                    Main.getNMS().restoreName(p);
                 }
 
                 //join message
@@ -203,25 +204,15 @@ public class ProfileListener implements Listener {
                         }
                     }
                 }
-
+                Bukkit.getPluginManager().callEvent(new PlayerInitEvent(p));
                 prof.checkStatus();
                 this.cancel();
             }
-        }.runTaskTimer(Main.getInstance(), 15, 15);
+        }.runTaskTimer(Main.getInstance(), 0, 5);
 
         if (SettingConfig.cfg.getYml().getBoolean("setting.join-msg-enabled")) {
             e.setJoinMessage(null);
         }
-    }
-
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
-        PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
-        if(prof == null){
-            return;
-        }
-        SystemAPI.getApi().refreshTag(p);
     }
 
     @EventHandler

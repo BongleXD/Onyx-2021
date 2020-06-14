@@ -3,13 +3,13 @@ package cn.newcraft.system.bukkit.util;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class JSONUtil {
+public class JsonMessageUtil {
 
     private static final StringBuilder JSON_BUILDER = new StringBuilder("{\"text\":\"\",\"extra\":[");
 
     private static final int RETAIN = "{\"text\":\"\",\"extra\":[".length();
 
-    public static String toJSON(String message) {
+    public static String toJson(String message) {
         if (message == null || message.isEmpty())
             return null;
         message = message.replace("\\", "\\\\").replace("\"", "\\\"");

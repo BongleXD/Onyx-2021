@@ -54,7 +54,7 @@ public class Fly extends CommandManager {
         Player p = Bukkit.getPlayer(args[0]);
         p.setAllowFlight(true);
         p.setFlying(true);
-        sender.sendMessage("§a" + p.getDisplayName() + " 的飞行已开启！");
+        sender.sendMessage("§a" + p.getDisplayName() + " §a的飞行已开启！");
         if(p != sender) {
             p.sendMessage("§a飞行已开启！");
         }
@@ -65,7 +65,7 @@ public class Fly extends CommandManager {
         Player p = Bukkit.getPlayer(args[0]);
         p.setAllowFlight(false);
         p.setFlying(false);
-        sender.sendMessage("§c" + p.getDisplayName() + " 的飞行已关闭！");
+        sender.sendMessage("§c" + p.getDisplayName() + " §a的飞行已关闭！");
         if(p != sender) {
             p.sendMessage("§c飞行已关闭！");
         }

@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import java.util.ArrayList;
@@ -42,6 +43,10 @@ public class Freeze extends CommandManager implements Listener {
     public void onMove(PlayerMoveEvent e){
         Player p = e.getPlayer();
         if(players.contains(p.getUniqueId())){
+            if(!p.isFlying()){
+                p.setAllowFlight(true);
+                p.setFlying(true);
+            }
             p.sendMessage("");
             p.sendMessage("§c你目前进入了冻结状态！请不要尝试退出当前服务器， 否则你将会被永久移除服务器！");
             p.sendMessage("");
@@ -50,8 +55,22 @@ public class Freeze extends CommandManager implements Listener {
     }
 
     @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e){
+        Player p = e.getPlayer();
+        if(players.contains(p.getUniqueId())){
+            p.sendMessage("");
+            p.sendMessage("§c你目前进入了冻结状态！请不要执行任何指令！");
+            p.sendMessage("");
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
     public void onLoggout(PlayerQuitEvent e){
-        if(players.contains(e.getPlayer().getUniqueId())){
+        Player p = e.getPlayer();
+        if(players.contains(p.getUniqueId())){
+            p.setAllowFlight(false);
+            p.setFlying(false);
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ban " + e.getPlayer().getName() + " 冻结状态下离开服务器");
         }
     }

@@ -25,6 +25,7 @@ public class Vanish extends CommandManager implements Listener {
             vanishPlayer(p, online, !profile.isVanish());
         }
         profile.setVanish(!profile.isVanish());
+        p.sendMessage(profile.isVanish() ? "§a你隐身了！" : "§c你解除了隐身！");
         if(PlayerProfile.getVanishs().contains(p.getUniqueId())){
             PlayerProfile.getVanishs().remove(p.getUniqueId());
         }else{

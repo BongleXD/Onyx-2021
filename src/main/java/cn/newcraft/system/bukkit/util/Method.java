@@ -11,6 +11,7 @@ import com.mojang.authlib.properties.Property;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,7 +33,6 @@ import java.util.*;
 public class Method {
 
     private static HashMap<String, BukkitTask> taskMap = new HashMap<>();
-    private static HashMap<Player, Long> coolDownMap = new HashMap<>();
 
     public static BukkitTask getTask(String task){
         return taskMap.get(task);
@@ -49,14 +49,6 @@ public class Method {
         }
     }
 
-    public static void setCoolDown(Player p, int seconds) {
-        coolDownMap.put(p, System.currentTimeMillis() + seconds * 1000);
-    }
-
-    public static boolean canExecute(Player p) {
-        return coolDownMap.containsKey(p) && coolDownMap.get(p) <= System.currentTimeMillis();
-    }
-
     public static String getPercent(double x, double y){
         DecimalFormat df = new DecimalFormat();
         df.applyPattern("0.0");
@@ -64,7 +56,7 @@ public class Method {
     }
 
     public static String transColor(String s){
-        return s.replaceAll("&", "§");
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
     public static String toTrisection(double d) {
@@ -135,49 +127,9 @@ public class Method {
         return sb.toString();
     }
 
-    public static List<Block> getNearbyBlocks(Location location, int radius) {
-        List<Block> blocks = new ArrayList<Block>();
-        for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-            for(int y = location.getBlockY() - radius; y <= location.getBlockY() + radius; y++) {
-                for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
-                    blocks.add(location.getWorld().getBlockAt(x, y, z));
-                }
-            }
-        }
-        return blocks;
-    }
-
-    public static List<Block> getNearbyBlocks(Location location, int radius, int height) {
-        height--;
-        List<Block> blocks = new ArrayList<Block>();
-        for(int x = location.getBlockX() - radius; x <= location.getBlockX() + radius; x++) {
-            for(int y = location.getBlockY() - height; y <= location.getBlockY() + height; y++) {
-                for(int z = location.getBlockZ() - radius; z <= location.getBlockZ() + radius; z++) {
-                    blocks.add(location.getWorld().getBlockAt(x, y, z));
-                }
-            }
-        }
-        return blocks;
-    }
 
     public static double roundDouble(double data, int scale){
         return new BigDecimal(data).setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
-
-    public static float roundFloat(float data, int scale){
-        return new BigDecimal(data).setScale(scale, BigDecimal.ROUND_HALF_UP).floatValue();
-    }
-
-    public static boolean hasFlag(String[] args, char flag) {
-        List<String> list = new ArrayList(Arrays.asList(args));
-        for (Iterator<String> it = list.iterator(); it.hasNext();) {
-            if (it.next().equalsIgnoreCase("-" + flag)) {
-                it.remove();
-                args = list.toArray(args);
-                return true;
-            }
-        }
-        return false;
     }
 
     public static ItemStack getSkull(String url) {
@@ -234,7 +186,7 @@ public class Method {
     public static void setSkin(Player p, String skinName){
         ByteArrayDataOutput b = ByteStreams.newDataOutput();
         b.writeUTF("CHANGE_SKIN");
-        b.writeUTF((String) Main.getSQL().getData("uuid", p.getUniqueId().toString(), "player_data", "player_name"));
+        b.writeUTF((String) Main.getSQL().getData("player_data", "uuid", p.getUniqueId().toString(),"player_name").get(0));
         b.writeUTF(skinName);
         p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
     }
@@ -243,10 +195,12 @@ public class Method {
         if(b){
             if (!sendTo.hasPermission("ncs.vanish.bypass") && p != sendTo) {
                 sendTo.hidePlayer(p);
+            }else{
+                sendTo.showPlayer(p);
             }
             Main.getNMS().changeNameTag(sendTo, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), " §c[已隐身]", TeamAction.UPDATE, getTagPriority(p, PlayerProfile.getDataFromUUID(p.getUniqueId())));
         }else{
-            if (!sendTo.hasPermission("ncs.vanish.bypass") && p != sendTo) {
+            if(p != sendTo){
                 sendTo.showPlayer(p);
             }
             Main.getNMS().changeNameTag(sendTo, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix()), TeamAction.UPDATE, getTagPriority(p, PlayerProfile.getDataFromUUID(p.getUniqueId())));
@@ -291,15 +245,6 @@ public class Method {
             }
         }
         return ret.toString();
-    }
-
-    public static void sendPluginMessageAsConsole(String data, String... messages){
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF(data);
-        for(String msg : messages){
-            out.writeUTF(msg);
-        }
-        Bukkit.getServer().sendPluginMessage(Main.getInstance(), "BungeeCord", out.toByteArray());
     }
 
     public static TagData getTagData(Player p){

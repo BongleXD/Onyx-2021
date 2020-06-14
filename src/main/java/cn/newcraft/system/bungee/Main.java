@@ -11,6 +11,7 @@ import cn.newcraft.system.bungee.config.DataConfig;
 import cn.newcraft.system.bungee.config.LobbyConfig;
 import cn.newcraft.system.bungee.listener.DataListener;
 import cn.newcraft.system.bungee.listener.MessageListener;
+import cn.newcraft.system.shared.util.MathHelper;
 import cn.newcraft.system.shared.util.SQLHelper;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -18,7 +19,6 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public class Main extends Plugin {
-
 
     private static Main instance;
     private static SQLHelper sql;

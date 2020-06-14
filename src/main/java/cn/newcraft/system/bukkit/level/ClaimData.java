@@ -27,7 +27,7 @@ public class ClaimData {
     private void putData(){
         boolean b = sql.checkDataExists("claim_data", "pid", pid);
         if(b){
-            claimList = sql.getAllData("claim_data", "pid", pid, 3);
+            claimList = sql.getColumnData("claim_data", "pid", pid, 3);
         }
     }
 
@@ -55,9 +55,9 @@ public class ClaimData {
     }
 
     public static void init(){
-        sql.create("claim_data");
-        sql.addStringColumn("claim_data", "pid");
-        sql.addIntegerColumn("claim_data", "level");
+        sql.create("claim_data",
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "level"));
     }
 
 }

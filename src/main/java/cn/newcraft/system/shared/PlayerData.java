@@ -2,7 +2,9 @@ package cn.newcraft.system.shared;
 
 import cn.newcraft.system.shared.util.SQLHelper;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class PlayerData {
@@ -48,29 +50,40 @@ public class PlayerData {
     }
 
     public static void init() {
-        sql.create("player_data");
-        sql.addStringColumn("player_data", "pid");
-        sql.addStringColumn("player_data", "uuid");
-        sql.addStringColumn("player_data", "player_name");
-        sql.addStringColumn("player_data", "ip_last_join");
-        sql.addStringColumn("player_data", "last_leave_mills");
-        sql.addIntegerColumn("player_data", "stay_secs");
-        sql.addStringColumn("player_data", "rejoin_server");
-        sql.addStringColumn("player_data", "guild");
-        sql.addStringColumn("player_data", "status");
-        sql.addStringColumn("player_data", "server_joined");
+        sql.create("player_data",
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "uuid"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "player_name"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "ip_last_join"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "last_leave_mills"),
+                new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "stay_secs"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "rejoin_server"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "guild"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "status"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "server_joined")
+        );
     }
 
     private void putData() {
-        this.uuid = (String) sql.getData("pid", pid, "player_data", "uuid" );
-        this.name = (String) sql.getData("pid", pid, "player_data", "player_name");
-        this.ipLastJoin = (String) sql.getData("pid", pid, "player_data", "ip_last_join");
-        this.lastLeaveMills = (String) sql.getData("pid", pid, "player_data", "last_leave_mills");
-        this.rejoinServer = (String) sql.getData("pid", pid, "player_data", "rejoin_server");
-        this.guild = (String) sql.getData("pid", pid, "player_data", "guild");
-        this.status = (String) sql.getData("pid", pid, "player_data", "status");
-        this.serverJoined = (String) sql.getData("pid", pid, "player_data", "server_joined");
-        this.staySecs = (int) sql.getData("pid", pid, "player_data", "stay_secs");
+        List list = sql.getData("player_data", "pid", pid,
+                "uuid",
+                "player_name",
+                "ip_last_join",
+                "last_leave_mills",
+                "rejoin_server",
+                "guild",
+                "status",
+                "server_joined",
+                "stay_secs");
+        this.uuid = (String) list.get(0);
+        this.name = (String) list.get(1);
+        this.ipLastJoin = (String) list.get(2);
+        this.lastLeaveMills = (String) list.get(3);
+        this.rejoinServer = (String) list.get(4);
+        this.guild = (String) list.get(5);
+        this.status = (String) list.get(6);
+        this.serverJoined = (String) list.get(7);
+        this.staySecs = (int) list.get(8);
     }
 
     public String getPID(){
@@ -147,9 +160,10 @@ public class PlayerData {
     }
 
     public void refreshStaySecs(){
-        int sec = Math.toIntExact((System.currentTimeMillis() - joinTime) / 1000) + staySecs;
+        if (joinTime == 0) return;
+        long sec = (System.currentTimeMillis() - joinTime) / 1000 + staySecs;
         this.joinTime = System.currentTimeMillis();
-        this.staySecs = sec;
+        this.staySecs = new BigDecimal(sec).intValue();
     }
 
     public long getJoinTime() {
@@ -173,7 +187,7 @@ public class PlayerData {
     }
 
     public static PlayerData initFromUUID(UUID uuid){
-        String pid = (String) sql.getData("uuid", uuid.toString(), "player_data", "pid");
+        String pid = (String) sql.getData("player_data", "uuid", uuid.toString(), "pid").get(0);
         if(pid != null) {
             pidMap.put(uuid.toString(), pid);
             return new PlayerData(pid);
@@ -186,7 +200,7 @@ public class PlayerData {
     }
 
     public static PlayerData initFromName(String name){
-        String pid = (String) sql.getData("player_name", name, "player_data", "pid");
+        String pid = (String) sql.getData("player_data", "player_name", name, "pid").get(0);
         if(pid != null) {
             pidMap.put(name, pid);
             return new PlayerData(pid);
@@ -196,15 +210,16 @@ public class PlayerData {
 
     public void saveData(boolean destroy){
         refreshStaySecs();
-        sql.putData("player_data", this.pid, "uuid", this.uuid);
-        sql.putData("player_data", this.pid, "player_name", this.name);
-        sql.putData("player_data", this.pid, "ip_last_join", this.ipLastJoin);
-        sql.putData("player_data", this.pid, "last_leave_mills", this.lastLeaveMills);
-        sql.putData("player_data", this.pid, "rejoin_server", this.rejoinServer);
-        sql.putData("player_data", this.pid, "guild", this.guild);
-        sql.putData("player_data", this.pid, "status", this.status);
-        sql.putData("player_data", this.pid, "server_joined", this.serverJoined);
-        sql.putData("player_data", this.pid, "stay_secs", this.getStaySecs());
+        sql.putData("player_data", "pid", this.pid,
+                new SQLHelper.SqlValue("uuid", this.uuid),
+                new SQLHelper.SqlValue("player_name", this.name),
+                new SQLHelper.SqlValue("ip_last_join", this.ipLastJoin),
+                new SQLHelper.SqlValue("last_leave_mills", this.lastLeaveMills),
+                new SQLHelper.SqlValue("rejoin_server", this.rejoinServer),
+                new SQLHelper.SqlValue("guild", this.guild),
+                new SQLHelper.SqlValue("status", this.status),
+                new SQLHelper.SqlValue("server_joined", this.serverJoined),
+                new SQLHelper.SqlValue("stay_secs", this.getStaySecs()));
         if(destroy){
             dataMap.remove(pid);
         }

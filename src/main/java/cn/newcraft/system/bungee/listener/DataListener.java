@@ -28,30 +28,30 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onLogin(LoginEvent e) {
-        String nickskin = (String) Main.getSQL().getData("pid", (String) Main.getSQL().getData("player_name", e.getConnection().getName(), "player_data", "pid" ), "player_profile", "nick_skin");
-        int i = (int) Main.getSQL().getData("pid", (String) Main.getSQL().getData("player_name", e.getConnection().getName(), "player_data", "pid" ), "player_profile", "nicked");
+        String pid = (String) Main.getSQL().getData("player_data", "player_name", e.getConnection().getName(), "pid" ).get(0);
+        String nickskin = (String) Main.getSQL().getData("pid", pid, "player_profile", "nick_skin").get(0);
+        int i = (int) Main.getSQL().getData("pid", pid, "player_profile", "nicked").get(0);
         SkinAPI.getApi().setSkin(e.getConnection(), nickskin == null || nickskin.isEmpty() || i == 0 ? e.getConnection().getName() : nickskin);
     }
 
     @EventHandler
     public void onQuit(PlayerDisconnectEvent e){
         SQLHelper sql = Main.getSQL();
-        String pid = (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" );
+        String pid = (String) Main.getSQL().getData("player_data", "player_name", e.getPlayer().getName(), "pid" ).get(0);
         PlayerData data = PlayerData.getData(pid);
         if(data != null){
             data.setIpLastJoin(e.getPlayer().getAddress().getHostString());
             data.setLastLeaveMills(System.currentTimeMillis());
             data.setStatus("OFFLINE");
             data.setServerJoined("NULL");
-            sql.putData("player_data", pid, "ip_last_join", data.getIpLastJoin());
+            sql.putData("player_data", "pid", pid, new SQLHelper.SqlValue("ip_last_join", data.getIpLastJoin()));
             data.saveData(true);
         }
     }
 
     @EventHandler
     public void onConnected(ServerConnectedEvent e){
-        SQLHelper sql = Main.getSQL();
-        String pid = (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" );
+        String pid = (String) Main.getSQL().getData("player_data", "player_name", e.getPlayer().getName(), "pid" ).get(0);
         if(PlayerData.getData(pid) != null){
             PlayerData data = PlayerData.getData(pid);
             if(e.getServer().getInfo().getName().toLowerCase().contains("lobby")) {
@@ -68,17 +68,21 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onConnect(ServerConnectEvent e){
-        SQLHelper sql = Main.getSQL();
-        String nickskin = (String) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nick_skin");
-        int i = (int) Main.getSQL().getData("pid", (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" ), "player_profile", "nicked");
+        String pid = (String) Main.getSQL().getData("player_data", "player_name", e.getPlayer().getName(), "pid" ).get(0);
+        String nickskin = (String) Main.getSQL().getData("pid", pid, "player_profile", "nick_skin").get(0);
+        int i = (int) Main.getSQL().getData("pid", pid, "player_profile", "nicked").get(0);
         SkinAPI.getApi().setSkin(e.getPlayer().getPendingConnection(), nickskin == null || nickskin.isEmpty() || i == 0 ? e.getPlayer().getPendingConnection().getName() : nickskin);
         if(e.getTarget().getName().contains("login") || e.isCancelled()){
             return;
         }
-        String pid = (String) sql.getData("player_name", e.getPlayer().getName(), "player_data", "pid" );
         if(pid != null){
-            PlayerData data = new PlayerData(pid);
-            data.setJoinTime(System.currentTimeMillis());
+            PlayerData data = PlayerData.getData(pid);
+            if (data == null) {
+                data = new PlayerData(pid);
+                data.setJoinTime(System.currentTimeMillis());
+            }else{
+                data.refreshStaySecs();
+            }
             data.setStatus("ONLINE");
             data.setServerJoined(e.getTarget().getName());
             data.saveData(false);

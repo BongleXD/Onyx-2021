@@ -197,6 +197,7 @@ public class Nick extends CommandManager {
                                         .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 输入要使用的昵称")
                                         .build())
                                 .create());
+                return;
             }
             boolean b = true;
             for(Player online : Bukkit.getOnlinePlayers()){

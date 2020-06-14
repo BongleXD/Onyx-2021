@@ -16,16 +16,26 @@ public class Level extends CommandManager {
     public void addXp(CommandSender sender, String[] args){
         Player p = (Player) sender;
         Player target = Bukkit.getPlayer(args[1]);
+        PlayerProfile prof = PlayerProfile.getDataFromUUID(target.getUniqueId());
+        if(prof == null){
+            p.sendMessage("§c玩家 " + target.getDisplayName() + " §c没有档案数据！");
+            return;
+        }
         p.sendMessage("§a已给予玩家 " + target.getDisplayName() + " " + args[2] + " §aEXP！");
-        PlayerProfile.getDataFromUUID(target.getUniqueId()).addXp(Integer.parseInt(args[2]));
+        prof.addXpWithNoEvent(Integer.parseInt(args[2]));
     }
 
     @Cmd(arg = "addLevel <player> <integer>", perm = "ncs.command.level.addlevel", permMessage = "§c你不能这么做！")
     public void addLevel(CommandSender sender, String[] args){
         Player p = (Player) sender;
         Player target = Bukkit.getPlayer(args[1]);
+        PlayerProfile prof = PlayerProfile.getDataFromUUID(target.getUniqueId());
+        if(prof == null){
+            p.sendMessage("§c玩家 " + target.getDisplayName() + " §c没有档案数据！");
+            return;
+        }
         p.sendMessage("§a已给予玩家 " + target.getDisplayName() + " " + args[2] + " §a等级！");
-        PlayerProfile.getDataFromUUID(target.getUniqueId()).addLevel(Integer.parseInt(args[2]));
+        prof.addLevel(Integer.parseInt(args[2]));
     }
 
 }

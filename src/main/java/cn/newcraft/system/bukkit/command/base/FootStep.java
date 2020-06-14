@@ -28,7 +28,7 @@ public class FootStep extends CommandManager implements Listener {
     @Cmd(arg = "<player> on", perm = "ncs.command.footstep.force", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！")
     public void forceEnable(CommandSender sender, String[] args){
         Player p = Bukkit.getPlayer(args[0]);
-        sender.sendMessage("§a" + p.getDisplayName() + " 的足迹模式已开启！");
+        sender.sendMessage("§a" + p.getDisplayName() + " §a的足迹模式已开启！");
         p.sendMessage("§a足迹模式已开启！ 你的脚印将被显示在服务器内！");
         setCoolDown(p, 0);
         taskMap.put(p, true);
@@ -37,7 +37,7 @@ public class FootStep extends CommandManager implements Listener {
     @Cmd(arg = "<player> off", perm = "ncs.command.footstep.force", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！")
     public void forceDisable(CommandSender sender, String[] args){
         Player p = Bukkit.getPlayer(args[0]);
-        sender.sendMessage("§c" + p.getDisplayName() + " 的足迹模式已关闭！");
+        sender.sendMessage("§c" + p.getDisplayName() + " §a的足迹模式已关闭！");
         p.sendMessage("§c足迹模式已关闭！ 你的脚印将不会显示在服务器内！");
         taskMap.put(p, false);
     }

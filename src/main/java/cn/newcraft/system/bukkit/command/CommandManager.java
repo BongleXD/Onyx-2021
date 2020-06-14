@@ -52,6 +52,7 @@ public class CommandManager extends BukkitCommand {
                 try {
                     method.invoke(clazz, sender, args);
                 } catch (IllegalAccessException | InvocationTargetException e) {
+                    sender.sendMessage("§c执行指令时发生错误，请告知管理员查询服务器后台相关报错！");
                     e.printStackTrace();
                 }
                 return true;
@@ -62,7 +63,7 @@ public class CommandManager extends BukkitCommand {
                     sender.sendMessage(this.getPermissionMessage() == null ? "§c很抱歉， 但是你没有足够的权限来执行这个指令。如果你认为这是个错误， 请联系管理员或者客服！" : this.getPermissionMessage());
                 }
             }else{
-                sender.sendMessage(this.usage.isEmpty() ? "§c你没有使用该命令的权限！" : this.usage);
+                sender.sendMessage(this.usage.isEmpty() ? "§c未知指令， 请输入 '/help' 查看帮助！" : this.usage);
             }
         }
         return false;
@@ -167,13 +168,12 @@ public class CommandManager extends BukkitCommand {
 
     private Method getMethodBySubCmd(String[] args, CommandSender sender) {
         Method finalMethod = null;
-        for(Method method : this.getClass().getMethods()) {
+        for(Method method : this.getClass().getDeclaredMethods()) {
             Cmd cmd = method.getAnnotation(Cmd.class);
             if (cmd == null) {
                 continue;
             }
             boolean b = true;
-            boolean moduleCheck = false;
             String[] cmdArgs = cmd.arg().split(" ");
             if (cmd.arg().isEmpty() && args.length == 0) {
                 this.containEmptyMethod = true;
@@ -240,10 +240,14 @@ public class CommandManager extends BukkitCommand {
 
     public static void regCommand(CommandManager command, Plugin plugin) throws ReflectiveOperationException {
         command.clazz = command;
+        Bukkit.getServer().getCommandMap().register(command.getName(), plugin.getDescription().getName(), command);
+        /*
         Method commandMap = plugin.getServer().getClass().getMethod("getCommandMap", null);
         Object cmdmap = commandMap.invoke(plugin.getServer(), null);
         Method register = cmdmap.getClass().getMethod("register", String.class, String.class, Command.class);
         register.invoke(cmdmap, command.getName(), plugin.getDescription().getName(), command);
+
+         */
     }
 
     public enum CommandOnly{

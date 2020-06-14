@@ -7,13 +7,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class IRCUtils {
+public class IrcUtil {
 
     private static PrintWriter pw;
     private BufferedReader br;
     private Socket socket;
 
-    public IRCUtils() {
+    public IrcUtil() {
         new connect().start();
     }
 
@@ -21,7 +21,8 @@ public class IRCUtils {
         pw.println(message);
         pw.flush();
     }
-    class connect extends Thread {
+
+    private class connect extends Thread {
         @Override
         public void run() {
             this.setName("Connect");
@@ -35,4 +36,5 @@ public class IRCUtils {
             }
         }
     }
+
 }
