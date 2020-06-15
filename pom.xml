@@ -6,7 +6,7 @@
 
     <groupId>cn.newcraft.system</groupId>
     <artifactId>newcraftsystem</artifactId>
-    <version>0.3.5</version>
+    <version>0.3.12</version>
     <packaging>jar</packaging>
 
     <name>NewCraftSystem</name>

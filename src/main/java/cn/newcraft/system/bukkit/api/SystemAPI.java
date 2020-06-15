@@ -52,9 +52,12 @@ public class SystemAPI {
             }
             for (Player online : Bukkit.getOnlinePlayers()) {
                 PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
+                if(other == null){
+                    continue;
+                }
                 if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, "");
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, "");
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
                 //restore tag
                 String suffix = PlaceholderAPI.setPlaceholders(p, getTagData(p).getSuffix());
                 if (prof.isVanish()) {
@@ -62,7 +65,7 @@ public class SystemAPI {
                 }
                 String priority = Method.getTagPriority(p, prof);
                 Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
-                if (other != null && p != online) {
+                if (p != online) {
                     String otherSuffix = PlaceholderAPI.setPlaceholders(online, getTagData(online).getSuffix());
                     if (other.isVanish()) {
                         otherSuffix = " §c[已隐身]";
@@ -133,45 +136,41 @@ public class SystemAPI {
         }
     }
 
-    public void createPIDExists(String pid, UUID uuid, String name){
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            PlayerData data = new PlayerData(
-                    pid,
-                    uuid.toString(),
-                    name,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "OFFLINE",
-                    "NULL",
-                    0);
-            data.setJoinTime(System.currentTimeMillis());
-            data.saveData(false);
-            Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
-        });
+    public void createPIDExists(String pid, UUID uuid, String name) {
+        PlayerData data = new PlayerData(
+                pid,
+                uuid.toString(),
+                name,
+                "",
+                "",
+                "",
+                "",
+                "OFFLINE",
+                "NULL",
+                0);
+        data.setJoinTime(System.currentTimeMillis());
+        data.saveData(false);
+        Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
     }
 
-    public void createNewData(UUID uuid, String name){
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
-            String newPid = spawnUniquePID();
-            PlayerData data = new PlayerData(
-                    newPid,
-                    uuid.toString(),
-                    name,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "OFFLINE",
-                    "NULL",
-                    0);
-            PlayerData.addPID(uuid.toString(), newPid);
-            PlayerData.addPID(name, newPid);
-            data.setJoinTime(System.currentTimeMillis());
-            data.saveData(false);
-            Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
-        });
+    public void createNewData(UUID uuid, String name) {
+        String newPid = spawnUniquePID();
+        PlayerData data = new PlayerData(
+                newPid,
+                uuid.toString(),
+                name,
+                "",
+                "",
+                "",
+                "",
+                "OFFLINE",
+                "NULL",
+                0);
+        PlayerData.addPID(uuid.toString(), newPid);
+        PlayerData.addPID(name, newPid);
+        data.setJoinTime(System.currentTimeMillis());
+        data.saveData(false);
+        Bukkit.getPluginManager().callEvent(new PlayerDataCreateEvent(data));
     }
 
     private String[] randomLetters = new String[]{

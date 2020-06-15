@@ -12,6 +12,7 @@ import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -21,8 +22,11 @@ public class ChatListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e){
+        if(e.isCancelled()){
+            return;
+        }
         if(ChatConfig.cfg.getBoolean("enabled")) {
             Player p = e.getPlayer();
             PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());

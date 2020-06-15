@@ -186,11 +186,29 @@ public class PlayerData {
         return dataMap.getOrDefault(pidMap.get(name), null);
     }
 
+    public static PlayerData init(UUID uuid, String name) {
+        try {
+            String pid = (String) sql.getData("player_data", "uuid", uuid.toString(), "pid").get(0);
+            if (pid != null) {
+                pidMap.put(uuid.toString(), pid);
+                pidMap.put(name, pid);
+                return new PlayerData(pid);
+            }
+        } catch (Exception ex) {
+            return null;
+        }
+        return null;
+    }
+
     public static PlayerData initFromUUID(UUID uuid){
-        String pid = (String) sql.getData("player_data", "uuid", uuid.toString(), "pid").get(0);
-        if(pid != null) {
-            pidMap.put(uuid.toString(), pid);
-            return new PlayerData(pid);
+        try {
+            String pid = (String) sql.getData("player_data", "uuid", uuid.toString(), "pid").get(0);
+            if (pid != null) {
+                pidMap.put(uuid.toString(), pid);
+                return new PlayerData(pid);
+            }
+        }catch (Exception ex){
+            return null;
         }
         return null;
     }
@@ -199,11 +217,15 @@ public class PlayerData {
         pidMap.put(data, pid);
     }
 
-    public static PlayerData initFromName(String name){
-        String pid = (String) sql.getData("player_data", "player_name", name, "pid").get(0);
-        if(pid != null) {
-            pidMap.put(name, pid);
-            return new PlayerData(pid);
+    public static PlayerData initFromName(String name) {
+        try {
+            String pid = (String) sql.getData("player_data", "player_name", name, "pid").get(0);
+            if (pid != null) {
+                pidMap.put(name, pid);
+                return new PlayerData(pid);
+            }
+        } catch (Exception ex) {
+            return null;
         }
         return null;
     }

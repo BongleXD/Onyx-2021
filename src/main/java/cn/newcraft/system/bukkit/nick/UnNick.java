@@ -26,7 +26,9 @@ public class UnNick extends CommandManager {
         }
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         if(prof.isNicked()) {
-            Main.getNMS().restoreName(p);
+            if(p.hasPermission("ncs.nick.staff")) {
+                Main.getNMS().restoreName(p);
+            }
             prof.setNicked(false);
             prof.setNickPrefix("");
             prof.setNickSkin("");

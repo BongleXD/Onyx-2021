@@ -8,9 +8,11 @@ public class PlayerInitEvent extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private Player p;
+    private String joinMessage;
 
-    public PlayerInitEvent(Player p) {
+    public PlayerInitEvent(Player p, String joinMessage) {
         this.p = p;
+        this.joinMessage = joinMessage;
     }
 
     public Player getPlayer() {
@@ -23,6 +25,14 @@ public class PlayerInitEvent extends Event {
 
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public String getJoinMessage() {
+        return joinMessage;
+    }
+
+    public void setJoinMessage(String joinMessage) {
+        this.joinMessage = joinMessage;
     }
 
 }
