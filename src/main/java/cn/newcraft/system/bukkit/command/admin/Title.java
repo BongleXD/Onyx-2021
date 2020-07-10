@@ -29,7 +29,7 @@ public class Title extends CommandManager {
                 TitleUtil.sendTitle(p, 20, 100, 20, args[1].replaceAll("&","§"), "");
                 p.sendMessage("§a标题命令执行成功！");
             default:
-                Player target = (Player)sender;
+                Player target = Bukkit.getPlayer(args[0]);
                 if (target == null){
                     sender.sendMessage("§c玩家 " + args[0] + " 不存在！");
                 }
@@ -55,7 +55,7 @@ public class Title extends CommandManager {
                 TitleUtil.sendTitle(p, 20, 100, 20, args[1].replaceAll("&","§"), args[2].replaceAll("&","§"));
                 p.sendMessage("§a标题命令执行成功！");
             default:
-                Player target = (Player)sender;
+                Player target = Bukkit.getPlayer(args[0]);
                 if (target == null){
                     sender.sendMessage("§c玩家 " + args[0] + " 不存在！");
                 }
@@ -81,7 +81,7 @@ public class Title extends CommandManager {
                 TitleUtil.sendTitle(p, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]), args[1].replaceAll("&","§"), "");
                 p.sendMessage("§a标题命令执行成功！");
             default:
-                Player target = (Player)sender;
+                Player target = Bukkit.getPlayer(args[0]);
                 if (target == null){
                     sender.sendMessage("§c玩家 " + args[0] + " 不存在！");
                 }
@@ -107,7 +107,7 @@ public class Title extends CommandManager {
                 TitleUtil.sendTitle(p, Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), args[1].replaceAll("&","§"), args[2].replaceAll("&","§"));
                 p.sendMessage("§a标题命令执行成功！");
             default:
-                Player target = (Player)sender;
+                Player target = Bukkit.getPlayer(args[0]);
                 if (target == null){
                     sender.sendMessage("§c玩家 " + args[0] + " 不存在！");
                 }
