@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.github.paperspigot.event.ServerExceptionEvent;
 
 import java.util.List;
 

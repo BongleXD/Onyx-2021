@@ -5,6 +5,7 @@ import cn.newcraft.system.bukkit.util.interact.ItemBuilder;
 import cn.newcraft.system.bukkit.util.Method;
 import cn.newcraft.system.bukkit.gui.PlayerGui;
 import cn.newcraft.system.shared.util.SQLHelper;
+import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

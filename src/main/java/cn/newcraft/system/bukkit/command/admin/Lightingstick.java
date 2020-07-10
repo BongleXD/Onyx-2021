@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
+
 public class Lightingstick extends CommandManager implements Listener {
 
     public Lightingstick() {

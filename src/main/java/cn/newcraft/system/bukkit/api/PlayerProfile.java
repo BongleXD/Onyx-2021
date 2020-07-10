@@ -30,11 +30,13 @@ public class PlayerProfile {
     private String nickPrefix;
     private String nickSkin;
     private String secondPasswd;
+    private String prefix;
+    private String suffix;
     private static HashMap<String, PlayerProfile> dataMap = new HashMap<>();
     private static SQLHelper sql = Main.getSQL();
     private static List<UUID> vanishs = Lists.newArrayList();
 
-    public PlayerProfile(String pid, UUID uuid, int level, int xp, double xpBoost, double coinBoost, boolean vanish, boolean nicked, String nickName, String nickPrefix, String nickSkin, String secondPasswd) {
+    public PlayerProfile(String pid, UUID uuid, int level, int xp, double xpBoost, double coinBoost, boolean vanish, boolean nicked, String nickName, String nickPrefix, String nickSkin, String secondPasswd, String prefix, String suffix) {
         this.pid = pid;
         this.uuid = uuid;
         this.level = level;
@@ -47,6 +49,8 @@ public class PlayerProfile {
         this.nickPrefix = nickPrefix;
         this.nickSkin = nickSkin;
         this.secondPasswd = secondPasswd;
+        this.prefix = prefix;
+        this.suffix = suffix;
         dataMap.put(pid, this);
     }
 
@@ -57,7 +61,7 @@ public class PlayerProfile {
     }
 
     private void putData(){
-        List list = sql.getData("player_profile", "pid", pid, "uuid", "net_level", "net_xp", "xp_boost", "coin_boost", "vanish", "nicked", "nick_name", "nick_prefix", "nick_skin", "second_passwd");
+        List list = sql.getData("player_profile", "pid", pid, "uuid", "net_level", "net_xp", "xp_boost", "coin_boost", "vanish", "nicked", "nick_name", "nick_prefix", "nick_skin", "second_passwd", "prefix", "suffix");
         this.uuid = UUID.fromString((String) list.get(0));
         this.level = (int) list.get(1);
         this.xp = (int) list.get(2);
@@ -69,6 +73,8 @@ public class PlayerProfile {
         this.nickPrefix = (String) list.get(8);
         this.nickSkin = (String) list.get(9);
         this.secondPasswd = (String) list.get(10);
+        this.prefix = (String) list.get(11);
+        this.suffix = (String) list.get(12);
     }
 
     public static void init(){
@@ -84,7 +90,9 @@ public class PlayerProfile {
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_name"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_prefix"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "nick_skin"),
-                new SQLHelper.Value(SQLHelper.ValueType.STRING, "second_passwd"));
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "second_passwd"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "prefix"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "suffix"));
     }
 
     public String getPID(){
@@ -146,6 +154,22 @@ public class PlayerProfile {
             addLevel(1);
             checkLevelUp();
         }
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public int getXpToLevelUp(){
@@ -265,7 +289,9 @@ public class PlayerProfile {
                 new SQLHelper.SqlValue("nick_name", this.nickName),
                 new SQLHelper.SqlValue("nick_prefix", this.nickPrefix),
                 new SQLHelper.SqlValue("nick_skin", this.nickSkin),
-                new SQLHelper.SqlValue("second_passwd", this.secondPasswd));
+                new SQLHelper.SqlValue("second_passwd", this.secondPasswd),
+                new SQLHelper.SqlValue("prefix", this.prefix),
+                new SQLHelper.SqlValue("suffix", this.suffix));
         if(destroy){
             dataMap.remove(pid);
         }

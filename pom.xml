@@ -6,7 +6,7 @@
 
     <groupId>cn.newcraft.system</groupId>
     <artifactId>newcraftsystem</artifactId>
-    <version>0.3.12</version>
+    <version>0.4.1</version>
     <packaging>jar</packaging>
 
     <name>NewCraftSystem</name>
@@ -74,8 +74,8 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
             <version>1.15-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/NewCraftBungee.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>

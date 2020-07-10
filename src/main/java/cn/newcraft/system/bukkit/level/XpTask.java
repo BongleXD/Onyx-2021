@@ -17,8 +17,9 @@ public class XpTask {
             public void run() {
                 for(Player p : Bukkit.getOnlinePlayers()){
                     PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
-                    assert prof != null;
-                    prof.addXp(30);
+                    if(prof != null) {
+                        prof.addXp(30);
+                    }
                 }
             }
         }.runTaskTimerAsynchronously(Main.getInstance(), 3 * 60 * 20, 3 * 60 * 20);
@@ -29,7 +30,7 @@ public class XpTask {
         this.task = null;
     }
 
-    public boolean isCanceled(){
+    public boolean isCancelled(){
         return this.task == null;
     }
 }

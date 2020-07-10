@@ -1,14 +1,10 @@
 package cn.newcraft.system.bungee;
 
-import cn.newcraft.system.bungee.command.Skin;
-import cn.newcraft.system.bungee.config.SkinConfig;
+import cn.newcraft.system.bungee.command.*;
+import cn.newcraft.system.bungee.config.*;
+import cn.newcraft.system.bungee.task.BroadcastTask;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.shared.PluginInfo;
-import cn.newcraft.system.bungee.command.AntiAttack;
-import cn.newcraft.system.bungee.command.Glist;
-import cn.newcraft.system.bungee.command.TpTo;
-import cn.newcraft.system.bungee.config.DataConfig;
-import cn.newcraft.system.bungee.config.LobbyConfig;
 import cn.newcraft.system.bungee.listener.DataListener;
 import cn.newcraft.system.bungee.listener.MessageListener;
 import cn.newcraft.system.shared.util.MathHelper;
@@ -38,14 +34,20 @@ public class Main extends Plugin {
         instance = this;
         new MessageListener();
         regConfig();
-        sql = new SQLHelper("localhost:36109", "root", "Mysql_r53Era_2686chen.", "newcraftsystem");
+        sql = new SQLHelper(MainConfig.cfg.getYml().getString("url"),
+                MainConfig.cfg.getYml().getString("user"),
+                MainConfig.cfg.getYml().getString("passwd"),
+                MainConfig.cfg.getYml().getString("database"));
         PlayerData.putSQL(sql);
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
         getProxy().getPluginManager().registerCommand(this, new Glist());
         getProxy().getPluginManager().registerCommand(this, new Skin());
-        getProxy().getPluginManager().registerCommand(this, new TpTo());getProxy().getPluginManager().registerCommand(this, new Glist());
+        getProxy().getPluginManager().registerCommand(this, new TpTo());
+        getProxy().getPluginManager().registerCommand(this, new Glist());
+        getProxy().getPluginManager().registerCommand(this, new MainCommand());
         BungeeCord.getInstance().getConsole().sendMessage(new TextComponent(PluginInfo.BUNGEE_INFO + " §a加载中..."));
         regListener();
+        new BroadcastTask();
         getProxy().getConsole().sendMessage(PluginInfo.BUNGEE_INFO + " §a已成功加载！ §b版本号" + PluginInfo.getVersion());
     }
 
@@ -62,6 +64,8 @@ public class Main extends Plugin {
         DataConfig.init();
         LobbyConfig.init();
         SkinConfig.init();
+        MainConfig.init();
+        BroadcastConfig.init();
     }
 
     public static Main getInstance(){

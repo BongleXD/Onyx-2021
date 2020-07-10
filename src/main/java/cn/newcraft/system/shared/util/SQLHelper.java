@@ -7,8 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SQLHelper {
-
-    private static SQLHelper sql;
+    
     private String url;
     private String user;
     private String passwd;

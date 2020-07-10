@@ -1,5 +1,6 @@
 package cn.newcraft.system.bukkit.support.v1_8_R3;
 
+import cn.newcraft.system.bukkit.support.Hologram;
 import cn.newcraft.system.shared.PlayerData;
 import cn.newcraft.system.bukkit.api.PlayerProfile;
 import cn.newcraft.system.bukkit.Main;
@@ -18,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.util.CraftChatMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,6 +31,16 @@ import static cn.newcraft.system.bukkit.util.Method.getTagData;
 import static cn.newcraft.system.bukkit.util.Method.vanishPlayer;
 
 public class v1_8_R3 implements NMS {
+
+    @Override
+    public Hologram newInstance(Location loc, String... lines) {
+        return new Hologram_1_8_R3(loc, lines);
+    }
+
+    @Override
+    public Hologram newInstance(Location loc) {
+        return new Hologram_1_8_R3(loc);
+    }
 
     @Override
     public void sendActionBar(Player p, String message) {
@@ -54,6 +66,12 @@ public class v1_8_R3 implements NMS {
 
     @Override
     public void changeNameTag(Player sendTo, Player p, String prefix, String suffix, TeamAction action, String priority) {
+        EntityPlayer ep = ((CraftPlayer) p).getHandle();
+        if(action == TeamAction.DESTROY){
+            ep.listName = null;
+        }else{
+            ep.listName = CraftChatMessage.fromString(prefix + p.getName() + suffix)[0];
+        }
         if(prefix.length() >= 16){
             prefix = prefix.substring(0, 16);
         }
@@ -81,6 +99,7 @@ public class v1_8_R3 implements NMS {
             case DESTROY:
                 packet = new PacketPlayOutScoreboardTeam(team, 1);
         }
+        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.UPDATE_DISPLAY_NAME, ep));
         ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(packet);
     }
 

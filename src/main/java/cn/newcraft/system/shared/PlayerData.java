@@ -230,6 +230,10 @@ public class PlayerData {
         return null;
     }
 
+    public void destroy(){
+        dataMap.remove(pid);
+    }
+
     public void saveData(boolean destroy){
         refreshStaySecs();
         sql.putData("player_data", "pid", this.pid,

@@ -4,6 +4,7 @@ import cn.newcraft.system.bukkit.Main;
 import cn.newcraft.system.bukkit.api.SystemAPI;
 import cn.newcraft.system.bukkit.command.CommandManager;
 import cn.newcraft.system.bukkit.config.BungeeConfig;
+import cn.newcraft.system.bukkit.exception.RebootException;
 import cn.newcraft.system.bukkit.util.Method;
 import cn.newcraft.system.bukkit.util.interact.SoundUtil;
 import cn.newcraft.system.bukkit.util.interact.TitleUtil;
@@ -81,6 +82,11 @@ public class Reboot extends CommandManager {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
+                            try {
+                                throw new RebootException();
+                            } catch (RebootException e) {
+                                e.printStackTrace();
+                            }
                             Bukkit.shutdown();
                             cancel();
                         }

@@ -209,6 +209,9 @@ public class Method {
 
     public static String getTagPriority(Player p, PlayerProfile prof) {
         String priority;
+        if(prof == null){
+            return null;
+        }
         if(!prof.isNicked()){
             return getTagData(p).getPriority();
         }

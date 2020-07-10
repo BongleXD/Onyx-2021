@@ -4,6 +4,7 @@ main: cn.newcraft.system.bukkit.Main
 prefix: NewCraftSystem
 softdepend:
   - PlaceholderAPI
+  - LuckPerms
 authors:
   - Hello_Han
   - May_Block

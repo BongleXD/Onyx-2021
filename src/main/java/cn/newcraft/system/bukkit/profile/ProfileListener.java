@@ -1,6 +1,7 @@
 package cn.newcraft.system.bukkit.profile;
 
-import cn.newcraft.spigot.event.PlayerPreConnectEvent;
+import cn.newcraft.spigot.event.AsyncPlayerConnectEvent;
+import cn.newcraft.spigot.event.AsyncPlayerDisconnectEvent;
 import cn.newcraft.system.bukkit.api.event.PlayerInitEvent;
 import cn.newcraft.system.bukkit.proxy.ServerType;
 import cn.newcraft.system.bukkit.util.interact.SoundUtil;
@@ -33,7 +34,7 @@ public class ProfileListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onLogin(PlayerPreConnectEvent e) {
+    public void onLogin(AsyncPlayerConnectEvent e) {
         //init profile
         try {
             UUID uuid = UUID.fromString((String) Main.getSQL().getData("player_data", "player_name", e.getName(), "uuid").get(0));
@@ -57,6 +58,8 @@ public class ProfileListener implements Listener {
             if (b) {
                 //load profile
                 prof = new PlayerProfile(data.getPID());
+                prof.setPrefix(Main.getVault().getPlayerPrefix(p));
+                prof.setSuffix(Main.getVault().getPlayerSuffix(p));
             } else {
                 //create new profile
                 prof = new PlayerProfile(
@@ -71,7 +74,9 @@ public class ProfileListener implements Listener {
                         "",
                         "",
                         "",
-                        ""
+                        "",
+                        Main.getVault().getPlayerPrefix(p),
+                        Main.getVault().getPlayerSuffix(p)
                 );
                 prof.saveData(false);
             }
@@ -206,7 +211,7 @@ public class ProfileListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onLogout(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         PlayerProfile profile = PlayerProfile.getDataFromUUID(p.getUniqueId());
@@ -239,7 +244,13 @@ public class ProfileListener implements Listener {
         profile.saveData(true);
     }
 
-    private void checkUUID(PlayerPreConnectEvent e, OfflinePlayer off, PlayerData data){
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onDisconnect(AsyncPlayerDisconnectEvent e){
+        PlayerData data = PlayerData.getDataFromUUID(e.getUniqueId());
+        data.destroy();
+    }
+
+    private void checkUUID(AsyncPlayerConnectEvent e, OfflinePlayer off, PlayerData data){
         if(!off.getUniqueId().toString().equals(data.getUUID())){
             e.setUniqueId(UUID.fromString(data.getUUID()));
         }

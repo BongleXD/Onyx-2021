@@ -8,6 +8,10 @@ import org.bukkit.inventory.ItemStack;
 
 public interface NMS {
 
+    Hologram newInstance(Location loc, String... lines);
+
+    Hologram newInstance(Location loc);
+
     void sendActionBar(Player p, String message);
 
     Channel getChannel(Player p);
