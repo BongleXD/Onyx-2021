@@ -1,11 +1,10 @@
-name: NewCraftSystem
+name: Onyx
 version: ${project.version}
-main: cn.newcraft.system.bukkit.Main
+main: net.blastmc.onyx.bukkit.Main
 prefix: NewCraftSystem
 softdepend:
   - PlaceholderAPI
   - LuckPerms
 authors:
   - Hello_Han
-  - May_Block
-description: NewCraft 核心
+description: BlastMC 核心

@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.newcraft.system</groupId>
-    <artifactId>newcraftsystem</artifactId>
+    <groupId>net.blastmc.onyx</groupId>
+    <artifactId>onyx</artifactId>
     <version>0.4.2</version>
     <packaging>jar</packaging>
 
-    <name>NewCraftSystem</name>
-    <description>NewCraft-Core</description>
+    <name>Onyx</name>
+    <description>核心</description>
 
     <properties>
         <java.version>1.8</java.version>

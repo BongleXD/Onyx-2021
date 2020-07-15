@@ -1,4 +1,4 @@
-main: cn.newcraft.system.bungee.Main
+main: net.blastmc.onyx.bungee.Main
 author: Hello_Han
-name: NewCraftSystem
+name: Onyx
 version: ${project.version}
