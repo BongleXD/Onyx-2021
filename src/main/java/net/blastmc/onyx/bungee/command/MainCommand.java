@@ -18,7 +18,6 @@ public class MainCommand extends Command {
                 DataConfig.cfg.reload();
                 LobbyConfig.cfg.reload();
                 SkinConfig.cfg.reload();
-                PunishConfig.cfg.reload();
                 sender.sendMessage("§a配置文件已重置！");
             }
         }

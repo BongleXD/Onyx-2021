@@ -112,18 +112,18 @@
             <systemPath>${basedir}/lib/Paper-1.12.2-b1618.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>cn.newcraft.spigot</groupId>
-            <artifactId>newcraftspigot-api</artifactId>
+            <groupId>net.blastmc.spigot</groupId>
+            <artifactId>potatospigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/NewCraftSpigot-1.8.8.jar</systemPath>
+            <systemPath>${basedir}/lib/PotatoSpigot-1.8.8.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>cn.newcraft.spigot</groupId>
-            <artifactId>newcraftspigot-server</artifactId>
+            <groupId>net.blastmc.spigot</groupId>
+            <artifactId>potatospigot-server</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/NewCraftSpigot-1.8.8.jar</systemPath>
+            <systemPath>${basedir}/lib/PotatoSpigot-1.8.8.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
