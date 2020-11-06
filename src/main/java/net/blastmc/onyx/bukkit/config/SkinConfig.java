@@ -5,7 +5,7 @@ public class SkinConfig extends ConfigManager{
     public static SkinConfig cfg;
 
     public SkinConfig() {
-        super("skins", "plugins/BlastMC");
+        super("skins", "plugins/Onyx");
     }
 
     public static void init(){

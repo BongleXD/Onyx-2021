@@ -5,7 +5,7 @@ public class TagConfig extends ConfigManager {
     public static TagConfig cfg;
 
     public TagConfig() {
-        super("tag", "plugins/BlastMC");
+        super("tag", "plugins/Onyx");
     }
 
     public static void init(){

@@ -27,7 +27,7 @@ public class ClaimData {
     private void putData(){
         boolean b = sql.checkDataExists("claim_data", "pid", pid);
         if(b){
-            claimList = sql.getColumnData("claim_data", "pid", pid, 3);
+            claimList = sql.getColumnData("claim_data", "pid", pid, 2);
         }
     }
 
@@ -46,9 +46,11 @@ public class ClaimData {
     }
 
     public void saveData(boolean destroy){
-        newClaim.forEach(level -> {
-            sql.insertData("claim_data", new Object[]{"pid", "level"}, new Object[]{pid, level});
-        });
+        for (int level : newClaim){
+            sql.insertData("claim_data",
+                    new SQLHelper.SqlValue("pid", pid),
+                    new SQLHelper.SqlValue("level", level));
+        }
         if(destroy){
             dataMap.remove(pid);
         }

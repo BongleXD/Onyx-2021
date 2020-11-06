@@ -5,7 +5,7 @@ public class SpawnConfig extends ConfigManager{
     public static SpawnConfig cfg;
 
     public SpawnConfig() {
-        super("spawn", "plugins/BlastMC");
+        super("spawn", "plugins/Onyx");
     }
 
     public static void init(){

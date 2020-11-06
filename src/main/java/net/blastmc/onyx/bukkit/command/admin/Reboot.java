@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.api.SystemAPI;
+import net.blastmc.onyx.bukkit.api.Onyx;
 import net.blastmc.onyx.bukkit.util.Method;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
 import net.blastmc.onyx.bukkit.util.interact.TitleUtil;
@@ -102,6 +102,6 @@ public class Reboot extends CommandManager {
     }
 
     private void shutdown(Player p, String reason) {
-        SystemAPI.getApi().kickToLobby(Main.getInstance(), p, BungeeConfig.cfg.getYml().getString("settings.lobby-servers"), BungeeConfig.cfg.getYml().getString("settings.lobby-server-name"), reason);
+        Onyx.getApi().kickToLobby(Main.getInstance(), p, BungeeConfig.cfg.getYml().getString("settings.lobby-servers"), BungeeConfig.cfg.getYml().getString("settings.lobby-server-name"), reason);
     }
 }

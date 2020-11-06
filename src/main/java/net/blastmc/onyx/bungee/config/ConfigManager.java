@@ -16,7 +16,7 @@ public class ConfigManager {
         File file = new File(Main.getInstance().getDataFolder() + "/" + name + ".yml");
         this.file = file;
         if(!file.getParentFile().exists()){
-            file.mkdirs();
+            file.getParentFile().mkdirs();
         }
         if(!file.exists()) {
             try {

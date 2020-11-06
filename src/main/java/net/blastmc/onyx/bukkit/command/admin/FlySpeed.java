@@ -16,6 +16,7 @@ public class FlySpeed extends CommandManager {
     public void reset(CommandSender sender, String[] args){
         Player p = (Player) sender;
         p.setFlySpeed((float) 0.1);
+        p.sendMessage("§a已将你的飞行速度修改为默认！");
     }
 
     @Cmd(arg = "<integer>", perm = "onyx.command.flyspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)

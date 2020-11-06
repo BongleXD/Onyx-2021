@@ -28,8 +28,8 @@ public class Nick extends CommandManager {
         this.setPermission("onyx.command.nick");
     }
 
-    @Cmd(coolDown = 5000, perm = "onyx.command.nick", only = CommandOnly.PLAYER)
-    public void rank(CommandSender sender, String[] args){
+    @Cmd(arg = "rank", coolDown = 5000, perm = "onyx.command.nick", only = CommandOnly.PLAYER)
+    public void select(CommandSender sender, String[] args){
         Player p = (Player) sender;
         if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME || Main.getInstance().getConfig().getBoolean("disable-nick")){
             p.sendMessage("§c请移步至大厅进行昵称修改！");
@@ -42,6 +42,20 @@ public class Nick extends CommandManager {
         }
     }
 
+    @Cmd(coolDown = 5000, perm = "onyx.command.nick", only = CommandOnly.PLAYER)
+    public void rank(CommandSender sender, String[] args){
+        Player p = (Player) sender;
+        if(Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME || Main.getInstance().getConfig().getBoolean("disable-nick")){
+            p.sendMessage("§c请移步至大厅进行昵称修改！");
+            return;
+        }
+        if(p.hasPermission("onyx.nick.staff")){
+            openAdminMenu(p);
+        }else{
+            openNotificationMenu(p);
+        }
+    }
+
     @Cmd(coolDown = 5000, arg = "<value>", perm = "onyx.command.nick", only = CommandOnly.PLAYER)
     public void skin(CommandSender sender, String[] args){
         Player p = (Player) sender;
@@ -49,13 +63,13 @@ public class Nick extends CommandManager {
             p.sendMessage("§c请移步至大厅进行昵称修改！");
             return;
         }
-        boolean b = !p.hasPermission("onyx.nick.staff") && (args[0].equalsIgnoreCase("self") || args[0].equalsIgnoreCase("mvp_plus"));
+        boolean b = !p.hasPermission("onyx.nick.staff") && (args[0].equalsIgnoreCase("self") || args[0].equalsIgnoreCase("svip_plus"));
         List<String> ranks = Lists.newArrayList();
         ranks.add("default");
         ranks.add("vip");
         ranks.add("vip_plus");
-        ranks.add("mvp");
-        ranks.add("mvp_plus");
+        ranks.add("svip");
+        ranks.add("svip_plus");
         ranks.add("self");
         if(ranks.contains(args[0]) && !b){
             switch (args[0]){
@@ -68,11 +82,11 @@ public class Nick extends CommandManager {
                 case "vip_plus":
                     p.sendMessage("§a你的昵称会员等级以设置为 §aVIP§6+§a！");
                     break;
-                case "mvp":
-                    p.sendMessage("§a你的昵称会员等级以设置为 §bMVP§a！");
+                case "svip":
+                    p.sendMessage("§a你的昵称会员等级以设置为 §bSVIP§a！");
                     break;
-                case "mvp_plus":
-                    p.sendMessage("§a你的昵称会员等级以设置为 §bMVP§c+§a！");
+                case "svip_plus":
+                    p.sendMessage("§a你的昵称会员等级以设置为 §bSVIP§c+§a！");
                     break;
                 case "self":
                     p.sendMessage("§a你的昵称会员等级将继承于你目前的会员等级！");
@@ -171,7 +185,7 @@ public class Nick extends CommandManager {
                                 .create());
                 return;
             }
-            if(Main.getSQL().checkDataExists("player_data", "player_name", name)){
+            if(Main.getSQL().checkDataExists("player_data", "name", name)){
                 Main.getNMS().openBookMenu(p,
                         new BookBuilder("name_error")
                                 .addText(new TextBuilder("注意！你不能将" + name + "用作你的昵称！\n").build())
@@ -225,11 +239,11 @@ public class Nick extends CommandManager {
             case "vip_plus":
                 prefix = "§a[VIP§6+§a] ";
                 break;
-            case "mvp":
-                prefix = "§b[MVP] ";
+            case "svip":
+                prefix = "§b[SVIP] ";
                 break;
-            case "mvp_plus":
-                prefix = "§b[MVP§c+§b] ";
+            case "svip_plus":
+                prefix = "§b[SVIP§c+§b] ";
                 break;
             case "self":
                 prefix = "self";
@@ -272,7 +286,7 @@ public class Nick extends CommandManager {
             return;
         }
         String name = randomName();
-        if(Main.getSQL().checkDataExists("player_data", "player_name", name)){
+        if(Main.getSQL().checkDataExists("player_data", "name", name)){
             name = randomName();
         }
         boolean b = true;
@@ -316,16 +330,27 @@ public class Nick extends CommandManager {
                                     .setClick(ClickEvent.Action.RUN_COMMAND, "/nick " + args[0] + " " + args[1] + " random")
                                     .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 重新生成昵称")
                                     .build())
-                            .addText(new TextBuilder("\n\n§n昵称不会马上生效而是在§l游§l戏§0中生效。")
+                            .addText(new TextBuilder("\n\n§n昵称不会马上生效而是在§0§l游§0§l戏§0中生效。")
                                     .build())
                             .create());
         }
     }
 
+    private void openNotificationMenu(Player p){
+        Main.getNMS().openBookMenu(p,
+                new BookBuilder("rank")
+                        .addText(new TextBuilder("昵称功能将允许你使用不同的用户名，使得其他玩家无法立即认出你。\n\n所有规则仍将适用，你仍可以被举报并且你的昵称记录将被保存。\n").build())
+                        .addText(new TextBuilder("\n§0§n➤ 我明白了，开始设定我的\n§0§n昵称吧！")
+                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick rank")
+                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 进行昵称修改")
+                                .build())
+                        .create());
+    }
+
     private void openNormalMenu(Player p){
         Main.getNMS().openBookMenu(p,
                 new BookBuilder("rank")
-                        .addText(new TextBuilder("帮助你设置昵称！\n首先，你需要选择你想要显示\n的§l会员等级§8。\n").build())
+                        .addText(new TextBuilder("帮助你设置昵称！\n首先，你需要选择你想要显示\n的§l会员等级§0。\n").build())
                         .addText(new TextBuilder("\n§l➤ §7默认")
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick default")
                                 .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §7默认")
@@ -338,9 +363,9 @@ public class Nick extends CommandManager {
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick vip_plus")
                                 .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §aVIP§6+")
                                 .build())
-                        .addText(new TextBuilder("\n§l➤ §bMVP")
-                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick mvp")
-                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bMVP")
+                        .addText(new TextBuilder("\n§l➤ §bSVIP")
+                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick svip")
+                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bSVIP")
                                 .build())
                         .create());
     }
@@ -348,7 +373,7 @@ public class Nick extends CommandManager {
     private void openAdminMenu(Player p){
         Main.getNMS().openBookMenu(p,
                 new BookBuilder("rank")
-                        .addText(new TextBuilder("帮助你设置昵称！\n首先，你需要选择你想要显示\n的§l会员等级§8。\n").build())
+                        .addText(new TextBuilder("帮助你设置昵称！\n首先，你需要选择你想要显示\n的§l会员等级§0。\n").build())
                         .addText(new TextBuilder("\n§l➤ §7默认")
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick default")
                                 .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §7默认")
@@ -361,13 +386,13 @@ public class Nick extends CommandManager {
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick vip_plus")
                                 .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §aVIP§6+")
                                 .build())
-                        .addText(new TextBuilder("\n§l➤ §bMVP")
-                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick mvp")
-                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bMVP")
+                        .addText(new TextBuilder("\n§l➤ §bSVIP")
+                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick svip")
+                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bSVIP")
                                 .build())
-                        .addText(new TextBuilder("\n§l➤ §bMVP§c+")
-                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick mvp_plus")
-                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bMVP§c+")
+                        .addText(new TextBuilder("\n§l➤ §bSVIP§c+")
+                                .setClick(ClickEvent.Action.RUN_COMMAND, "/nick svip_plus")
+                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bSVIP§c+")
                                 .build())
                         .addText(new TextBuilder("\n§l➤ §0不更换会员等级")
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick self")

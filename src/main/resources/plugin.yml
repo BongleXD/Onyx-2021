@@ -1,10 +1,8 @@
 name: Onyx
 version: ${project.version}
 main: net.blastmc.onyx.bukkit.Main
-prefix: NewCraftSystem
+prefix: Onyx
 softdepend:
   - PlaceholderAPI
-  - LuckPerms
-authors:
-  - Hello_Han
+author: Hello_Han
 description: BlastMC 核心

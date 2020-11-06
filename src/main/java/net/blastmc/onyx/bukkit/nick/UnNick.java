@@ -12,7 +12,7 @@ public class UnNick extends CommandManager {
 
     public UnNick() {
         super("unnick", "昵称修改", "/unnick", "昵称修改");
-        this.setPermission("ncs.command.nick");
+        this.setPermission("onyx.command.nick");
     }
 
     @Cmd(coolDown = 5000, perm = "onyx.command.nick", only = CommandOnly.PLAYER)
@@ -24,7 +24,7 @@ public class UnNick extends CommandManager {
         }
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         if(prof.isNicked()) {
-            if(p.hasPermission("ncs.nick.staff")) {
+            if(p.hasPermission("onyx.nick.staff")) {
                 Main.getNMS().restoreName(p);
             }
             prof.setNicked(false);

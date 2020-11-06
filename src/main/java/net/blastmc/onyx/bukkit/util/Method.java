@@ -183,7 +183,7 @@ public class Method {
     public static void setSkin(Player p, String skinName){
         ByteArrayDataOutput b = ByteStreams.newDataOutput();
         b.writeUTF("CHANGE_SKIN");
-        b.writeUTF((String) Main.getSQL().getData("player_data", "uuid", p.getUniqueId().toString(),"player_name").get(0));
+        b.writeUTF((String) Main.getSQL().getData("player_data", "uuid", p.getUniqueId().toString(),"name").get(0));
         b.writeUTF(skinName);
         p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
     }
@@ -213,11 +213,11 @@ public class Method {
             return getTagData(p).getPriority();
         }
         switch (prof.getNickPrefix()) {
-            case "§b[MVP§c+§b] ":
-                priority = TagData.getData("mvp_plus").getPriority();
+            case "§b[SVIP§c+§b] ":
+                priority = TagData.getData("svip_plus").getPriority();
                 break;
-            case "§b[MVP] ":
-                priority = TagData.getData("mvp").getPriority();
+            case "§b[SVIP] ":
+                priority = TagData.getData("svip").getPriority();
                 break;
             case "§a[VIP§6+§a] ":
                 priority = TagData.getData("vip_plus").getPriority();

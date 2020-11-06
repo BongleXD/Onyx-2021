@@ -22,7 +22,7 @@ public class MainCommand extends CommandManager{
 
     @Cmd
     public void mainCommand(CommandSender sender, String[] args){
-        sender.sendMessage("§9" + PluginInfo.getPlugin() + " §e由 §e" + PluginInfo.getAuthor() + " §e编写， 当前插件版本 §b" + PluginInfo.getVersion());
+        sender.sendMessage("§9" + PluginInfo.getPlugin() + " §e由 §a" + PluginInfo.getAuthor() + " §e编写， 当前插件版本 §b" + PluginInfo.getVersion());
     }
 
     @Cmd(arg = "help", perm = "onyx.command.main.help")

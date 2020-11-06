@@ -5,7 +5,7 @@ public class SettingConfig extends ConfigManager {
     public static SettingConfig cfg;
 
     public SettingConfig() {
-        super("setting", "plugins/BlastMC");
+        super("setting", "plugins/Onyx");
     }
 
     public static void init(){

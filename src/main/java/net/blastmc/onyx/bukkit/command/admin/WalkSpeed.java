@@ -11,6 +11,13 @@ public class WalkSpeed extends CommandManager {
         super("walkspeed", "行走速度", "/walkspeed [玩家] <1-10>", "行走速度");
     }
 
+    @Cmd(perm = "onyx.command.walkspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
+    public void reset(CommandSender sender, String[] args){
+        Player p = (Player) sender;
+        p.setFlySpeed((float) 0.2);
+        p.sendMessage("§a已将你的行走速度修改为默认！");
+    }
+
     @Cmd(arg = "<integer>", perm = "onyx.command.walkspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
     public void set(CommandSender sender, String[] args){
         Player p = (Player) sender;

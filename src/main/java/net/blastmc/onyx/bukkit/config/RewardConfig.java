@@ -5,7 +5,7 @@ public class RewardConfig extends ConfigManager{
     public static RewardConfig cfg;
 
     public RewardConfig() {
-        super("rewards", "plugins/BlastMC");
+        super("rewards", "plugins/Onyx");
     }
 
     public static void init(){

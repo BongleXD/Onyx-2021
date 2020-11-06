@@ -19,7 +19,6 @@ import java.util.UUID;
 public class PlayerProfile {
 
     private String pid;
-    private UUID uuid;
     private int level;
     private int xp;
     private double xpBoost;
@@ -36,9 +35,8 @@ public class PlayerProfile {
     private static SQLHelper sql = Main.getSQL();
     private static List<PlayerProfile> vanishs = Lists.newArrayList();
 
-    public PlayerProfile(String pid, UUID uuid, int level, int xp, double xpBoost, double coinBoost, boolean vanish, boolean nicked, String nickName, String nickPrefix, String nickSkin, String secondPasswd, String prefix, String suffix) {
+    public PlayerProfile(String pid, int level, int xp, double xpBoost, double coinBoost, boolean vanish, boolean nicked, String nickName, String nickPrefix, String nickSkin, String secondPasswd, String prefix, String suffix) {
         this.pid = pid;
-        this.uuid = uuid;
         this.level = level;
         this.xp = xp;
         this.xpBoost = xpBoost;
@@ -61,26 +59,24 @@ public class PlayerProfile {
     }
 
     private void putData() {
-        List list = sql.getData("player_profile", "pid", pid, "uuid", "net_level", "net_xp", "xp_boost", "coin_boost", "vanish", "nicked", "nick_name", "nick_prefix", "nick_skin", "second_passwd", "prefix", "suffix");
-        this.uuid = UUID.fromString((String) list.get(0));
-        this.level = (int) list.get(1);
-        this.xp = (int) list.get(2);
-        this.xpBoost = (double) list.get(3);
-        this.coinBoost = (double) list.get(4);
-        this.vanish = (int) list.get(5) != 0;
-        this.nicked = (int) list.get(6) != 0;
-        this.nickName = (String) list.get(7);
-        this.nickPrefix = (String) list.get(8);
-        this.nickSkin = (String) list.get(9);
-        this.secondPasswd = (String) list.get(10);
-        this.prefix = (String) list.get(11);
-        this.suffix = (String) list.get(12);
+        List list = sql.getData("player_profile", "pid", pid, "net_level", "net_xp", "xp_boost", "coin_boost", "vanish", "nicked", "nick_name", "nick_prefix", "nick_skin", "second_passwd", "prefix", "suffix");
+        this.level = (int) list.get(0);
+        this.xp = (int) list.get(1);
+        this.xpBoost = (double) list.get(2);
+        this.coinBoost = (double) list.get(3);
+        this.vanish = (int) list.get(4) != 0;
+        this.nicked = (int) list.get(5) != 0;
+        this.nickName = (String) list.get(6);
+        this.nickPrefix = (String) list.get(7);
+        this.nickSkin = (String) list.get(8);
+        this.secondPasswd = (String) list.get(9);
+        this.prefix = (String) list.get(10);
+        this.suffix = (String) list.get(11);
     }
 
     public static void init() {
         sql.create("player_profile",
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
-                new SQLHelper.Value(SQLHelper.ValueType.STRING, "uuid"),
                 new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "net_level"),
                 new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "net_xp"),
                 new SQLHelper.Value(SQLHelper.ValueType.DECIMAL, "xp_boost"),
@@ -100,11 +96,11 @@ public class PlayerProfile {
     }
 
     public UUID getUUID() {
-        return this.uuid;
+        return PlayerData.getData(pid).getUUID();
     }
 
     public void addLevel(int value) {
-        Bukkit.getPluginManager().callEvent(new PlayerLevelUPEvent(Bukkit.getPlayer(uuid), level, level + value));
+        Bukkit.getPluginManager().callEvent(new PlayerLevelUPEvent(Bukkit.getPlayer(getUUID()), level, level + value));
         this.level = this.level + value;
     }
 
@@ -143,7 +139,7 @@ public class PlayerProfile {
     public void addXp(int value) {
         double d = (double) value * xpBoost;
         value = (int) d;
-        Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(Bukkit.getPlayer(uuid), value, xpBoost));
+        Bukkit.getPluginManager().callEvent(new PlayerXpGainEvent(Bukkit.getPlayer(getUUID()), value, xpBoost));
         this.xp = value + xp;
         checkLevelUp();
     }
@@ -239,17 +235,17 @@ public class PlayerProfile {
     }
 
     public void checkStatus() {
-        if ((isVanish() && isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (isVanish() && isNicked() && Bukkit.getPlayer(uuid).hasPermission("onyx.nick.stuff"))) {
-            ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
-            ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f你目前§c已设置昵称, 隐身", -1);
+        if ((isVanish() && isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (isVanish() && isNicked() && Bukkit.getPlayer(getUUID()).hasPermission("onyx.nick.staff"))) {
+            ActionBarUtil.cancel(Bukkit.getPlayer(getUUID()));
+            ActionBarUtil.sendBar(Bukkit.getPlayer(getUUID()), "§f你目前§c已设置昵称, 隐身", -1);
         } else if (isVanish()) {
-            ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
-            ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f你目前§c已隐身", -1);
-        } else if ((isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (isNicked() && Bukkit.getPlayer(uuid).hasPermission("onyx.nick.stuff"))) {
-            ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
-            ActionBarUtil.sendBar(Bukkit.getPlayer(uuid), "§f你目前§c已设置昵称", -1);
+            ActionBarUtil.cancel(Bukkit.getPlayer(getUUID()));
+            ActionBarUtil.sendBar(Bukkit.getPlayer(getUUID()), "§f你目前§c已隐身", -1);
+        } else if ((isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (isNicked() && Bukkit.getPlayer(getUUID()).hasPermission("onyx.nick.staff"))) {
+            ActionBarUtil.cancel(Bukkit.getPlayer(getUUID()));
+            ActionBarUtil.sendBar(Bukkit.getPlayer(getUUID()), "§f你目前§c已设置昵称", -1);
         } else {
-            ActionBarUtil.cancel(Bukkit.getPlayer(uuid));
+            ActionBarUtil.cancel(Bukkit.getPlayer(getUUID()));
         }
     }
 
@@ -279,7 +275,6 @@ public class PlayerProfile {
 
     public void saveData(boolean destroy) {
         sql.putData("player_profile", "pid", this.pid,
-                new SQLHelper.SqlValue("uuid", this.uuid),
                 new SQLHelper.SqlValue("net_level", this.level),
                 new SQLHelper.SqlValue("net_xp", this.xp),
                 new SQLHelper.SqlValue("xp_boost", this.xpBoost),
@@ -307,7 +302,7 @@ public class PlayerProfile {
                     priority = RankData.getData(ranks).getPriority();
                 }
             }
-            if (Bukkit.getPlayer(uuid).hasPermission((RankData.getData(ranks).getPerm()))) {
+            if (Bukkit.getPlayer(getUUID()).hasPermission((RankData.getData(ranks).getPerm()))) {
                 if (priority == -1 || RankData.getData(ranks).getPriority() < priority) {
                     rank = RankData.getData(ranks);
                     priority = RankData.getData(ranks).getPriority();
@@ -326,14 +321,14 @@ public class PlayerProfile {
         if (this == profObj) {
             return true;
         }
-        return profObj.uuid.equals(this.uuid) && profObj.pid.equals(this.pid);
+        return profObj.getUUID().equals(this.getUUID()) && profObj.pid.equals(this.pid);
     }
 
 
     @Override
     public int hashCode() {
         int result = pid.hashCode();
-        result = 17 * result + uuid.hashCode();
+        result = 17 * result + getUUID().hashCode();
         return result;
     }
 

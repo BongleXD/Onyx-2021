@@ -11,7 +11,7 @@ public class PlayerData {
 
     private static SQLHelper sql;
     private String pid;
-    private String uuid;
+    private UUID uuid;
     private String name;
     private String ipLastJoin;
     private String lastLeaveMills;
@@ -24,7 +24,7 @@ public class PlayerData {
     private static HashMap<String, String> pidMap = new HashMap<>();
     private static HashMap<String, PlayerData> dataMap = new HashMap<>();
 
-    public PlayerData(String pid, String uuid, String name, String ipLastJoin, String lastLeaveMills, String rejoinServer, String guild, String status, String serverJoined, int staySecs){
+    public PlayerData(String pid, UUID uuid, String name, String ipLastJoin, String lastLeaveMills, String rejoinServer, String guild, String status, String serverJoined, int staySecs){
         this.pid = pid;
         this.uuid = uuid;
         this.name = name;
@@ -41,7 +41,7 @@ public class PlayerData {
     public PlayerData(String pid) {
         this.pid = pid;
         putData();
-        pidMap.put(uuid, this.pid);
+        pidMap.put(uuid.toString(), this.pid);
         dataMap.put(pid, this);
     }
 
@@ -53,7 +53,7 @@ public class PlayerData {
         sql.create("player_data",
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "uuid"),
-                new SQLHelper.Value(SQLHelper.ValueType.STRING, "player_name"),
+                new SQLHelper.Value(SQLHelper.ValueType.STRING, "name"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "ip_last_join"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "last_leave_mills"),
                 new SQLHelper.Value(SQLHelper.ValueType.INTEGER, "stay_secs"),
@@ -67,7 +67,7 @@ public class PlayerData {
     private void putData() {
         List list = sql.getData("player_data", "pid", pid,
                 "uuid",
-                "player_name",
+                "name",
                 "ip_last_join",
                 "last_leave_mills",
                 "rejoin_server",
@@ -75,7 +75,7 @@ public class PlayerData {
                 "status",
                 "server_joined",
                 "stay_secs");
-        this.uuid = (String) list.get(0);
+        this.uuid = UUID.fromString((String) list.get(0));
         this.name = (String) list.get(1);
         this.ipLastJoin = (String) list.get(2);
         this.lastLeaveMills = (String) list.get(3);
@@ -90,7 +90,7 @@ public class PlayerData {
         return pid;
     }
 
-    public String getUUID() {
+    public UUID getUUID() {
         return uuid;
     }
 
@@ -174,6 +174,23 @@ public class PlayerData {
         this.joinTime = joinTime;
     }
 
+    public static String getOfflineName(String pid){
+        try {
+            return (String) sql.getData("player_data", "pid", pid, "name").get(0);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    public static UUID getOfflineUUID(String pid){
+        try {
+            return UUID.fromString((String) sql.getData("player_data", "pid", pid, "uuid").get(0));
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+
     public static PlayerData getData(String pid){
         return dataMap.getOrDefault(pid, null);
     }
@@ -219,7 +236,7 @@ public class PlayerData {
 
     public static PlayerData initFromName(String name) {
         try {
-            String pid = (String) sql.getData("player_data", "player_name", name, "pid").get(0);
+            String pid = (String) sql.getData("player_data", "name", name, "pid").get(0);
             if (pid != null) {
                 pidMap.put(name, pid);
                 return new PlayerData(pid);
@@ -237,8 +254,8 @@ public class PlayerData {
     public void saveData(boolean destroy){
         refreshStaySecs();
         sql.putData("player_data", "pid", this.pid,
-                new SQLHelper.SqlValue("uuid", this.uuid),
-                new SQLHelper.SqlValue("player_name", this.name),
+                new SQLHelper.SqlValue("uuid", this.uuid.toString()),
+                new SQLHelper.SqlValue("name", this.name),
                 new SQLHelper.SqlValue("ip_last_join", this.ipLastJoin),
                 new SQLHelper.SqlValue("last_leave_mills", this.lastLeaveMills),
                 new SQLHelper.SqlValue("rejoin_server", this.rejoinServer),
@@ -248,7 +265,7 @@ public class PlayerData {
                 new SQLHelper.SqlValue("stay_secs", this.getStaySecs()));
         if(destroy){
             dataMap.remove(pid);
-            pidMap.remove(uuid);
+            pidMap.remove(uuid.toString());
             pidMap.remove(name);
         }
     }

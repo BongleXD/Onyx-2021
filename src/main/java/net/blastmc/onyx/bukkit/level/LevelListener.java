@@ -62,7 +62,7 @@ public class LevelListener implements Listener {
         p.sendMessage("     §7你目前的 §6BlastMC §7等级 为 §aLv." + e.getNewLevel());
         p.sendMessage("");
         if(xpMap.containsKey(newLevel) && coinMap.containsKey(newLevel)){
-            p.sendMessage("      §b" + xpMap.get(newLevel) + "x §7经验, §6" + coinMap.get(newLevel) + "x §7工艺币加成 §a已解锁！");
+            p.sendMessage("      §b" + xpMap.get(newLevel) + "x §7经验, §f" + coinMap.get(newLevel) + "x §7银粒加成 §a已解锁！");
             p.sendMessage("");
             profile.setXpBoost(xpMap.get(newLevel));
             profile.setCoinBoost(coinMap.get(newLevel));
@@ -71,7 +71,7 @@ public class LevelListener implements Listener {
             p.sendMessage("");
             profile.setXpBoost(xpMap.get(newLevel));
         }else if (coinMap.containsKey(newLevel)){
-            p.sendMessage("           §6" + coinMap.get(newLevel) + "x §7工艺币加成 §a已解锁！");
+            p.sendMessage("           §f" + coinMap.get(newLevel) + "x §7银粒加成 §a已解锁！");
             p.sendMessage("");
             profile.setCoinBoost(coinMap.get(newLevel));
         }
@@ -82,7 +82,7 @@ public class LevelListener implements Listener {
         }
         p.sendMessage("§9▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃");
         p.playSound(p.getLocation(), SoundUtil.LEVEL_UP, 1, 1);
-        TitleUtil.sendTitle(p, 10, 10, 10, "", "§6升级");
+        TitleUtil.sendTitle(p, 10, 10, 10, "§6升级", "");
     }
 
     @EventHandler

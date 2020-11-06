@@ -1,10 +1,12 @@
 package net.blastmc.onyx.shared.util;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
 import java.sql.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SQLHelper {
     
@@ -137,7 +139,7 @@ public class SQLHelper {
                     int i = 1;
                     while(true) {
                         try {
-                            list.add(rs.getObject(i + 1));
+                            list.add(rs.getObject(i));
                         }catch (SQLException ex){
                             break;
                         }
@@ -151,6 +153,24 @@ public class SQLHelper {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public boolean checkDataExists(String query){
+        boolean b = false;
+        try {
+            if(this.getConnection().isClosed()){
+                this.exeConn();
+            }
+            Statement s = this.getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                int count = rs.getInt(1);
+                b = count != 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return b;
     }
 
     public boolean checkDataExists(String table, String flag, String data){
@@ -169,6 +189,20 @@ public class SQLHelper {
             e.printStackTrace();
         }
         return b;
+    }
+
+    public ResultSet queryData(String query){
+        try {
+            if (conn.isClosed()) {
+                exeConn();
+            }
+            Statement s = conn.createStatement();
+            ResultSet rs = s.executeQuery(query);
+            return rs;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public List getData(String query, String data){
@@ -255,17 +289,38 @@ public class SQLHelper {
         }
     }
 
-    public void insertData(String table, Object[] data, Object[] value) {
+    public void insertData(String table, SqlValue... values) {
+        //Object[] data, Object[] value
         try {
-            PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + Arrays.toString(data).replace("[", "").replace("]", "") + ") VALUES (" +  Arrays.toString(value)
-                    .replace("[", "'")
-                    .replace("]", "'")
-                    .replace(", ", "', '") + ");");
+            if(this.getConnection().isClosed()){
+                this.exeConn();
+            }
+            PreparedStatement stmt = conn.prepareStatement(
+                    "INSERT INTO " + table +
+                            " (" + Joiner.on(", ").join(Arrays.stream(values).map(SqlValue::getData).collect(Collectors.toList())) + ") VALUES ('" +
+                            Joiner.on("', '").join(Arrays.stream(values).map(SqlValue::getValue).collect(Collectors.toList())) + "');");
             stmt.executeUpdate();
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public int countData(String query){
+        try {
+            if(this.getConnection().isClosed()){
+                this.exeConn();
+            }
+            Statement s = this.getConnection().createStatement();
+            ResultSet rs = s.executeQuery(query);
+            while (rs.next()) {
+                int count = rs.getInt(1);
+                return count;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public List<Object> getListData(String table, String flag, String flagData, String data) {

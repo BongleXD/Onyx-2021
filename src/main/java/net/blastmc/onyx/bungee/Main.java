@@ -5,6 +5,8 @@ import net.blastmc.onyx.bungee.command.*;
 import net.blastmc.onyx.bungee.config.*;
 import net.blastmc.onyx.bungee.listener.DataListener;
 import net.blastmc.onyx.bungee.listener.MessageListener;
+import net.blastmc.onyx.bungee.listener.PunishListener;
+import net.blastmc.onyx.bungee.punish.PunishManager;
 import net.blastmc.onyx.bungee.task.BroadcastTask;
 import net.blastmc.onyx.shared.PlayerData;
 import net.blastmc.onyx.shared.PluginInfo;
@@ -27,13 +29,12 @@ public class Main extends Plugin {
     @Override
     public void onLoad() {
         PluginInfo.init(this.getDescription().getVersion());
-        getProxy().getConsole().sendMessage(new TextComponent("§bNewCraftSystem-Bungee §7> §a加载中..."));
+        Log.getLogger().sendLog("§a读取中...");
     }
 
     @Override
     public void onEnable() {
         instance = this;
-        new MessageListener();
         regConfig();
         sql = new SQLHelper(MainConfig.cfg.getYml().getString("url"),
                 MainConfig.cfg.getYml().getString("user"),
@@ -41,6 +42,7 @@ public class Main extends Plugin {
                 MainConfig.cfg.getYml().getString("database"));
         PlayerData.putSQL(sql);
         BanData.init();
+        PunishManager.init();
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
         getProxy().getPluginManager().registerCommand(this, new Glist());
         getProxy().getPluginManager().registerCommand(this, new Skin());
@@ -76,6 +78,8 @@ public class Main extends Plugin {
 
     private void regListener(){
         new DataListener();
+        new MessageListener();
+        new PunishListener();
     }
 
 }

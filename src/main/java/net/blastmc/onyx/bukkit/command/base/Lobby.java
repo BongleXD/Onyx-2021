@@ -23,11 +23,6 @@ public class Lobby extends CommandManager {
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
             synchronized (this) {
                 Player p = (Player) sender;
-                Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
-                    if (p.isOnline()) {
-                        p.sendMessage("§c发生错误！ §7无法连接到主大厅！");
-                    }
-                }, 5 * 20);
                 PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
                 if (prof != null) {
                     prof.saveData(false);

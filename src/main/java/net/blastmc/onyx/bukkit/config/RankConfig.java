@@ -5,7 +5,7 @@ public class RankConfig extends ConfigManager {
     public static RankConfig cfg;
 
     public RankConfig() {
-        super("rank", "plugins/BlastMC");
+        super("rank", "plugins/Onyx");
     }
 
     public static void init(){

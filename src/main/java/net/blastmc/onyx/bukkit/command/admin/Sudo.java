@@ -9,7 +9,7 @@ public class Sudo extends CommandManager {
 
     public Sudo() {
         super("sudo", "强行执行指令", "/sudo <玩家> <指令...>", "执行");
-        this.setPermission("§c你需要 ADMIN 及以上的会员等级才能使用此指令！");
+        this.setPermissionMessage("§c你需要 ADMIN 及以上的会员等级才能使用此指令！");
     }
 
     @Cmd(arg = "<player> <value...>", perm = "onyx.command.sudo", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")

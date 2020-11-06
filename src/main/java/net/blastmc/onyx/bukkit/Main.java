@@ -15,6 +15,8 @@ import net.blastmc.onyx.bukkit.packet.PacketProtocol;
 import net.blastmc.onyx.bukkit.packet.AntiCrash;
 import net.blastmc.onyx.bukkit.proxy.ServerType;
 import net.blastmc.onyx.bukkit.support.v1_12_R1.v1_12_R1;
+import net.blastmc.onyx.bukkit.whitelist.Whitelist;
+import net.blastmc.onyx.bukkit.whitelist.WhitelistListener;
 import net.blastmc.onyx.shared.PlayerData;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import net.blastmc.onyx.bukkit.command.MainCommand;
@@ -171,6 +173,7 @@ public final class Main extends JavaPlugin {
         new CommandLimitListener();
         new ChatListener();
         new LevelListener();
+        new WhitelistListener();
     }
 
     private void regCommand(){
@@ -210,6 +213,8 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Nick(), this);
             CommandManager.regCommand(new UnNick(), this);
             CommandManager.regCommand(new Spawn(), this);
+            CommandManager.regCommand(new Whitelist(), this);
+            CommandManager.regCommand(new Ban(), this);
             if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
                 CommandManager.regCommand(new Lobby(), this);
             }
@@ -242,14 +247,7 @@ public final class Main extends JavaPlugin {
         BungeeConfig.init();
         SettingConfig.init();
         RankConfig.init();
-        SkinConfig.cfg.reload();
-        ChatConfig.cfg.reload();
-        SpawnConfig.cfg.reload();
-        TagConfig.cfg.reload();
-        SettingConfig.cfg.reload();
-        RankConfig.cfg.reload();
-        RewardConfig.cfg.reload();
-        BungeeConfig.cfg.reload();
+        WhitelistConfig.init();
     }
 
     private boolean checkPlugin(String name, boolean disable){

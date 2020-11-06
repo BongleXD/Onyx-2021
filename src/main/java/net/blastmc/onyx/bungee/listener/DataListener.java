@@ -1,5 +1,6 @@
 package net.blastmc.onyx.bungee.listener;
 
+import net.blastmc.onyx.bungee.punish.PunishManager;
 import net.blastmc.onyx.shared.PlayerData;
 import net.blastmc.onyx.shared.util.SQLHelper;
 import net.blastmc.onyx.bungee.SkinAPI;
@@ -19,7 +20,7 @@ public class DataListener implements Listener {
     public void onLogin(LoginEvent e) {
         String pid;
         try {
-            pid = (String) Main.getSQL().getData("player_data", "player_name", e.getConnection().getName(), "pid").get(0);
+            pid = (String) Main.getSQL().getData("player_data", "name", e.getConnection().getName(), "pid").get(0);
         }catch (NullPointerException ex){
             SkinAPI.getApi().setSkin(e.getConnection(), e.getConnection().getName());
             return;
@@ -27,6 +28,8 @@ public class DataListener implements Listener {
         String nickskin = (String) Main.getSQL().getData("player_profile", "pid", pid, "nick_skin").get(0);
         int i = (int) Main.getSQL().getData("player_profile", "pid", pid, "nicked").get(0);
         SkinAPI.getApi().setSkin(e.getConnection(), nickskin == null || nickskin.isEmpty() || i == 0 ? e.getConnection().getName() : nickskin);
+        PunishManager.getManager().checkBan(pid, e.getConnection());
+        PunishManager.getManager().checkMute(pid);
     }
 
     @EventHandler

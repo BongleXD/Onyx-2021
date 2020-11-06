@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.profile;
 
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.PlayerProfile;
-import net.blastmc.onyx.bukkit.api.SystemAPI;
+import net.blastmc.onyx.bukkit.api.Onyx;
 import net.blastmc.onyx.bukkit.api.event.PlayerInitEvent;
 import net.blastmc.onyx.bukkit.proxy.ServerType;
 import net.blastmc.onyx.bukkit.util.Method;
@@ -50,7 +50,7 @@ public class ProfileListener implements Listener {
         PlayerData data = PlayerData.init(p.getUniqueId(), p.getName());
         PlayerProfile prof;
         if (data != null) {
-            boolean b = Main.getSQL().checkDataExists("player_profile", "uuid", p.getUniqueId().toString());
+            boolean b = Main.getSQL().checkDataExists("player_profile", "pid", data.getPID());
             if (b) {
                 //load profile
                 prof = new PlayerProfile(data.getPID());
@@ -60,7 +60,6 @@ public class ProfileListener implements Listener {
                 //create new profile
                 prof = new PlayerProfile(
                         data.getPID(),
-                        p.getUniqueId(),
                         1,
                         0,
                         1.0,
@@ -145,7 +144,7 @@ public class ProfileListener implements Listener {
                 prof.setNickPrefix("");
                 prof.saveData(false);
                 p.sendMessage("§c有玩家使用了此昵称所以已经将你的昵称还原！");
-                SystemAPI.getApi().refreshTag(p);
+                Onyx.getApi().refreshTag(p);
             }
         }
 
@@ -247,7 +246,7 @@ public class ProfileListener implements Listener {
 
     private void checkUUID(AsyncPlayerConnectEvent e, OfflinePlayer off, PlayerData data){
         if(!off.getUniqueId().toString().equals(data.getUUID())){
-            e.setUniqueId(UUID.fromString(data.getUUID()));
+            e.setUniqueId(data.getUUID());
         }
     }
 

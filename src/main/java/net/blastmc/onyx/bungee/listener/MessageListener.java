@@ -53,10 +53,9 @@ public class MessageListener implements Listener {
                 if (channel.equals("BACK_LOBBY")) {
                     String lobby = in.readUTF();
                     String playerName = in.readUTF();
-                    Map<String, ServerInfo> servers = BungeeCord.getInstance().getServers();
                     List<String> list = LobbyConfig.cfg.getYml().getStringList("lobby." + lobby);
                     if(!list.isEmpty()){
-                        serverInfo(playerName, servers, list);
+                        serverInfo(playerName, list);
                         return;
                     }
                 }
@@ -72,21 +71,28 @@ public class MessageListener implements Listener {
         }
     }
 
-    private void serverInfo(String playerName, Map<String, ServerInfo> servers, List<String> list) {
-        ServerInfo server = BungeeCord.getInstance().getServerInfo(list.get(0));
-        int onlines = BungeeCord.getInstance().getServerInfo(list.get(0)).getPlayers().size();
-        for (String s : list) {
-            ServerInfo info = servers.get(s);
-            if (onlines > info.getPlayers().size()) {
-                server = info;
+    private void serverInfo(String playerName, List<String> list){
+        try {
+            ServerInfo server = BungeeCord.getInstance().getServerInfo(list.get(0));
+            int onlines = BungeeCord.getInstance().getServerInfo(list.get(0)).getPlayers().size();
+            for (String s : list) {
+                ServerInfo info = BungeeCord.getInstance().getServers().get(s);
+                if(info == null){
+                    continue;
+                }
+                if (onlines > info.getPlayers().size()) {
+                    server = info;
+                }
+                onlines = Math.min(onlines, info.getPlayers().size());
             }
-            onlines = Math.min(onlines, info.getPlayers().size());
+            if (server == null) {
+                return;
+            }
+            Main.getInstance().getProxy().getPlayer(playerName).sendMessage("§a正在将你传送至大厅 §7" + server.getName());
+            Main.getInstance().getProxy().getPlayer(playerName).connect(server);
+        }catch (Exception ex){
+            Main.getInstance().getProxy().getPlayer(playerName).sendMessage("§c无法传送到目标服务器！请联系管理员进行修复！");
         }
-        if (server == null) {
-            return;
-        }
-        Main.getInstance().getProxy().getPlayer(playerName).sendMessage("§a正在将你传送至大厅 §7" + server.getName());
-        Main.getInstance().getProxy().getPlayer(playerName).connect(server);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
