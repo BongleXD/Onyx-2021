@@ -3,7 +3,8 @@ package net.blastmc.onyx.bukkit.level;
 import net.blastmc.onyx.bukkit.api.PlayerProfile;
 import net.blastmc.onyx.bukkit.config.RewardConfig;
 import net.blastmc.onyx.bukkit.gui.PlayerGui;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
+import net.blastmc.onyx.shared.util.Method;
 import net.blastmc.onyx.bukkit.util.interact.ItemBuilder;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
@@ -35,7 +36,7 @@ public class RewardGui extends PlayerGui {
         int index = page * 14 - 14;
         int endIndex = Math.min(index + 14, size);
         for(; index < endIndex; index++){
-            Method.setInvItem(inv, getItem(Integer.parseInt((String) RewardConfig.cfg.getYml().getConfigurationSection("rewards").getKeys(false).toArray()[index])), row, column);
+            BukkitMethod.setInvItem(inv, getItem(Integer.parseInt((String) RewardConfig.cfg.getYml().getConfigurationSection("rewards").getKeys(false).toArray()[index])), row, column);
             column++;
             if(column == 9){
                 column = 2;
@@ -57,13 +58,13 @@ public class RewardGui extends PlayerGui {
                     .addLoreLine("§e切换到页面 " + (page - 1))
                     .toItemStack());
         }
-        Method.setInvItem(inv, new ItemBuilder(Material.DIAMOND_BLOCK)
+        BukkitMethod.setInvItem(inv, new ItemBuilder(Material.DIAMOND_BLOCK)
                 .setName("§a你目前的 §b经验 §a加成: " + profile.getXpBoost() + "x")
                 .addLoreLine("§8通过升级来提升 §b经验 §8加成")
                 .addLoreLine("")
                 .addLoreLine(getNextUnlockLevel(profile.getLevel(), BoostReward.XP))
                 .toItemStack(), 5, 3);
-        Method.setInvItem(inv, new ItemBuilder(Material.GOLD_BLOCK)
+        BukkitMethod.setInvItem(inv, new ItemBuilder(Material.GOLD_BLOCK)
                 .setName("§a你目前的 §f铁粒 §a加成: " + profile.getCoinBoost() + "x")
                 .addLoreLine("§8通过升级来提升 §f铁粒 §8加成")
                 .addLoreLine("")

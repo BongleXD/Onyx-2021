@@ -1,9 +1,9 @@
 package net.blastmc.onyx.bukkit.messaging;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.Method;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import net.blastmc.onyx.shared.util.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;

@@ -5,7 +5,7 @@ import net.blastmc.onyx.bukkit.api.PlayerProfile;
 import net.blastmc.onyx.bukkit.api.Onyx;
 import net.blastmc.onyx.bukkit.api.event.PlayerInitEvent;
 import net.blastmc.onyx.bukkit.proxy.ServerType;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.util.TeamAction;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
 import net.blastmc.onyx.shared.PlayerData;
@@ -44,7 +44,7 @@ public class ProfileListener implements Listener {
         Player p = e.getPlayer();
         for (PlayerProfile prof : PlayerProfile.getVanishs()) {
             if (prof.isVanish()) {
-                Method.vanishPlayer(Bukkit.getPlayer(prof.getUUID()), p, true);
+                BukkitMethod.vanishPlayer(Bukkit.getPlayer(prof.getUUID()), p, true);
             }
         }
         PlayerData data = PlayerData.init(p.getUniqueId(), p.getName());
@@ -83,17 +83,17 @@ public class ProfileListener implements Listener {
                         Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, "100");
                     String otherPriority = "100";
                     if (other != null) {
-                        otherPriority = Method.getTagPriority(online, other);
+                        otherPriority = BukkitMethod.getTagPriority(online, other);
                     }
                     Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, otherPriority);
                     //restore tag
                     Main.getNMS().changeNameTag(online, p, "§7[未注册] ", "", TeamAction.CREATE, "100");
                     if (other != null && p != online) {
-                        String suffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
+                        String suffix = PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getSuffix());
                         if (other.isVanish()) {
                             suffix = " §c[已隐身]";
                         }
-                        Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, suffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                        Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, suffix), TeamAction.CREATE, BukkitMethod.getTagPriority(online, other));
                     }
                 }
             }
@@ -103,7 +103,7 @@ public class ProfileListener implements Listener {
         if (prof.isVanish()) {
             PlayerProfile.addVanishPlayer(prof);
             for (Player online : Bukkit.getOnlinePlayers()) {
-                Method.vanishPlayer(p, online, true);
+                BukkitMethod.vanishPlayer(p, online, true);
             }
         }
 
@@ -114,21 +114,21 @@ public class ProfileListener implements Listener {
                     continue;
                 }
                 if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(p, prof));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(online, other));
                 //restore tag
-                String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
+                String suffix = PlaceholderAPI.setPlaceholders(p, BukkitMethod.getTagData(p).getSuffix());
                 if (prof.isVanish()) {
                     suffix = " §c[已隐身]";
                 }
-                String priority = Method.getTagPriority(p, prof);
-                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
+                String priority = BukkitMethod.getTagPriority(p, prof);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, BukkitMethod.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
                 if (p != online) {
-                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
+                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getSuffix());
                     if (other.isVanish()) {
                         otherSuffix = " §c[已隐身]";
                     }
-                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, BukkitMethod.getTagPriority(online, other));
                 }
             }
         }
@@ -180,27 +180,27 @@ public class ProfileListener implements Listener {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 PlayerProfile other = PlayerProfile.getDataFromUUID(online.getUniqueId());
                 if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(p, prof));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
                 //restore tag
-                String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
+                String suffix = PlaceholderAPI.setPlaceholders(p, BukkitMethod.getTagData(p).getSuffix());
                 if (prof.isVanish()) {
                     suffix = " §c[已隐身]";
                 }
-                String priority = Method.getTagPriority(p, prof);
-                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
+                String priority = BukkitMethod.getTagPriority(p, prof);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, BukkitMethod.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
                 if (other != null && p != online) {
-                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
+                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getSuffix());
                     if (other.isVanish()) {
                         otherSuffix = " §c[已隐身]";
                     }
-                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, BukkitMethod.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, BukkitMethod.getTagPriority(online, other));
                 }
             }
         }
         for (PlayerProfile other : PlayerProfile.getVanishs()) {
             if (other.isVanish()) {
-                Method.vanishPlayer(Bukkit.getPlayer(other.getUUID()), p, true);
+                BukkitMethod.vanishPlayer(Bukkit.getPlayer(other.getUUID()), p, true);
             }
         }
     }
@@ -216,8 +216,8 @@ public class ProfileListener implements Listener {
         if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(p, prof));
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(p, prof));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, BukkitMethod.getTagPriority(online, PlayerProfile.getDataFromUUID(online.getUniqueId())));
             }
         }
         PlayerProfile.removeVanishPlayer(prof);

@@ -70,6 +70,7 @@ public class Main extends Plugin {
         SkinConfig.init();
         MainConfig.init();
         BroadcastConfig.init();
+        PunishConfig.init();
     }
 
     public static Main getInstance(){

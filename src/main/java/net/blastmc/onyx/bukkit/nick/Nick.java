@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.nick;
 
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.util.interact.BookBuilder;
 import net.blastmc.onyx.bukkit.util.interact.SignGUI;
 import net.blastmc.onyx.bukkit.util.interact.TextBuilder;
@@ -128,7 +128,7 @@ public class Nick extends CommandManager {
                 p.sendMessage("§a你的皮肤已设置为 " + args[1] + "！");
                 break;
         }
-        Method.setSkin(p, args[1]);
+        BukkitMethod.setSkin(p, args[1]);
         if (!p.hasPermission("onyx.nick.staff")) {
             p.chat("/nick " + args[0] + " " + args[1] + " random");
             return;

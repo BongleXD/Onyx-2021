@@ -1,8 +1,9 @@
 package net.blastmc.onyx.bukkit.command.admin;
 
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import com.google.common.base.Joiner;
+import net.blastmc.onyx.shared.util.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

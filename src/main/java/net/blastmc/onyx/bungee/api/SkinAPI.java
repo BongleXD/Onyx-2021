@@ -1,4 +1,4 @@
-package net.blastmc.onyx.bungee;
+package net.blastmc.onyx.bungee.api;
 
 import net.blastmc.onyx.bungee.config.SkinConfig;
 import com.google.gson.Gson;

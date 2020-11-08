@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bukkit.command;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.util.plugin.PluginManager;
 import net.blastmc.onyx.shared.PluginInfo;
 import com.google.common.base.Joiner;
@@ -94,7 +94,7 @@ public class MainCommand extends CommandManager{
             sender.sendMessage("§c插件 " + targetPlugin + " §c已经加载到了服务器！");
             return;
         }
-        String name = Method.consolidateStrings(args, 2);
+        String name = BukkitMethod.consolidateStrings(args, 2);
         try {
             sender.sendMessage("§e插件 " + name + " §e开始载入服务器中...");
             sender.sendMessage(PluginManager.load(name));

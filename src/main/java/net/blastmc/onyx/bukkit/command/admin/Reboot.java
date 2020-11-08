@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.Onyx;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
 import net.blastmc.onyx.bukkit.util.interact.TitleUtil;
 import net.blastmc.onyx.bukkit.command.CommandManager;
@@ -26,8 +26,8 @@ public class Reboot extends CommandManager {
 
     @Cmd(arg = "stop", aliases = "暂停", perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void stop(CommandSender sender, String[] args){
-        if(Method.getTask("reboot") != null){
-            Method.removeTask("reboot");
+        if(BukkitMethod.getTask("reboot") != null){
+            BukkitMethod.removeTask("reboot");
             sender.sendMessage("§c关闭服务器操作被强行终止！");
             for(Player online : Bukkit.getOnlinePlayers()){
                 TitleUtil.sendTitle(online, 3, 15, 3, "§c关闭操作被终止", "");
@@ -62,7 +62,7 @@ public class Reboot extends CommandManager {
 
     @Cmd(arg = "confirm <integer> <value>", perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void rebootConfirmReason(CommandSender sender, String[] args){
-        if(Method.getTask("reboot") != null){
+        if(BukkitMethod.getTask("reboot") != null){
             sender.sendMessage("§c服务器重启执行中！");
             return;
         }
@@ -98,7 +98,7 @@ public class Reboot extends CommandManager {
                 i--;
             }
         }.runTaskTimer(Main.getInstance(), 0L, 20L);
-        Method.createTask("reboot", task);
+        BukkitMethod.createTask("reboot", task);
     }
 
     private void shutdown(Player p, String reason) {

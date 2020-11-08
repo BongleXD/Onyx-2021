@@ -6,8 +6,9 @@ import com.google.common.io.ByteStreams;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.Onyx;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.shared.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.shared.PlayerData;
+import net.blastmc.onyx.shared.util.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,10 +16,10 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Ban extends CommandManager {
+public class TempBan extends CommandManager {
 
-    public Ban() {
-        super("ban", "封禁", "/ban <玩家> [时间] [原因]");
+    public TempBan() {
+        super("tempban", "封禁", "/ban <玩家> <时间> [原因]");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.ban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
@@ -42,11 +43,12 @@ public class Ban extends CommandManager {
                     duration = String.valueOf(Integer.parseInt(args[1]) * 1000);
                 }
             }catch (Exception ex){
-                duration = "-1";
+                sender.sendMessage("§c请输入数字或者时长！例如: 3d (天), 1m (月), 1y (年), 100 (秒)");
+                return;
             }
             args[0] = args[args.length - 1];
             args = Arrays.copyOf(args, args.length - 1);
-            if(!duration.equals("-1") && args.length > 1){
+            if(args.length > 1){
                 args[0] = args[args.length - 1];
                 args = Arrays.copyOf(args, args.length - 1);
             }

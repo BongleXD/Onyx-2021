@@ -155,24 +155,6 @@ public class SQLHelper {
         return list;
     }
 
-    public boolean checkDataExists(String query){
-        boolean b = false;
-        try {
-            if(this.getConnection().isClosed()){
-                this.exeConn();
-            }
-            Statement s = this.getConnection().createStatement();
-            ResultSet rs = s.executeQuery(query);
-            while (rs.next()) {
-                int count = rs.getInt(1);
-                b = count != 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return b;
-    }
-
     public boolean checkDataExists(String table, String flag, String data){
         boolean b = false;
         try {

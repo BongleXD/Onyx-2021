@@ -15,14 +15,14 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class Ban extends CommandManager {
+public class Kick extends CommandManager {
 
-    public Ban() {
-        super("ban", "封禁", "/ban <玩家> [时间] [原因]");
+    public Kick() {
+        super("kick", "移除", "/kick <玩家> [原因]", "移除");
     }
 
-    @Cmd(arg = "<value...>", perm = "onyx.command.ban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
-    public void ban(CommandSender sender, String[] args){
+    @Cmd(arg = "<value...>", perm = "onyx.command.kick", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
+    public void kick(CommandSender sender, String[] args){
         Player p = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()).get(0);
         if(p != null){
             String pid = Onyx.getApi().getPID(args[0]);
@@ -30,36 +30,17 @@ public class Ban extends CommandManager {
                 sender.sendMessage("§c玩家不存在！");
                 return;
             }
-            String duration;
-            try {
-                if (args[1].endsWith("d")) {
-                    duration = String.valueOf(Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24);
-                } else if (args[1].endsWith("m")) {
-                    duration = String.valueOf(Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30);
-                } else if (args[1].endsWith("y")) {
-                    duration = String.valueOf(Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30 * 12);
-                } else {
-                    duration = String.valueOf(Integer.parseInt(args[1]) * 1000);
-                }
-            }catch (Exception ex){
-                duration = "-1";
-            }
             args[0] = args[args.length - 1];
             args = Arrays.copyOf(args, args.length - 1);
-            if(!duration.equals("-1") && args.length > 1){
-                args[0] = args[args.length - 1];
-                args = Arrays.copyOf(args, args.length - 1);
-            }
             String reason = Method.transColor(Joiner.on(" ").join(args));
             if(reason.isEmpty()){
-                reason = "利用破坏游戏平衡性的方式获取不平等优势！";
+                reason = "你被从服务器移除， 请重新加入服务器！";
             }
             ByteArrayDataOutput b = ByteStreams.newDataOutput();
-            b.writeUTF("BAN_PLAYER");
+            b.writeUTF("KICK_PLAYER");
             b.writeUTF(pid);
             b.writeUTF(sender instanceof Player ? PlayerData.getDataFromUUID(((Player) sender).getUniqueId()).getName() : "CONSOLE");
             b.writeUTF(reason);
-            b.writeUTF(duration);
             b.writeUTF(PlayerData.getDataFromUUID(p.getUniqueId()).getName());
             p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
         }

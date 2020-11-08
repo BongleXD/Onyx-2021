@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bungee.listener;
 
 import net.blastmc.onyx.bungee.Main;
-import net.blastmc.onyx.bungee.SkinAPI;
+import net.blastmc.onyx.bungee.api.SkinAPI;
 import net.blastmc.onyx.bungee.config.DataConfig;
 import net.blastmc.onyx.bungee.config.LobbyConfig;
 import net.md_5.bungee.BungeeCord;
@@ -17,7 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class MessageListener implements Listener {
 

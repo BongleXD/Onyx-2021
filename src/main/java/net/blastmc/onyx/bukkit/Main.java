@@ -215,6 +215,13 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Spawn(), this);
             CommandManager.regCommand(new Whitelist(), this);
             CommandManager.regCommand(new Ban(), this);
+            CommandManager.regCommand(new TempBan(), this);
+            CommandManager.regCommand(new UnBan(), this);
+            CommandManager.regCommand(new Mute(), this);
+            CommandManager.regCommand(new TempMute(), this);
+            CommandManager.regCommand(new UnMute(), this);
+            CommandManager.regCommand(new Kick(), this);
+            CommandManager.regCommand(new Warn(), this);
             if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
                 CommandManager.regCommand(new Lobby(), this);
             }

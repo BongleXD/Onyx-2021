@@ -1,8 +1,7 @@
 package net.blastmc.onyx.bukkit.util.plugin;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.Method;
-import net.blastmc.onyx.shared.PluginInfo;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -132,7 +131,7 @@ public class PluginManager {
     }
 
     public static Plugin getPluginByName(String[] args, int start) {
-        return getPluginByName(Method.consolidateStrings(args, start));
+        return getPluginByName(BukkitMethod.consolidateStrings(args, start));
     }
 
     public static String unload(Plugin plugin) {

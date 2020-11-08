@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.PlayerProfile;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -20,7 +20,7 @@ public class Vanish extends CommandManager implements Listener {
         Player p = (Player) sender;
         PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
         for(Player online : Bukkit.getOnlinePlayers()){
-            Method.vanishPlayer(p, online, !prof.isVanish());
+            BukkitMethod.vanishPlayer(p, online, !prof.isVanish());
         }
         prof.setVanish(!prof.isVanish());
         p.sendMessage(prof.isVanish() ? "§a你隐身了！" : "§c你解除了隐身！");

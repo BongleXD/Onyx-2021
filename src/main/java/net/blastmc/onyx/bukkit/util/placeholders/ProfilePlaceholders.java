@@ -3,9 +3,10 @@ package net.blastmc.onyx.bukkit.util.placeholders;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.PlayerProfile;
 import net.blastmc.onyx.bukkit.proxy.ServerType;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.util.BukkitMethod;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderHook;
+import net.blastmc.onyx.shared.util.Method;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
