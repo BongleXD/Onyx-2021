@@ -1,6 +1,7 @@
 package net.blastmc.onyx.bungee.command;
 
 import net.blastmc.onyx.bungee.config.*;
+import net.blastmc.onyx.bungee.punish.Punish;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -18,6 +19,7 @@ public class MainCommand extends Command {
                 DataConfig.cfg.reload();
                 LobbyConfig.cfg.reload();
                 SkinConfig.cfg.reload();
+                PunishConfig.cfg.reload();
                 sender.sendMessage("§a配置文件已重置！");
             }
         }

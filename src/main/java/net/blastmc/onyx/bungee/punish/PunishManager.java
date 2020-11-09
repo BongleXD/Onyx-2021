@@ -11,6 +11,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -20,11 +21,11 @@ public class PunishManager {
     private static PunishManager manager = new PunishManager();
     private static SQLHelper sql = Main.getSQL();
 
-    public static PunishManager getManager(){
+    public static PunishManager getManager() {
         return manager;
     }
 
-    public static void init(){
+    public static void init() {
         sql.create("ban_data",
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "pid"),
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "executor"),
@@ -57,15 +58,16 @@ public class PunishManager {
                 new SQLHelper.Value(SQLHelper.ValueType.STRING, "reason"));
     }
 
-    public void checkBan(String pid, PendingConnection player){
-        if(sql.checkDataExists("ban_data", "pid", pid)){
-            ResultSet rs = sql.queryData("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
+    public void checkBan(String pid, PendingConnection player) {
+        if (sql.checkDataExists("ban_data", "pid", pid)) {
             try {
-                if(rs.next()){
-                    if(!rs.getString("action").equals("UNBAN")){
+                Statement stmt = sql.createStatement();
+                ResultSet rs = stmt.executeQuery("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
+                if (rs.next()) {
+                    if (!rs.getString("action").equals("UNBAN")) {
                         long duration = Long.parseLong(rs.getString("duration"));
                         long banMillis = Long.parseLong(rs.getString("ban_millis"));
-                        if(duration + banMillis <= System.currentTimeMillis() && duration != -1){
+                        if (duration + banMillis <= System.currentTimeMillis() && duration != -1) {
                             return;
                         }
                         String reason = rs.getString("reason");
@@ -77,16 +79,20 @@ public class PunishManager {
                                 "§7向客服分享你的封禁 ID 可能会加快处理此封禁的速度！");
                     }
                 }
+                rs.close();
+                stmt.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
     }
 
+
     public void checkMute(String pid){
         if(sql.checkDataExists("mute_data", "pid", pid)){
-            ResultSet rs = sql.queryData("select mute_millis, action, duration, reason, mute_id from mute_data where pid = '" + pid + "' order by mute_millis desc limit 1;");
             try {
+                Statement stmt = sql.createStatement();
+                ResultSet rs = stmt.executeQuery("select mute_millis, action, duration, reason, mute_id from mute_data where pid = '" + pid + "' order by mute_millis desc limit 1;");
                 if(rs.next()){
                     if(!rs.getString("action").equals("UNMUTE")){
                         long duration = Long.parseLong(rs.getString("duration"));
@@ -97,6 +103,8 @@ public class PunishManager {
                         muteData.put(pid, mute);
                     }
                 }
+                rs.close();
+                stmt.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

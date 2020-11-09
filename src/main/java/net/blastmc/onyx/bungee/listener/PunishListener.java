@@ -34,7 +34,8 @@ public class PunishListener implements Listener {
             PlayerData data = PlayerData.getDataFromName(p.getName());
             if(data != null){
                 Mute mute = (Mute) PunishManager.muteData.get(data.getPID());
-                if(mute != null && (!e.getMessage().startsWith("/") || PunishConfig.cfg.getBlackList().stream().anyMatch(s -> e.getMessage().startsWith(s)))){
+                if(mute != null &&
+                        (!e.getMessage().startsWith("/") || PunishConfig.cfg.getBlackList().stream().anyMatch(s -> e.getMessage().startsWith(s)))){
                     long duration = mute.getDuration();
                     p.sendMessage("§c§m---------------------------");
                     p.sendMessage("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "禁言!" + (duration >= 0 ? "还有 §e" + BungeeMethod.longToTime(mute.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除禁言！" : ""));

@@ -222,6 +222,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new UnMute(), this);
             CommandManager.regCommand(new Kick(), this);
             CommandManager.regCommand(new Warn(), this);
+            CommandManager.regCommand(new Play(), this);
             if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
                 CommandManager.regCommand(new Lobby(), this);
             }

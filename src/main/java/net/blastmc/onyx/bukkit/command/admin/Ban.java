@@ -46,7 +46,7 @@ public class Ban extends CommandManager {
             }
             args[0] = args[args.length - 1];
             args = Arrays.copyOf(args, args.length - 1);
-            if(!duration.equals("-1") && args.length > 1){
+            if(!duration.equals("-1") && args.length > 0){
                 args[0] = args[args.length - 1];
                 args = Arrays.copyOf(args, args.length - 1);
             }

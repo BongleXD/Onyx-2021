@@ -58,39 +58,6 @@ public class SQLHelper {
         }
     }
 
-    public void addDoubleColumn(String table, String name) {
-        try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-            Statement s = conn.createStatement();
-            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " DOUBLE;");
-        } catch (SQLException ignored) {
-        }
-    }
-
-    public void addIntegerColumn(String table, String name) {
-        try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-            Statement s = conn.createStatement();
-            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " INTEGER;");
-        } catch (SQLException ignored) {
-        }
-    }
-
-    public void addStringColumn(String table, String name) {
-        try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-            Statement s = conn.createStatement();
-            s.executeUpdate("ALTER TABLE " + table + " ADD COLUMN " + name + " VARCHAR(200) CHARACTER SET utf8;");
-        } catch (SQLException ignored) {
-        }
-    }
-
     public int getOrder(String table, String flag, String flagData, String data){
         try {
             if (conn.isClosed()) {
@@ -101,6 +68,8 @@ public class SQLHelper {
             if (rs.next()) {
                 return rs.getInt(1);
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -119,6 +88,8 @@ public class SQLHelper {
             while (rs.next()) {
                 list.add(rs.getObject(line));
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,6 +120,8 @@ public class SQLHelper {
                 }
                 j++;
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -167,20 +140,21 @@ public class SQLHelper {
                 int count = rs.getInt(1);
                 b = count != 0;
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return b;
     }
 
-    public ResultSet queryData(String query){
+    public Statement createStatement(){
         try {
             if (conn.isClosed()) {
                 exeConn();
             }
             Statement s = conn.createStatement();
-            ResultSet rs = s.executeQuery(query);
-            return rs;
+            return s;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -198,6 +172,8 @@ public class SQLHelper {
             while (rs.next()) {
                 list.add(rs.getObject(data));
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -224,6 +200,8 @@ public class SQLHelper {
                     list.add(obj == null ? "" : obj);
                 }
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -299,6 +277,8 @@ public class SQLHelper {
                 int count = rs.getInt(1);
                 return count;
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -320,6 +300,8 @@ public class SQLHelper {
             while (rs.next()) {
                 list.add(rs.getObject(1));
             }
+            rs.close();
+            s.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

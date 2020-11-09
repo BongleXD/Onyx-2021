@@ -48,7 +48,7 @@ public class TempMute extends CommandManager {
             }
             args[0] = args[args.length - 1];
             args = Arrays.copyOf(args, args.length - 1);
-            if(args.length > 1){
+            if(args.length > 0){
                 args[0] = args[args.length - 1];
                 args = Arrays.copyOf(args, args.length - 1);
             }

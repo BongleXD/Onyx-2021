@@ -42,7 +42,7 @@ public class FootStep extends CommandManager implements Listener {
         taskMap.put(p, false);
     }
 
-    @Cmd(arg = "on", perm = "onyx.command.footstep", permMessage = "§c你需要 §bMVP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
+    @Cmd(arg = "on", perm = "onyx.command.footstep", permMessage = "§c你需要 §bSVIP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
     public void enable(CommandSender sender, String[] args){
         Player p = (Player) sender;
         p.sendMessage("§a足迹模式已开启！ 你的脚印将被显示在服务器内！");
@@ -50,14 +50,14 @@ public class FootStep extends CommandManager implements Listener {
         taskMap.put(p, true);
     }
 
-    @Cmd(arg = "off", perm = "onyx.command.footstep", permMessage = "§c你需要 §bMVP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
+    @Cmd(arg = "off", perm = "onyx.command.footstep", permMessage = "§c你需要 §bSVIP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
     public void disable(CommandSender sender, String[] args){
         Player p = (Player) sender;
         p.sendMessage("§c足迹模式已关闭！ 你的脚印将不会显示在服务器内！");
         taskMap.put(p, false);
     }
 
-    @Cmd(coolDown = 2000, perm = "onyx.command.footstep", permMessage = "§c你需要 §bMVP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
+    @Cmd(coolDown = 2000, perm = "onyx.command.footstep", permMessage = "§c你需要 §bSVIP §c及以上的会员等级才能使用显示足迹！ 请移步到大厅进行购买会员等级！", only = CommandOnly.PLAYER)
     public void footstep(CommandSender sender, String[] args){
         Player p = (Player) sender;
         if(taskMap.containsKey(p) && taskMap.get(p)) {

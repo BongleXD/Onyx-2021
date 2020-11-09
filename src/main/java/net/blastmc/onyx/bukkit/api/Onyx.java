@@ -16,6 +16,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Random;
 import java.util.UUID;
 
@@ -34,6 +37,39 @@ public class Onyx {
     public String getPID(String name) {
         try {
             return (String) getSQL().getData("player_data", "name", name, "pid").get(0);
+        }catch (Exception ex){
+            return null;
+        }
+    }
+
+    public boolean checkBan(String pid) {
+        if (getSQL().checkDataExists("ban_data", "pid", pid)) {
+            try {
+                Statement stmt = getSQL().createStatement();
+                ResultSet rs = stmt.executeQuery("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
+                if (rs.next()) {
+                    if (!rs.getString("action").equals("UNBAN")) {
+                        long duration = Long.parseLong(rs.getString("duration"));
+                        long banMillis = Long.parseLong(rs.getString("ban_millis"));
+                        if (duration + banMillis <= System.currentTimeMillis() && duration != -1) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+                rs.close();
+                stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public String getOfflineTrueDisplayName(UUID uuid){
+        try {
+            String pid = Onyx.getApi().getPID(uuid);
+            return (String) Main.getSQL().getData("player_profile", "pid", pid, "prefix").get(0) + Main.getSQL().getData("player_data", "uuid", uuid.toString(), "name").get(0) + Main.getSQL().getData("player_profile", "pid", pid, "suffix").get(0);
         }catch (Exception ex){
             return null;
         }
