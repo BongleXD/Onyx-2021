@@ -30,23 +30,18 @@ public class ProfileListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(AsyncPlayerConnectEvent e) {
         //init profile
         try {
-            UUID uuid = UUID.fromString((String) Main.getSQL().getData("player_data", "player_name", e.getName(), "uuid").get(0));
+            UUID uuid = UUID.fromString((String) Main.getSQL().getData("player_data", "name", e.getName(), "uuid").get(0));
         }catch (Exception ignored){}
         //check uuid
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        for (PlayerProfile prof : PlayerProfile.getVanishs()) {
-            if (prof.isVanish()) {
-                BukkitMethod.vanishPlayer(Bukkit.getPlayer(prof.getUUID()), p, true);
-            }
-        }
         PlayerData data = PlayerData.init(p.getUniqueId(), p.getName());
         PlayerProfile prof;
         if (data != null) {
@@ -135,7 +130,7 @@ public class ProfileListener implements Listener {
 
         //nick check
         if (((prof.isNicked() && (Main.getType() == ServerType.GAME || Main.getType() == ServerType.ENDLESS_GAME)) || (prof.isNicked() && p.hasPermission("onyx.nick.staff"))) && !Main.getInstance().getConfig().getBoolean("disable-nick")) {
-            if (!Main.getSQL().checkDataExists("player_data", "player_name", prof.getNickName())) {
+            if (!Main.getSQL().checkDataExists("player_data", "name", prof.getNickName())) {
                 Main.getNMS().changeName(p, prof.getNickName());
             } else {
                 prof.setNicked(false);
@@ -146,6 +141,10 @@ public class ProfileListener implements Listener {
                 p.sendMessage("§c有玩家使用了此昵称所以已经将你的昵称还原！");
                 Onyx.getApi().refreshTag(p);
             }
+        }
+
+        for (PlayerProfile profs : PlayerProfile.getVanishs()) {
+            BukkitMethod.vanishPlayer(Bukkit.getPlayer(profs.getUUID()), p, true);
         }
 
         //join message
@@ -241,7 +240,9 @@ public class ProfileListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onDisconnect(AsyncPlayerDisconnectEvent e){
         PlayerData data = PlayerData.getDataFromUUID(e.getUniqueId());
-        data.destroy();
+        if(data != null){
+            data.destroy();
+        }
     }
 
     private void checkUUID(AsyncPlayerConnectEvent e, OfflinePlayer off, PlayerData data){

@@ -45,7 +45,7 @@ public class ChatListener implements Listener {
             String message = e.getMessage();
             boolean b = false;
             ChatColor color = ChatColor.GRAY;
-            if (p.hasPermission("onyx.chat.gg") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§b[SVIP§c+§b] "))) {
+            if (p.hasPermission("onyx.chat.gg") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
                 if (message.equalsIgnoreCase("GG")) {
                     message = "GG";
                     color = ChatColor.GOLD;
@@ -63,7 +63,7 @@ public class ChatListener implements Listener {
                     if (p.hasPermission("onyx.chat.white")) color = ChatColor.WHITE;
                 }
             }
-            if (p.hasPermission("onyx.chat.transcolor") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§b[SVIP§c+§b] ") || prof.getNickPrefix().equals("§b[SVIP§c+§b] "))) {
+            if (p.hasPermission("onyx.chat.transcolor") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] ") || prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
                 message =  ChatColor.translateAlternateColorCodes('&', message);
             }
             for (Player online : Bukkit.getOnlinePlayers()) {

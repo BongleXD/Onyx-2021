@@ -103,7 +103,7 @@ public class v1_8_R3 implements NMS {
     @Override
     public void crashClient(Player p) {
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
-        PacketPlayOutExplosion packet = new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, new ArrayList<BlockPosition>(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE));
+        PacketPlayOutExplosion packet = new PacketPlayOutExplosion(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE, Float.MAX_VALUE, new ArrayList<>(), new Vec3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE));
         ep.playerConnection.sendPacket(packet);
     }
 
@@ -127,11 +127,11 @@ public class v1_8_R3 implements NMS {
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
 
         //remove vanish
-        if(prof.isVanish()){
+        /*if(prof.isVanish()){
             for(Player online : Bukkit.getOnlinePlayers()) {
                 BukkitMethod.vanishPlayer(p, online, false);
             }
-        }
+        }*/
 
         //name tag remove
         if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
@@ -144,8 +144,11 @@ public class v1_8_R3 implements NMS {
         prof.setNicked(true);
 
         //remove player
-        PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
-        Bukkit.getOnlinePlayers().forEach(online -> { ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove); });
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.hidePlayer(p);
+        }
+        //PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
+        //Bukkit.getOnlinePlayers().forEach(online -> ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove));
 
         //change name
         Class<?> entityHuman = ep.getClass().getSuperclass();
@@ -181,10 +184,13 @@ public class v1_8_R3 implements NMS {
         }
 
         //add player
-        PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.showPlayer(p);
+        }
+        /*PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
         Bukkit.getOnlinePlayers().forEach(online -> {
             ((CraftPlayer) online).getHandle().playerConnection.sendPacket(add);
-        });
+        });*/
 
         //destroy player
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(new int[]{p.getEntityId()});
@@ -223,11 +229,12 @@ public class v1_8_R3 implements NMS {
         EntityPlayer ep = ((CraftPlayer) p).getHandle();
         String name = PlayerData.getDataFromUUID(p.getUniqueId()).getName();
         //remove vanish
+        /*
         if(prof.isVanish()){
             for(Player online : Bukkit.getOnlinePlayers()) {
                 BukkitMethod.vanishPlayer(p, online, false);
             }
-        }
+        }*/
 
         //name tag remove
         if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
@@ -238,8 +245,11 @@ public class v1_8_R3 implements NMS {
         }
 
         //remove player
-        PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
-        Bukkit.getOnlinePlayers().forEach(online -> { ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove); });
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.hidePlayer(p);
+        }
+        //PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
+        //Bukkit.getOnlinePlayers().forEach(online -> { ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove); });
 
         //change name
         Class<?> entityHuman = ep.getClass().getSuperclass();
@@ -275,10 +285,13 @@ public class v1_8_R3 implements NMS {
         }
 
         //add player
-        PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.showPlayer(p);
+        }
+        /*PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
         Bukkit.getOnlinePlayers().forEach(online -> {
             ((CraftPlayer) online).getHandle().playerConnection.sendPacket(add);
-        });
+        });*/
 
         //destroy player
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(new int[]{p.getEntityId()});
@@ -333,16 +346,22 @@ public class v1_8_R3 implements NMS {
                 return;
             }
             //remove player
-            PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
+            for (Player online : Bukkit.getOnlinePlayers()){
+                online.hidePlayer(p);
+            }
+            /*PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
             Bukkit.getOnlinePlayers().forEach(online -> { ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove); });
-
+             */
             ep.server.getPlayerList().moveToWorld(ep, ep.dimension, false, p.getLocation(), false);
 
             //add player
-            PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
+            for (Player online : Bukkit.getOnlinePlayers()){
+                online.showPlayer(p);
+            }
+            /*PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
             Bukkit.getOnlinePlayers().forEach(online -> {
                 ((CraftPlayer) online).getHandle().playerConnection.sendPacket(add);
-            });
+            });*/
 
             //destroy player
             PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(new int[]{p.getEntityId()});
@@ -354,6 +373,18 @@ public class v1_8_R3 implements NMS {
             for (Player online : Bukkit.getOnlinePlayers())
                 if (p != online) ((CraftPlayer) online).getHandle().playerConnection.sendPacket(spawn);
         });
+    }
+
+    @Override
+    public void hidePlayer(Player p, Player sendTo) {
+        PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer) p).getHandle());
+        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(remove);
+    }
+
+    @Override
+    public void showPlayer(Player p, Player sendTo) {
+        PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ((CraftPlayer) p).getHandle());
+        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(add);
     }
 
 }

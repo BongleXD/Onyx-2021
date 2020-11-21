@@ -30,4 +30,8 @@ public interface NMS {
 
     void reloadPlayer(Player p);
 
+    void hidePlayer(Player p, Player sendTo);
+
+    void showPlayer(Player p, Player sendTo);
+
 }

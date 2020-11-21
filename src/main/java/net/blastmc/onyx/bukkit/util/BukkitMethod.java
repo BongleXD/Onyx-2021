@@ -100,7 +100,7 @@ public class BukkitMethod {
             return getTagData(p).getPriority();
         }
         switch (prof.getNickPrefix()) {
-            case "§b[SVIP§c+§b] ":
+            case "§6[SVIP§c+§6] ":
                 priority = TagData.getData("svip_plus").getPriority();
                 break;
             case "§b[SVIP] ":

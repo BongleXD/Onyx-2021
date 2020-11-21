@@ -363,4 +363,17 @@ public class v1_12_R1 implements NMS {
                 if (p != online) ((CraftPlayer) online).getHandle().playerConnection.sendPacket(spawn);
         });
     }
+
+    @Override
+    public void hidePlayer(Player p, Player sendTo) {
+        PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ((CraftPlayer) p).getHandle());
+        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(remove);
+    }
+
+    @Override
+    public void showPlayer(Player p, Player sendTo) {
+        PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ((CraftPlayer) p).getHandle());
+        ((CraftPlayer) sendTo).getHandle().playerConnection.sendPacket(add);
+    }
+
 }

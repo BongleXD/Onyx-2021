@@ -6,7 +6,7 @@
 
     <groupId>net.blastmc.onyx</groupId>
     <artifactId>onyx</artifactId>
-    <version>0.6.3-DEV</version>
+    <version>0.6.3</version>
     <packaging>jar</packaging>
 
     <name>Onyx</name>

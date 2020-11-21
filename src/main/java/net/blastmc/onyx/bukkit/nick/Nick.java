@@ -86,7 +86,7 @@ public class Nick extends CommandManager {
                     p.sendMessage("§a你的昵称会员等级以设置为 §bSVIP§a！");
                     break;
                 case "svip_plus":
-                    p.sendMessage("§a你的昵称会员等级以设置为 §bSVIP§c+§a！");
+                    p.sendMessage("§a你的昵称会员等级以设置为 §6SVIP§c+§a！");
                     break;
                 case "self":
                     p.sendMessage("§a你的昵称会员等级将继承于你目前的会员等级！");
@@ -243,7 +243,7 @@ public class Nick extends CommandManager {
                 prefix = "§b[SVIP] ";
                 break;
             case "svip_plus":
-                prefix = "§b[SVIP§c+§b] ";
+                prefix = "§6[SVIP§c+§6] ";
                 break;
             case "self":
                 prefix = "self";
@@ -390,9 +390,9 @@ public class Nick extends CommandManager {
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick svip")
                                 .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bSVIP")
                                 .build())
-                        .addText(new TextBuilder("\n§l➤ §bSVIP§c+")
+                        .addText(new TextBuilder("\n§l➤ §6SVIP§c+")
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick svip_plus")
-                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §bSVIP§c+")
+                                .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 显示为 §6SVIP§c+")
                                 .build())
                         .addText(new TextBuilder("\n§l➤ §0不更换会员等级")
                                 .setClick(ClickEvent.Action.RUN_COMMAND, "/nick self")

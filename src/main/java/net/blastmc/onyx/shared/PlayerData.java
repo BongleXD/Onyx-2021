@@ -210,6 +210,13 @@ public class PlayerData {
                 pidMap.put(uuid.toString(), pid);
                 pidMap.put(name, pid);
                 return new PlayerData(pid);
+            }else{
+                pid = (String) sql.getData("player_data", "uuid", uuid.toString(), "pid").get(0);
+                if (pid != null) {
+                    pidMap.put(uuid.toString(), pid);
+                    pidMap.put(name, pid);
+                    return new PlayerData(pid);
+                }
             }
         } catch (Exception ex) {
             return null;

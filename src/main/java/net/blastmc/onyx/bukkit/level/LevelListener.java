@@ -2,6 +2,8 @@ package net.blastmc.onyx.bukkit.level;
 
 import net.blastmc.onyx.bukkit.proxy.ServerType;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
+import net.blastmc.onyx.bukkit.util.interact.inventory.ItemClickEvent;
+import net.blastmc.onyx.bukkit.util.interact.inventory.SimpleInventory;
 import net.blastmc.onyx.shared.PlayerData;
 import net.blastmc.onyx.bukkit.api.PlayerProfile;
 import net.blastmc.onyx.bukkit.api.event.PlayerLevelUPEvent;
@@ -18,6 +20,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.TreeMap;
 
