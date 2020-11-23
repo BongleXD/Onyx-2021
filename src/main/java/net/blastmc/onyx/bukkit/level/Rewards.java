@@ -50,7 +50,7 @@ public class Rewards extends CommandManager implements Listener {
                     int level = Integer.parseInt(name.split(" ")[2].replace("Lv.", ""));
                     data.addClaim(level);
                     List<String> commands = RewardConfig.cfg.getYml().getStringList("rewards." + level + ".command");
-                    p.playSound(p.getLocation(), SoundUtil.LEVEL_UP, 1, 1);
+                    p.playSound(p.getLocation(), SoundUtil.LEVEL_UP.getSound(), 1, 1);
                     for(String cmd : commands){
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("{player}", p.getName()));
                     }

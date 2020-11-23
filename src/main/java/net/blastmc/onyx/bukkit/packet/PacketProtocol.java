@@ -47,7 +47,7 @@ public class PacketProtocol implements Listener {
     private void remove(Player p) {
         Channel channel = Main.getNMS().getChannel(p);
         channel.eventLoop().submit(() -> {
-            channel.pipeline().remove(p.getName());
+            channel.pipeline().remove("onyx_" + p.getName());
             return null;
         });
     }
@@ -85,6 +85,6 @@ public class PacketProtocol implements Listener {
 
         };
         ChannelPipeline pipeLine = Main.getNMS().getChannel(p).pipeline();
-        pipeLine.addBefore("packet_handler", p.getName(), handler);
+        pipeLine.addBefore("packet_handler", "onyx_" + p.getName(), handler);
     }
 }

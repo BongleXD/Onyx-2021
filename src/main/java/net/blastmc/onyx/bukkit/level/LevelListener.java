@@ -85,7 +85,7 @@ public class LevelListener implements Listener {
             p.sendMessage("          §e请到大厅领取你的奖励！");
         }
         p.sendMessage("§9▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃▃");
-        p.playSound(p.getLocation(), SoundUtil.LEVEL_UP, 1, 1);
+        p.playSound(p.getLocation(), SoundUtil.LEVEL_UP.getSound(), 1, 1);
         TitleUtil.sendTitle(p, 10, 10, 10, "§6升级", "");
     }
 

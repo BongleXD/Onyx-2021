@@ -12,24 +12,19 @@ import net.blastmc.onyx.shared.PlayerData;
 import net.blastmc.onyx.bukkit.config.SettingConfig;
 import net.blastmc.onyx.bukkit.config.TagConfig;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.blastmc.spigot.event.AsyncPlayerConnectEvent;
-import net.blastmc.spigot.event.AsyncPlayerDisconnectEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
-import java.util.UUID;
-
 public class ProfileListener implements Listener {
 
     public ProfileListener(){
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
-
+/*
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(AsyncPlayerConnectEvent e) {
         //init profile
@@ -38,6 +33,8 @@ public class ProfileListener implements Listener {
         }catch (Exception ignored){}
         //check uuid
     }
+
+ */
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -157,7 +154,7 @@ public class ProfileListener implements Listener {
                         .replace("{name}", p.getName());
                 for (Player online : Bukkit.getOnlinePlayers()) {
                     Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                        online.playSound(p.getLocation(), SoundUtil.NOTE_PLING, 3.0F, 1.3F);
+                        online.playSound(p.getLocation(), SoundUtil.NOTE_PLING.getSound(), 3.0F, 1.3F);
                     }, 5L);
                 }
             }
@@ -226,7 +223,7 @@ public class ProfileListener implements Listener {
                         .replace("{displayname}", p.getDisplayName())
                         .replace("{name}", p.getName()));
                 for (Player players : Bukkit.getOnlinePlayers()) {
-                    players.playSound(p.getLocation(), SoundUtil.NOTE_BASS, 3.0F, 1.0F);
+                    players.playSound(p.getLocation(), SoundUtil.NOTE_BASS.getSound(), 3.0F, 1.0F);
                 }
             } else {
                 e.setQuitMessage(null);
@@ -238,17 +235,20 @@ public class ProfileListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
-    public void onDisconnect(AsyncPlayerDisconnectEvent e){
-        PlayerData data = PlayerData.getDataFromUUID(e.getUniqueId());
+    public void onQuit(PlayerQuitEvent e){
+        PlayerData data = PlayerData.getDataFromUUID(e.getPlayer().getUniqueId());
         if(data != null){
             data.destroy();
         }
     }
 
+    /*
     private void checkUUID(AsyncPlayerConnectEvent e, OfflinePlayer off, PlayerData data){
         if(!off.getUniqueId().toString().equals(data.getUUID())){
             e.setUniqueId(data.getUUID());
         }
     }
+
+     */
 
 }

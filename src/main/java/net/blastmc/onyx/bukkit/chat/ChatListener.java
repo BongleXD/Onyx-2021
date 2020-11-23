@@ -15,11 +15,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 
 public class ChatListener implements Listener {
 
     public ChatListener(){
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onKick(PlayerKickEvent e){
+        if(e.getReason().equalsIgnoreCase("请不要刷屏！") || e.getReason().equalsIgnoreCase("disconnect.spam")){
+            e.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -45,7 +53,7 @@ public class ChatListener implements Listener {
             String message = e.getMessage();
             boolean b = false;
             ChatColor color = ChatColor.GRAY;
-            if (p.hasPermission("onyx.chat.gg") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
+            if (p.hasPermission("onyx.chat.gg") && prof.isNicked() && prof.getNickPrefix().equalsIgnoreCase("self") || p.hasPermission("onyx.chat.gg") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
                 if (message.equalsIgnoreCase("GG")) {
                     message = "GG";
                     color = ChatColor.GOLD;
@@ -63,7 +71,7 @@ public class ChatListener implements Listener {
                     if (p.hasPermission("onyx.chat.white")) color = ChatColor.WHITE;
                 }
             }
-            if (p.hasPermission("onyx.chat.transcolor") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] ") || prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
+            if (p.hasPermission("onyx.chat.transcolor") && prof.isNicked() && prof.getNickPrefix().equalsIgnoreCase("self") || p.hasPermission("onyx.chat.transcolor") && !prof.isNicked() || prof.isNicked() && (prof.getNickPrefix().equals("§6[SVIP§c+§6] ") || prof.getNickPrefix().equals("§6[SVIP§c+§6] "))) {
                 message =  ChatColor.translateAlternateColorCodes('&', message);
             }
             for (Player online : Bukkit.getOnlinePlayers()) {

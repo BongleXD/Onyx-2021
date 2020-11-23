@@ -133,8 +133,8 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         for(Player p : Bukkit.getOnlinePlayers()){
-            Objects.requireNonNull(PlayerProfile.getDataFromUUID(p.getUniqueId())).saveData(true);
-            PlayerData.getDataFromUUID(p.getUniqueId()).saveData(true);
+            PlayerProfile prof = PlayerProfile.getDataFromUUID(p.getUniqueId());
+            if(prof != null) prof.saveData(true);
         }
         Log.getLogger().sendLog("§c已成功卸载！ §b版本号" + PluginInfo.getVersion());
     }

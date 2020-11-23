@@ -46,8 +46,7 @@ public class v1_12_R1 implements NMS {
 
     @Override
     public Channel getChannel(Player p) {
-        EntityPlayer ep = ((CraftPlayer) p).getHandle();
-        return ep.playerConnection.networkManager.channel;
+        return ((CraftPlayer) p).getHandle().playerConnection.networkManager.channel;
     }
 
     @Override
