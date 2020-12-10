@@ -95,7 +95,7 @@ public class OnyxPlayerProfile implements PlayerProfile {
 
     @Override
     public UUID getUUID() {
-        return Onyx.getPlayerData(pid).getUUID();
+        return Onyx.getPlayerDataFromPID(pid).getUUID();
     }
 
     @Override
