@@ -1,8 +1,0 @@
-name: Onyx
-version: 1.0.2
-main: net.blastmc.onyx.bukkit.Main
-prefix: Onyx
-softdepend:
-  - PlaceholderAPI
-author: Hello_Han
-description: BlastMC 核心
