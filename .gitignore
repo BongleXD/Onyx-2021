@@ -1,5 +1,6 @@
-# Project exclude paths
-/target/
+# maven
+target/
+dependency-reduced-pom.xml
 
 # intellij
 *.iml
