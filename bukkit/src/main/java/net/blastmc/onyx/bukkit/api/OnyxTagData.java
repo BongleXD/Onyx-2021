@@ -1,9 +1,13 @@
 package net.blastmc.onyx.bukkit.api;
 
+import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.TagData;
+import net.blastmc.onyx.api.util.Log;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.config.TagConfig;
 import net.blastmc.onyx.api.util.SQLHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -43,44 +47,46 @@ public class OnyxTagData implements TagData {
     }
 
     public static void init(){
-        if(TagConfig.cfg.getBoolean("enabled")){
-            if(TagConfig.cfg.getBoolean("mysql")) {
-                create();
-                new BukkitRunnable(){
-                    @Override
-                    public void run() {
-                        if (!Main.getSQL().checkDataExists("player_tag", "name", "default")) {
-                            Main.getSQL().putData("player_tag", "name", "default",
-                                    new SQLHelper.SqlValue("prefix", "%profile_prefix%"),
-                                    new SQLHelper.SqlValue("suffix", "%profile_suffix%"),
-                                    new SQLHelper.SqlValue("perm", ""),
-                                    new SQLHelper.SqlValue("priority", 1));
-                        }
-                        int i = 1;
-                        while (true) {
-                            List list = Main.getSQL().getRowData("player_tag", i);
-                            if(list == null || list.isEmpty()){
-                                break;
-                            }
-                            setMaxLength(Math.max(maxLength, String.valueOf((int) list.get(4)).length()));
-                            new OnyxTagData((String) list.get(0), (String) list.get(1), (String) list.get(2), (String) list.get(3), (int) list.get(4));
-                            i++;
-                        }
-                    }
-                }.runTaskAsynchronously(Main.getInstance());
-            }else {
-                for (String group : TagConfig.cfg.getYml().getConfigurationSection("group").getKeys(false)) {
-                    if (dataMap.containsKey(group)) {
-                        continue;
-                    }
-                    setMaxLength(Math.max(maxLength, String.valueOf(TagConfig.cfg.getInt("group." + group + ".priority")).length()));
-                    new OnyxTagData(group, TagConfig.cfg.getString("group." + group + ".prefix"), TagConfig.cfg.getString("group." + group + ".suffix"), TagConfig.cfg.getString("group." + group + ".perm"), TagConfig.cfg.getInt("group." + group + ".priority"));
+        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+            if(TagConfig.ENABLED){
+                for (Player online : Bukkit.getOnlinePlayers()) {
+                    Onyx.getAPI().removeTag(online.getUniqueId());
                 }
+                dataMap.clear();
+                if(TagConfig.MYSQL_ENABLED) {
+                    create();
+                    if (!Main.getSQL().checkDataExists("player_tag", "name", "default")) {
+                        Main.getSQL().putData("player_tag", "name", "default",
+                                new SQLHelper.SqlValue("prefix", "%profile_prefix%"),
+                                new SQLHelper.SqlValue("suffix", "%profile_suffix%"),
+                                new SQLHelper.SqlValue("perm", ""),
+                                new SQLHelper.SqlValue("priority", 1));
+                    }
+                    int i = 1;
+                    while (true) {
+                        List list = Main.getSQL().getRowData("player_tag", i);
+                        if(list == null || list.isEmpty()){
+                            break;
+                        }
+                        setMaxLength(Math.max(maxLength, String.valueOf((int) list.get(4)).length()));
+                        new OnyxTagData((String) list.get(0), (String) list.get(1), (String) list.get(2), (String) list.get(3), (int) list.get(4));
+                        i++;
+                    }
+                }else {
+                    for (String group : TagConfig.config.getYml().getConfigurationSection("group").getKeys(false)) {
+                        if (dataMap.containsKey(group)) {
+                            continue;
+                        }
+                        setMaxLength(Math.max(maxLength, String.valueOf(TagConfig.config.getInt("group." + group + ".priority")).length()));
+                        new OnyxTagData(group, TagConfig.config.getString("group." + group + ".prefix"), TagConfig.config.getString("group." + group + ".suffix"), TagConfig.config.getString("group." + group + ".perm"), TagConfig.config.getInt("group." + group + ".priority"));
+                    }
+                }
+                dataMap.forEach((s, tagData) -> {
+                    Log.getLogger().sendLog(s + " 已导入！");
+                });
+                Onyx.getAPI().refreshAllTag();
             }
-            dataMap.forEach((s, tagData) -> {
-                System.out.println(s + " 已导入！");
-            });
-        }
+        });
     }
 
     public String getPrefix() {

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class UnMute extends CommandManager {
 
     @Cmd(arg = "<value...>", perm = "onyx.command.unmute", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
     public void unMute(CommandSender sender, String[] args) {
-        Player p = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()).get(0);
+        Player p = new ArrayList<Player>(Bukkit.getOnlinePlayers()).get(0);
         if (p != null) {
             String pid = Onyx.getAPI().getPIDIgnoreNick(args[0]);
             if (pid == null) {

@@ -406,7 +406,7 @@ public class Nick extends CommandManager {
     }
 
     private String randomSkin(){
-        List<String> list = SkinConfig.cfg.getYml().getStringList("skin");
+        List<String> list = SkinConfig.SKINS;
         return list.get(new Random().nextInt(list.size()));
     }
 

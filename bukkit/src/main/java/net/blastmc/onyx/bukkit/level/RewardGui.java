@@ -30,13 +30,13 @@ public class RewardGui extends PlayerGui {
     public void open(Player p) {
         PlayerProfile profile = Onyx.getPlayerProfile(p.getUniqueId());
         Inventory inv = Bukkit.createInventory(null, 54, "BlastMC 等级奖励");
-        int size = RewardConfig.cfg.getYml().getConfigurationSection("rewards").getKeys(false).size();
+        int size = RewardConfig.config.getYml().getConfigurationSection("rewards").getKeys(false).size();
         int row = 2;
         int column = 2;
         int index = page * 14 - 14;
         int endIndex = Math.min(index + 14, size);
         for(; index < endIndex; index++){
-            Method.setInvItem(inv, getItem(Integer.parseInt((String) RewardConfig.cfg.getYml().getConfigurationSection("rewards").getKeys(false).toArray()[index])), row, column);
+            Method.setInvItem(inv, getItem(Integer.parseInt((String) RewardConfig.config.getYml().getConfigurationSection("rewards").getKeys(false).toArray()[index])), row, column);
             column++;
             if(column == 9){
                 column = 2;
@@ -78,7 +78,7 @@ public class RewardGui extends PlayerGui {
         ClaimData data = ClaimData.getDataFromUUID(p.getUniqueId());
         PlayerProfile profile = Onyx.getPlayerProfile(p.getUniqueId());
         List<String> lore = Lists.newArrayList();
-        RewardConfig.cfg.getYml().getStringList("rewards." + level + ".lore").forEach(s -> {
+        RewardConfig.config.getYml().getStringList("rewards." + level + ".lore").forEach(s -> {
             lore.add(net.blastmc.onyx.api.util.Method.transColor(s));
         });
         if(profile.getLevel() < level){

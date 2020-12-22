@@ -19,6 +19,7 @@ import net.blastmc.onyx.bukkit.util.TeamAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -83,7 +84,8 @@ public class BukkitAPI implements API {
     public boolean isBanned(String pid) {
         if (getSQL().checkDataExists("ban_data", "pid", pid)) {
             try {
-                Statement stmt = getSQL().createStatement();
+                Connection conn = getSQL().getConnection();
+                Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
                 if (rs.next()) {
                     if (!rs.getString("action").equals("UNBAN")) {
@@ -97,6 +99,7 @@ public class BukkitAPI implements API {
                 }
                 rs.close();
                 stmt.close();
+                conn.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -135,7 +138,7 @@ public class BukkitAPI implements API {
     @Override
     public void refreshVanish(UUID uuid){
         Player p = Bukkit.getPlayer(uuid);
-        if (!TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+        if (!TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             PlayerProfile prof = Onyx.getPlayerProfile(p.getUniqueId());
             if (prof == null) {
                 return;
@@ -235,17 +238,17 @@ public class BukkitAPI implements API {
     @Override
     public void refreshTag(UUID uuid) {
         Player p = Bukkit.getPlayer(uuid);
-        if (TagConfig.cfg.getBoolean("enabled")) {
+        if (TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             p.setDisplayName(PlaceholderAPI.setPlaceholders(p, "%profile_prefix%") + p.getName() + PlaceholderAPI.setPlaceholders(p, "%profile_suffix%"));
+            PlayerProfile prof = Onyx.getPlayerProfile(p.getUniqueId());
+            String priority = Method.getTagPriority(p, prof);
+            String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
+            if (prof.isVanish()) {
+                suffix = " §c[已隐身]";
+            }
             for (Player online : Bukkit.getOnlinePlayers()) {
-                PlayerProfile prof = Onyx.getPlayerProfile(online.getUniqueId());
-                String priority = Method.getTagPriority(online, prof);
-                String suffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
-                if (prof.isVanish()) {
-                    suffix = " §c[已隐身]";
-                }
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, priority);
-                Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), suffix, TeamAction.CREATE, priority);
+                Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, priority);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), suffix, TeamAction.CREATE, priority);
             }
         }else{
             removeTag(p.getUniqueId());
@@ -253,9 +256,11 @@ public class BukkitAPI implements API {
     }
 
     @Override
-    public void removeTag(UUID uuid){
+    public void removeTag(UUID uuid) {
         for (Player online : Bukkit.getOnlinePlayers()) {
-            Main.getNMS().changeNameTag(online, Bukkit.getPlayer(uuid), "", "", TeamAction.DESTROY, "0");
+            PlayerProfile prof = Onyx.getPlayerProfile(online.getUniqueId());
+            String priority = Method.getTagPriority(online, prof);
+            Main.getNMS().changeNameTag(online, Bukkit.getPlayer(uuid), "", "", TeamAction.DESTROY, priority);
         }
     }
 
@@ -263,6 +268,36 @@ public class BukkitAPI implements API {
     public void refreshAllTag(){
         for(Player online : Bukkit.getOnlinePlayers()){
             refreshTag(online.getUniqueId());
+        }
+    }
+
+    @Override
+    public void refreshTagFor(UUID uuid) {
+        Player p = Bukkit.getPlayer(uuid);
+        PlayerProfile prof = Onyx.getPlayerProfile(p.getUniqueId());
+        if (prof != null && TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
+            for (Player online : Bukkit.getOnlinePlayers()) {
+                PlayerProfile other = Onyx.getPlayerProfile(online.getUniqueId());
+                if (other == null) {
+                    continue;
+                }
+                if (p != online)
+                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
+                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
+                String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
+                if (prof.isVanish()) {
+                    suffix = " §c[已隐身]";
+                }
+                String priority = Method.getTagPriority(p, prof);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
+                if (p != online) {
+                    String otherSuffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
+                    if (other.isVanish()) {
+                        otherSuffix = " §c[已隐身]";
+                    }
+                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                }
+            }
         }
     }
 

@@ -20,10 +20,10 @@ import net.md_5.bungee.api.plugin.Plugin;
 public class Main extends Plugin {
 
     private static Main instance;
-    private static SQLHelper sql;
+    private SQLHelper sql;
 
     public static SQLHelper getSQL(){
-        return sql;
+        return instance.sql;
     }
 
     @Override
@@ -36,10 +36,11 @@ public class Main extends Plugin {
     public void onEnable() {
         instance = this;
         regConfig();
-        sql = new SQLHelper(MainConfig.cfg.getYml().getString("url"),
-                MainConfig.cfg.getYml().getString("user"),
-                MainConfig.cfg.getYml().getString("passwd"),
-                MainConfig.cfg.getYml().getString("database"));
+        String url = MainConfig.cfg.getYml().getString("url");
+        String user = MainConfig.cfg.getYml().getString("user");
+        String passwd = MainConfig.cfg.getYml().getString("passwd");
+        String database = MainConfig.cfg.getYml().getString("database");
+        this.sql = new SQLHelper(url, user, passwd, database);
         Onyx.setAPI(new BungeeAPI());
         PunishManager.init();
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
@@ -54,12 +55,27 @@ public class Main extends Plugin {
         Log.getLogger().sendLog("§a已成功加载！ §b版本号" + PluginInfo.getVersion());
     }
 
+    public void reload(){
+        this.sql.close();
+        String url = MainConfig.cfg.getYml().getString("url");
+        String user = MainConfig.cfg.getYml().getString("user");
+        String passwd = MainConfig.cfg.getYml().getString("passwd");
+        String database = MainConfig.cfg.getYml().getString("database");
+        this.sql = new SQLHelper(url, user, passwd, database);
+        BroadcastConfig.cfg.reload();
+        DataConfig.cfg.reload();
+        LobbyConfig.cfg.reload();
+        SkinConfig.cfg.reload();
+        PunishConfig.cfg.reload();
+    }
+
     @Override
     public void onDisable() {
         for(ProxiedPlayer online : BungeeCord.getInstance().getPlayers()){
             PlayerData data = Onyx.getPlayerData(online.getName());
             data.saveData(true);
         }
+        sql.close();
         Log.getLogger().sendLog("§c已成功卸载！ §b版本号" + PluginInfo.getVersion());
     }
 

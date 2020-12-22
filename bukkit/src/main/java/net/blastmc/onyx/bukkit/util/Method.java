@@ -2,6 +2,7 @@ package net.blastmc.onyx.bukkit.util;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
+import net.blastmc.onyx.api.bukkit.TagData;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.api.OnyxTagData;
 import com.google.common.io.ByteArrayDataOutput;
@@ -132,8 +133,8 @@ public class Method {
         return ret.toString();
     }
 
-    public static OnyxTagData getTagData(Player p){
-        OnyxTagData tagData = OnyxTagData.getData("default");
+    public static TagData getTagData(Player p){
+        TagData tagData = OnyxTagData.getData("default");
         int priority = tagData.getIntegerPriority();
         for(String group : OnyxTagData.getTagGroups()){
             int pri = OnyxTagData.getData(group).getIntegerPriority();

@@ -1,18 +1,18 @@
 package net.blastmc.onyx.bukkit.config;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class SkinConfig extends ConfigManager{
 
-    public static SkinConfig cfg;
+    public static SkinConfig config;
+    @Config(path = "skin")
+    public static List<String> SKINS = new ArrayList<>(Collections.singletonList("Hello_Han"));
 
     public SkinConfig() {
         super("skins", "plugins/Onyx");
-    }
-
-    public static void init(){
-        SkinConfig.cfg = new SkinConfig();
-        cfg.getYml().options().copyDefaults(true);
-        cfg.getYml().addDefault("skin", new String[]{"Hello_Han", "Shepi_Chao"});
-        cfg.save();
+        config = this;
     }
 
 }

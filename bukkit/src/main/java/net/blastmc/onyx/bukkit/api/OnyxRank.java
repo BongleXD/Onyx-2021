@@ -25,11 +25,15 @@ public class OnyxRank implements Rank {
     }
 
     public static void init(){
-        for (String rank : RankConfig.cfg.getYml().getConfigurationSection("rank").getKeys(false)) {
+        for (String rank : RankConfig.config.getYml().getConfigurationSection("rank").getKeys(false)) {
             if (dataMap.containsKey(rank)) {
                 continue;
             }
-            new OnyxRank(rank, RankConfig.cfg.getString("rank." + rank + ".displayname"), RankConfig.cfg.getString("rank." + rank + ".perm"), RankConfig.cfg.getString("rank." + rank + ".color"), RankConfig.cfg.getInt("rank." + rank + ".priority"));
+            new OnyxRank(rank,
+                    RankConfig.config.getString("rank." + rank + ".displayname"),
+                    RankConfig.config.getString("rank." + rank + ".perm"),
+                    RankConfig.config.getString("rank." + rank + ".color"),
+                    RankConfig.config.getInt("rank." + rank + ".priority"));
         }
     }
 

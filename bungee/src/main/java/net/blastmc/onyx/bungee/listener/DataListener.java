@@ -24,7 +24,7 @@ public class DataListener implements Listener {
     @EventHandler
     public void onLogin(LoginEvent e) {
         PendingConnection conn = e.getConnection();
-        PlayerData data = Onyx.getPlayerData(conn.getName());
+        PlayerData data = Onyx.init(conn.getUniqueId(), conn.getName());
         if(data == null){
             SkinAPI.getApi().setSkin(e.getConnection(), e.getConnection().getName());
         }else{

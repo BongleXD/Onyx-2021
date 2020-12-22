@@ -37,6 +37,8 @@ public interface API {
 
     void refreshAllTag();
 
+    void refreshTagFor(UUID uuid);
+
     SQLHelper getSQL();
 
     String getPIDIgnoreNick(String name);

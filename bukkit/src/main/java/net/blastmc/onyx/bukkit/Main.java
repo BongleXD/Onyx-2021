@@ -50,48 +50,45 @@ import java.io.File;
 public final class Main extends JavaPlugin {
 
     private static Main instance;
-    private static String bukkitVer;
-    private static NMS nms;
-    private static Chat chat = null;
-    private static SQLHelper sql;
-    private static ServerType type;
-    private static String serverName;
+    private NMS nms;
+    private Chat chat = null;
+    private SQLHelper sql;
+    private ServerType type;
+    private String serverName;
     private XpTask task;
+
+    public static String getBukkitVer() {
+        return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+    }
 
     public static Main getInstance() {
             return instance;
         }
 
-    public static String getBukkitVer() {
-        return bukkitVer;
-    }
-
     public static NMS getNMS() {
-        return nms;
+        return instance.nms;
     }
 
     public static SQLHelper getSQL() {
-        return sql;
+        return instance.sql;
     }
 
     public static ServerType getType() {
-        return type;
+        return instance.type;
     }
 
     public static String getServerName() {
-        return serverName;
+        return instance.serverName;
     }
 
     public static Chat getVault(){
-        return chat;
+        return instance.chat;
     }
 
     @Override
     public void onLoad() {
         PluginInfo.init(this.getDescription().getVersion());
         Log.getLogger().sendLog("§e插件读取中...");
-        bukkitVer = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
-        bukkitVer = bukkitVer.substring(bukkitVer.lastIndexOf(".") + 1);
         checkNMS();
     }
 
@@ -138,25 +135,26 @@ public final class Main extends JavaPlugin {
             PlayerProfile prof = Onyx.getPlayerProfile(p.getUniqueId());
             if(prof != null) prof.saveData(true);
         }
+        sql.close();
         Log.getLogger().sendLog("§c已成功卸载！ §b版本号" + PluginInfo.getVersion());
     }
 
     public void reloadConfigs(){
         reloadConfig();
-        SkinConfig.cfg.reload();
-        ChatConfig.cfg.reload();
-        SpawnConfig.cfg.reload();
-        TagConfig.cfg.reload();
-        SettingConfig.cfg.reload();
-        RankConfig.cfg.reload();
+        SkinConfig.config.reload();
+        ChatConfig.config.reload();
+        SpawnConfig.config.reload();
+        TagConfig.config.reload();
+        SettingConfig.config.reload();
+        RankConfig.config.reload();
         OnyxTagData.init();
-        RewardConfig.cfg.reload();
-        BungeeConfig.cfg.reload();
+        RewardConfig.config.reload();
+        BungeeConfig.config.reload();
     }
 
     private void checkNMS(){
-        Log.getLogger().sendLog("§e检测到服务器版本为 " + bukkitVer + " 正在读取中...");
-        switch (bukkitVer){
+        Log.getLogger().sendLog("§e检测到服务器版本为 " + getBukkitVer() + " 正在读取中...");
+        switch (getBukkitVer()){
             case "v1_8_R3":
                 nms = new v1_8_R3();
                 break;
@@ -164,7 +162,7 @@ public final class Main extends JavaPlugin {
                 nms = new v1_12_R1();
                 break;
             default:
-                Log.getLogger().sendError("§c检测到不兼容版本为 " + bukkitVer + " 的服务器！");
+                Log.getLogger().sendError("§c检测到不兼容版本为 " + getBukkitVer() + " 的服务器！");
                 Bukkit.shutdown();
                 break;
         }
@@ -225,7 +223,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Kick(), this);
             CommandManager.regCommand(new Warn(), this);
             CommandManager.regCommand(new Play(), this);
-            if (SettingConfig.cfg.getYml().getBoolean("setting.reg-lobby-command")) {
+            if (SettingConfig.LOBBY_REG) {
                 CommandManager.regCommand(new Lobby(), this);
             }
         } catch (ReflectiveOperationException e) {
@@ -249,15 +247,15 @@ public final class Main extends JavaPlugin {
         };
         this.getConfig().addDefault("disabled-cmd", cmd);
         this.saveConfig();
-        SkinConfig.init();
-        TagConfig.init();
-        SpawnConfig.init();
-        ChatConfig.init();
-        RewardConfig.init();
-        BungeeConfig.init();
-        SettingConfig.init();
-        RankConfig.init();
-        WhitelistConfig.init();
+        new SkinConfig();
+        new TagConfig();
+        new SpawnConfig();
+        new ChatConfig();
+        new RewardConfig();
+        new BungeeConfig();
+        new RankConfig();
+        new WhitelistConfig();
+        new SettingConfig();
     }
 
     private boolean checkPlugin(String name, boolean disable){

@@ -10,17 +10,13 @@ import java.util.UUID;
 public class WhitelistConfig extends ConfigManager{
 
     public static WhitelistConfig cfg;
+    @Config(path = "enabled")
+    public static boolean ENABLED = false;
+    @Config(path = "white-list")
+    public static List<String> WHITE_LIST = new ArrayList<>(Collections.singleton("b4d89443-69d4-365d-abaa-46036c4e7eb7"));
 
     public WhitelistConfig() {
-        super("whitelist", "plugins/Onyx");
-    }
-
-    public static void init(){
-        WhitelistConfig.cfg = new WhitelistConfig();
-        cfg.getYml().options().copyDefaults(true);
-        cfg.getYml().addDefault("enabled", false);
-        cfg.getYml().addDefault("white-list", new ArrayList<>(Collections.singleton("b4d89443-69d4-365d-abaa-46036c4e7eb7")));
-        cfg.save();
+        super("whitelist");
     }
 
     public static boolean addPlayer(String name){

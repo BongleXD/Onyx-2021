@@ -131,7 +131,7 @@ public class v1_12_R1 implements NMS {
         }
 
         //name tag remove
-        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+        if (TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 String priority = Method.getTagPriority(p, prof);
                 Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, priority);
@@ -189,7 +189,7 @@ public class v1_12_R1 implements NMS {
             if (p != online) ((CraftPlayer) online).getHandle().playerConnection.sendPacket(destroy);
 
         //name tag restore
-        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+        if (TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             String priority = Method.getTagPriority(p, prof);
             for (Player online : Bukkit.getOnlinePlayers()) {
                 String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
@@ -237,7 +237,7 @@ public class v1_12_R1 implements NMS {
         }
 
         //name tag remove
-        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+        if (TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 String priority = Method.getTagPriority(p, prof);
                 Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, priority);
@@ -298,7 +298,7 @@ public class v1_12_R1 implements NMS {
         prof.setNickName("");
 
         //name tag restore
-        if (TagConfig.cfg.getBoolean("enabled") && TagConfig.cfg.getYml().getStringList("enabled-world").contains(p.getWorld().getName())) {
+        if (TagConfig.ENABLED && TagConfig.ENABLED_WORLD.contains(p.getWorld().getName())) {
             String priority = Method.getTagPriority(p, prof);
             for (Player online : Bukkit.getOnlinePlayers()) {
                 String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -22,16 +23,16 @@ public class Kick extends CommandManager {
 
     @Cmd(arg = "<value...>", perm = "onyx.command.kick", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
     public void kick(CommandSender sender, String[] args){
-        Player p = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()).get(0);
+        Player p = new ArrayList<Player>(Bukkit.getOnlinePlayers()).get(0);
         if(p != null){
             String pid = Onyx.getAPI().getPIDIgnoreNick(args[0]);
             if(pid == null){
                 sender.sendMessage("§c玩家不存在！");
                 return;
             }
-            args[0] = args[args.length - 1];
-            args = Arrays.copyOf(args, args.length - 1);
-            String reason = Method.transColor(Joiner.on(" ").join(args));
+            String[] reasonArgs = new String[args.length - 1];
+            System.arraycopy(args, 1, reasonArgs, 0, args.length - 1);
+            String reason = Method.transColor(Joiner.on(" ").join(reasonArgs));
             if(reason.isEmpty()){
                 reason = "你被从服务器移除， 请重新加入服务器！";
             }

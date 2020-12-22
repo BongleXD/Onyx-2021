@@ -9,6 +9,7 @@ import net.blastmc.onyx.api.bukkit.server.ServerType;
 import net.blastmc.onyx.api.util.SQLHelper;
 import net.blastmc.onyx.bungee.Main;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -70,7 +71,8 @@ public class BungeeAPI implements API {
     public boolean isBanned(String pid) {
         if (getSQL().checkDataExists("ban_data", "pid", pid)) {
             try {
-                Statement stmt = getSQL().createStatement();
+                Connection conn = getSQL().getConnection();
+                Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
                 if (rs.next()) {
                     if (!rs.getString("action").equals("UNBAN")) {
@@ -84,6 +86,7 @@ public class BungeeAPI implements API {
                 }
                 rs.close();
                 stmt.close();
+                conn.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -185,6 +188,11 @@ public class BungeeAPI implements API {
 
     @Override
     public void refreshAllTag(){
+        throw new UnsupportedOperationException("Please use this method on PotatoSpigot Server");
+    }
+
+    @Override
+    public void refreshTagFor(UUID uuid) {
         throw new UnsupportedOperationException("Please use this method on PotatoSpigot Server");
     }
 

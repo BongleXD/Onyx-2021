@@ -2,17 +2,16 @@ package net.blastmc.onyx.bukkit.config;
 
 public class BungeeConfig extends ConfigManager {
 
-    public static BungeeConfig cfg;
+    public static BungeeConfig config;
+
+    @Config(path = "settings.lobby-servers")
+    public static String LOBBY = "mainLobby";
+    @Config(path = "settings.lobby-server-name")
+    public static String LOBBY_NAME = "主大厅";
 
     public BungeeConfig() {
-        super("bungee", "plugins/Onyx");
+        super("bungee");
+        config = this;
     }
 
-    public static void init(){
-        BungeeConfig.cfg = new BungeeConfig();
-        cfg.getYml().options().copyDefaults(true);
-        cfg.getYml().addDefault("settings.lobby-servers", "mainLobby");
-        cfg.getYml().addDefault("settings.lobby-server-name", "主大厅");
-        cfg.save();
-    }
 }

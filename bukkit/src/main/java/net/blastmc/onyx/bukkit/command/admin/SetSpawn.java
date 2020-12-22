@@ -21,16 +21,15 @@ public class SetSpawn extends CommandManager implements Listener{
     @Cmd(perm = "onyx.command.setspawn", only = CommandOnly.PLAYER)
     public void setSpawn(CommandSender sender, String[] args){
         Player p = (Player) sender;
-        SpawnConfig.cfg.getYml().set("spawn.loc", p.getLocation());
-        SpawnConfig.cfg.save();
+        SpawnConfig.SPAWN_LOC = p.getLocation();
         p.sendMessage("§a出生点已成功设置！");
     }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         try {
-            if (SpawnConfig.cfg.getYml().get("spawn.loc") != null) {
-                e.getPlayer().teleport((Location) SpawnConfig.cfg.getYml().get("spawn.loc"));
+            if (SpawnConfig.SPAWN_LOC != null) {
+                e.getPlayer().teleport(SpawnConfig.SPAWN_LOC);
             }
         }catch (ClassCastException ignored){}
     }

@@ -9,6 +9,7 @@ import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -60,7 +61,8 @@ public class PunishManager {
     public void checkBan(String pid, PendingConnection player) {
         if (sql.checkDataExists("ban_data", "pid", pid)) {
             try {
-                Statement stmt = sql.createStatement();
+                Connection conn = sql.getConnection();
+                Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("select ban_millis, action, duration, reason, ban_id from ban_data where pid = '" + pid + "' order by ban_millis desc limit 1;");
                 if (rs.next()) {
                     if (!rs.getString("action").equals("UNBAN")) {
@@ -80,6 +82,7 @@ public class PunishManager {
                 }
                 rs.close();
                 stmt.close();
+                conn.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -90,7 +93,8 @@ public class PunishManager {
     public void checkMute(String pid){
         if(sql.checkDataExists("mute_data", "pid", pid)){
             try {
-                Statement stmt = sql.createStatement();
+                Connection conn = sql.getConnection();
+                Statement stmt = conn.createStatement();
                 ResultSet rs = stmt.executeQuery("select mute_millis, action, duration, reason, mute_id from mute_data where pid = '" + pid + "' order by mute_millis desc limit 1;");
                 if(rs.next()){
                     if(!rs.getString("action").equals("UNMUTE")){
@@ -104,6 +108,7 @@ public class PunishManager {
                 }
                 rs.close();
                 stmt.close();
+                conn.close();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

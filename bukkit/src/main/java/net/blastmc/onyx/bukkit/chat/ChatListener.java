@@ -36,20 +36,20 @@ public class ChatListener implements Listener {
         if(e.isCancelled()){
             return;
         }
-        if(ChatConfig.cfg.getBoolean("enabled")) {
+        if(ChatConfig.ENABLED) {
             Player p = e.getPlayer();
             PlayerProfile prof = Onyx.getPlayerProfile(p.getUniqueId());
             if(prof == null){
                 return;
             }
             e.setCancelled(true);
-            TextComponent text = new TextComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(), ChatConfig.cfg.getString("format")));
-            if (ChatConfig.cfg.getBoolean("hover-enabled")) {
-                HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(PlaceholderAPI.setPlaceholders(p, ChatConfig.cfg.getString("hover-format"))).create());
+            TextComponent text = new TextComponent(PlaceholderAPI.setPlaceholders(e.getPlayer(), ChatConfig.FORMAT));
+            if (ChatConfig.HOVER_ENABLED) {
+                HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(PlaceholderAPI.setPlaceholders(p, ChatConfig.HOVER_FORMAT)).create());
                 text.setHoverEvent(hover);
             }
-            if (ChatConfig.cfg.getBoolean("click-enabled")) {
-                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ChatConfig.cfg.getString("click-command").replace("{player}", p.getName())));
+            if (ChatConfig.CLICK_ENABLED) {
+                text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, ChatConfig.CLICK_COMMAND.replace("{player}", p.getName())));
             }
             String message = e.getMessage();
             boolean b = false;
@@ -78,7 +78,7 @@ public class ChatListener implements Listener {
             for (Player online : Bukkit.getOnlinePlayers()) {
                 online.spigot().sendMessage(text, ComponentSerializer.parse(JsonMessageUtil.toJson(color.toString() + message))[0]);
             }
-            Bukkit.getConsoleSender().sendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(), ChatConfig.cfg.getString("format")) + message);
+            Bukkit.getConsoleSender().sendMessage(PlaceholderAPI.setPlaceholders(e.getPlayer(), ChatConfig.FORMAT) + message);
         }
     }
 

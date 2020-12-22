@@ -20,7 +20,7 @@ public class LynxMessaging implements PluginMessageListener {
         if (!channel.equals("Lynx")){
             return;
         }
-        if (!SettingConfig.cfg.getYml().getBoolean("setting.lynx-check")){
+        if (!SettingConfig.LYNX){
             return;
         }
         ByteArrayDataInput in = ByteStreams.newDataInput(b);

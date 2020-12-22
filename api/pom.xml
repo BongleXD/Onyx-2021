@@ -5,14 +5,13 @@
     <parent>
         <artifactId>onyx-parent</artifactId>
         <groupId>net.blastmc.onyx</groupId>
-        <version>1.0.2</version>
+        <version>1.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>onyx-api</artifactId>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -22,22 +21,6 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -50,18 +33,38 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.blastmc.spigot</groupId>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.4.5</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.blastmc.spigot.v1_12_R1</groupId>
+            <artifactId>potatospigot-api</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/PotatoSpigot-1.12.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.blastmc.spigot.v1_12_R1</groupId>
+            <artifactId>potatospigot-server</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/PotatoSpigot-1.12.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.blastmc.spigot.v1_8_R3</groupId>
             <artifactId>potatospigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${pom.basedir}/lib/PotatoSpigot-1.8.8.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>net.blastmc.spigot</groupId>
+            <groupId>net.blastmc.spigot.v1_8_R3</groupId>
             <artifactId>potatospigot-server</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/PotatoSpigot-1.8.8.jar</systemPath>
+            <systemPath>${pom.basedir}/lib/Bungee.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
@@ -71,13 +74,19 @@
             <systemPath>${pom.basedir}/lib/Bungee.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-proxy</artifactId>
-            <version>1.15-SNAPSHOT</version>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.9.2</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/Bungee.jar</systemPath>
+            <systemPath>${pom.basedir}/lib/PlaceholderAPI-2.9.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/Vault.jar</systemPath>
         </dependency>
     </dependencies>
-
 
 </project>

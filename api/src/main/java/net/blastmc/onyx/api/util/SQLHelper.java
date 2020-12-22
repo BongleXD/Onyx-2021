@@ -2,6 +2,8 @@ package net.blastmc.onyx.api.util;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -9,39 +11,68 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class SQLHelper {
-    
-    private String url;
-    private String user;
-    private String passwd;
-    private String database;
-    private Connection conn;
+
+    private HikariDataSource source;
 
     public SQLHelper(String url, String user, String passwd, String database) {
-        this.url = url;
-        this.user = user;
-        this.passwd = passwd;
-        this.database = database;
-        exeConn();
-    }
-
-    public Connection getConnection() {
-        return this.conn;
-    }
-
-    public void exeConn() {
+        HikariConfig config;
+        try {
+            config = new HikariConfig();
+        } catch (LinkageError ex) {
+            handleLinkageError(ex);
+            throw ex;
+        }
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://" + url + "/" + database + "?autoReconnect=true&user=" + user + "&password=" + passwd + "&useSSL=false" + "&useUnicode=true&characterEncoding=UTF-8");
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+        config.setPoolName("onyx-hikari");
+        config.setJdbcUrl(String.format("jdbc:mysql://%s/%s"
+                , url, database));
+        config.setUsername(user);
+        config.setPassword(passwd);
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("useServerPrepStmts", "true");
+        config.addDataSourceProperty("useLocalSessionState", "true");
+        config.addDataSourceProperty("rewriteBatchedStatements", "true");
+        config.addDataSourceProperty("cacheResultSetMetadata", "true");
+        config.addDataSourceProperty("cacheServerConfiguration", "true");
+        config.addDataSourceProperty("elideSetAutoCommits", "true");
+        config.addDataSourceProperty("maintainTimeStats", "false");
+        config.addDataSourceProperty("alwaysSendSetIsolation", "false");
+        config.addDataSourceProperty("cacheCallableStmts", "true");
+        config.addDataSourceProperty("useUnicode", "true");
+        config.addDataSourceProperty("characterEncoding", "utf-8");
+        config.addDataSourceProperty("useSSL", "false");
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(10);
+        config.setMaxLifetime(1800000);
+        config.setConnectionTimeout(5000);
+        Log.getLogger().sendLog("§e连接 " + config.getJdbcUrl() + " 中。。。");
+        this.source = new HikariDataSource(config);
+    }
+
+    public Connection getConnection() throws SQLException {
+        if (this.source == null) {
+            throw new SQLException("Unable to get a connection from the pool. (hikari is null)");
+        }
+        Connection connection = this.source.getConnection();
+        if (connection == null) {
+            throw new SQLException("Unable to get a connection from the pool. (getConnection returned null)");
+        }
+        return connection;
+    }
+
+    private static void handleLinkageError(LinkageError linkageError) {
+        Log.getLogger().sendLog("在引入 Hikari 时发生错误 " + linkageError.getClass().getSimpleName() + "。 Onyx 似乎与其他插件冲突！");
     }
 
     public void create(String table, Value... values) {
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             StringBuilder sb = new StringBuilder();
             boolean first = true;
             for(Value value : values){
@@ -52,7 +83,10 @@ public class SQLHelper {
                 }
                 sb.append(value.getName() + " " + value.getType().getStatement());
             }
-            conn.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + "(" + sb.toString() + ");");
+            PreparedStatement stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " + table + "(" + sb.toString() + ");");
+            stmt.executeUpdate();
+            stmt.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,9 +94,7 @@ public class SQLHelper {
 
     public int getOrder(String table, String flag, String flagData, String data){
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("select data_order from (SELECT t.*, @rownum := @rownum + 1 AS data_order FROM (select * from " + table + " order by " + data + " desc) t, (SELECT @rownum := 0) r) b where " + flag + " = '" + flagData + "';");
             if (rs.next()) {
@@ -70,6 +102,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,9 +113,7 @@ public class SQLHelper {
     public List getColumnData(String table, String flag, String flagData, int line){
         List<Object> list = Lists.newArrayList();
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM " + table + " WHERE " + flag + " = '" + flagData + "';");
             while (rs.next()) {
@@ -90,6 +121,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -99,9 +131,7 @@ public class SQLHelper {
     public List getRowData(String table, int line) {
         List<Object> list = Lists.newArrayList();
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT * FROM " + table + ";");
             int j = 1;
@@ -122,6 +152,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -131,10 +162,8 @@ public class SQLHelper {
     public boolean checkDataExists(String table, String flag, String data){
         boolean b = false;
         try {
-            if(this.getConnection().isClosed()){
-                this.exeConn();
-            }
-            Statement s = this.getConnection().createStatement();
+            Connection conn = getConnection();
+            Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM " + table + " WHERE " + flag + " = '" + data + "';");
             while (rs.next()) {
                 int count = rs.getInt(1);
@@ -142,31 +171,17 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return b;
     }
 
-    public Statement createStatement(){
-        try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-            Statement s = conn.createStatement();
-            return s;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public List getData(String query, String data){
         List<Object> list = Lists.newArrayList();
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery(query);
             while (rs.next()) {
@@ -174,6 +189,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -183,9 +199,7 @@ public class SQLHelper {
     public List getData(String table, String flag, String flagData, String... datas) {
         List<Object> list = Lists.newArrayList();
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < datas.length; i++) {
                 if (i != 0)
@@ -202,6 +216,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -210,9 +225,7 @@ public class SQLHelper {
 
     public void putData(String table, String flag, String flagData, SqlValue... values) {
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
+            Connection conn = getConnection();
             StringBuilder datas = new StringBuilder();
             datas.append(flag + ", ");
             for (int i = 0; i < values.length; i++) {
@@ -239,10 +252,12 @@ public class SQLHelper {
                 PreparedStatement stmt = conn.prepareStatement("INSERT INTO " + table + " (" + datas.toString() + ") VALUES(" + sqlValues.toString() + ");");
                 stmt.executeUpdate();
                 stmt.close();
+                conn.close();
             } else {
                 PreparedStatement stmt = conn.prepareStatement("UPDATE " + table + " SET " + sb.toString() + " WHERE " + flag + " = '" + flagData + "';");
                 stmt.executeUpdate();
                 stmt.close();
+                conn.close();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -250,17 +265,15 @@ public class SQLHelper {
     }
 
     public void insertData(String table, SqlValue... values) {
-        //Object[] data, Object[] value
         try {
-            if(this.getConnection().isClosed()){
-                this.exeConn();
-            }
+            Connection conn = getConnection();
             PreparedStatement stmt = conn.prepareStatement(
                     "INSERT INTO " + table +
                             " (" + Joiner.on(", ").join(Arrays.stream(values).map(SqlValue::getData).collect(Collectors.toList())) + ") VALUES ('" +
                             Joiner.on("', '").join(Arrays.stream(values).map(SqlValue::getValue).collect(Collectors.toList())) + "');");
             stmt.executeUpdate();
             stmt.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -268,10 +281,8 @@ public class SQLHelper {
 
     public int countData(String query){
         try {
-            if(this.getConnection().isClosed()){
-                this.exeConn();
-            }
-            Statement s = this.getConnection().createStatement();
+            Connection conn = getConnection();
+            Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery(query);
             if (rs.next()) {
                 int count = rs.getInt(1);
@@ -279,22 +290,21 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
 
+    public void close(){
+        this.source.close();
+    }
+
     public List<Object> getListData(String table, String flag, String flagData, String data) {
         List<Object> list = Lists.newArrayList();
         try {
-            if (conn.isClosed()) {
-                exeConn();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
+            Connection conn = getConnection();
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery("SELECT " + data + " FROM " + table + " WHERE " + flag + " = '" + flagData + "';");
             while (rs.next()) {
@@ -302,6 +312,7 @@ public class SQLHelper {
             }
             rs.close();
             s.close();
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -102,6 +102,6 @@ public class Reboot extends CommandManager {
     }
 
     private void shutdown(Player p, String reason) {
-        Onyx.getAPI().kickToLobby(p.getUniqueId(), BungeeConfig.cfg.getYml().getString("settings.lobby-servers"), BungeeConfig.cfg.getYml().getString("settings.lobby-server-name"), reason);
+        Onyx.getAPI().kickToLobby(p.getUniqueId(), BungeeConfig.LOBBY, BungeeConfig.LOBBY_NAME, reason);
     }
 }

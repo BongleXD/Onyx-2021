@@ -16,7 +16,7 @@ public class Spawn extends CommandManager {
     public void spawn(CommandSender sender, String[] args){
         Player p = (Player) sender;
         try {
-            p.teleport((Location) SpawnConfig.cfg.getYml().get("spawn.loc"));
+            p.teleport(SpawnConfig.SPAWN_LOC);
             p.sendMessage("§a已将你传送至出生点！");
         }catch (Exception ex){
             p.sendMessage("§c出生点未设置！");

@@ -1,14 +1,16 @@
 package net.blastmc.onyx.bukkit.config;
 
+import org.bukkit.Location;
+
 public class SpawnConfig extends ConfigManager{
 
-    public static SpawnConfig cfg;
+    public static SpawnConfig config;
+    @Config(path = "spawn.loc")
+    public static Location SPAWN_LOC = null;
 
     public SpawnConfig() {
-        super("spawn", "plugins/Onyx");
+        super("spawn");
+        config = this;
     }
 
-    public static void init(){
-        SpawnConfig.cfg = new SpawnConfig();
-    }
 }
