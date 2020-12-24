@@ -14,6 +14,10 @@ public class Packet {
         return packet;
     }
 
+    public void setPacket(Object packet) {
+        this.packet = packet;
+    }
+
     public String getName() {
         return name;
     }

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Kick extends CommandManager {
 
     public Kick() {
-        super("kick", "移除", "/kick <玩家> [原因]", "移除");
+        super("kick", "移除", "/kick <玩家> [原因]", "onyx.command.kick", "移除");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.kick", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

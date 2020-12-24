@@ -14,11 +14,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class SetSpawn extends CommandManager implements Listener{
 
     public SetSpawn() {
-        super("setspawn", "设置出生点", "/setspawn");
+        super("setspawn", "设置出生点", "/setspawn", "onyx.command.set-spawn");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 
-    @Cmd(perm = "onyx.command.setspawn", only = CommandOnly.PLAYER)
+    @Cmd(perm = "onyx.command.set-spawn", only = CommandOnly.PLAYER)
     public void setSpawn(CommandSender sender, String[] args){
         Player p = (Player) sender;
         SpawnConfig.SPAWN_LOC = p.getLocation();

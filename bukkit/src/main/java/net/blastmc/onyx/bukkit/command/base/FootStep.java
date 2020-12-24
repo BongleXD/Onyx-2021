@@ -19,9 +19,8 @@ public class FootStep extends CommandManager implements Listener {
     private HashMap<Player, Long> coolDownMap = new HashMap<>();
 
     public FootStep() {
-        super("footstep", "开启足迹模式", "/footstep [玩家] [on/off]", "fs", "fp", "footprint", "step", "足迹模式");
+        super("footstep", "开启足迹模式", "/footstep [玩家] [on/off]", "onyx.command.footstep", "fs", "fp", "footprint", "step", "足迹模式");
         this.setPermissionMessage("§c你需要 §2MOD §c及以上的会员等级才能使用此指令！");
-        this.setPermission("onyx.command.footstepforce");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 

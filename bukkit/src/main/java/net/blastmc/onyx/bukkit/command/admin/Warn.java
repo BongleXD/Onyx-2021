@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Warn extends CommandManager {
 
     public Warn() {
-        super("warn", "警告", "/warn <玩家> [原因]", "警告");
+        super("warn", "警告", "/warn <玩家> [原因]", "onyx.command.warn","警告");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.warn", permMessage = "§c你需要 §9志愿者 及以上的会员等级才能使用此指令！")

@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class Heal extends CommandManager {
 
     public Heal() {
-        super("heal", "治疗", "/heal [玩家]", "治疗");
+        super("heal", "治疗", "/heal [玩家]", "onyx.command.heal", "治疗");
     }
 
     @Cmd(perm = "onyx.command.heal", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)

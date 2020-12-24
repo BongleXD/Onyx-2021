@@ -6,7 +6,7 @@
 
     <groupId>net.blastmc.onyx</groupId>
     <artifactId>onyx-parent</artifactId>
-    <version>1.1.2</version>
+    <version>1.2.12</version>
     <modules>
         <module>api</module>
         <module>bukkit</module>

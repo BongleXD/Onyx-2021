@@ -2,11 +2,11 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.bukkit.Main;
+import net.blastmc.onyx.bukkit.config.SettingConfig;
 import net.blastmc.onyx.bukkit.util.Method;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
 import net.blastmc.onyx.bukkit.util.interact.TitleUtil;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.bukkit.config.BungeeConfig;
 import net.blastmc.onyx.bukkit.exception.RebootException;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -21,7 +21,7 @@ import org.bukkit.scheduler.BukkitTask;
 public class Reboot extends CommandManager {
 
     public Reboot() {
-        super("reboot", "重启", "/reboot <时间> [原因] 或 /reboot stop", "shutdown");
+        super("reboot", "重启", "/reboot <时间> [原因] 或 /reboot stop", "onyx.command.reboot", "shutdown");
     }
 
     @Cmd(arg = "stop", aliases = "暂停", perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
@@ -30,7 +30,7 @@ public class Reboot extends CommandManager {
             Method.removeTask("reboot");
             sender.sendMessage("§c关闭服务器操作被强行终止！");
             for(Player online : Bukkit.getOnlinePlayers()){
-                TitleUtil.sendTitle(online, 3, 15, 3, "§c关闭操作被终止", "");
+                TitleUtil.sendTitle(online, 3, 35, 3, "§c关闭操作被终止", "");
             }
         }else{
             sender.sendMessage("§c未检测到服务器正在进行重启！");
@@ -92,7 +92,7 @@ public class Reboot extends CommandManager {
                 }else if(i % 10 == 0 || i <= 5) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
                         online.playSound(online.getLocation(), SoundUtil.NOTE_STICKS.getSound(), 2.0F, 1.0F);
-                        TitleUtil.sendTitle(online, 3, 25, 3, "§c服务器即将于 §e" + i + " §c秒后关闭", "§e原因: " + args[2]);
+                        TitleUtil.sendTitle(online, 3, 35, 3, "§c服务器即将于 §e" + i + " §c秒后关闭", "§e原因: " + args[2]);
                     }
                 }
                 i--;
@@ -102,6 +102,6 @@ public class Reboot extends CommandManager {
     }
 
     private void shutdown(Player p, String reason) {
-        Onyx.getAPI().kickToLobby(p.getUniqueId(), BungeeConfig.LOBBY, BungeeConfig.LOBBY_NAME, reason);
+        Onyx.getAPI().kickToLobby(p.getUniqueId(), SettingConfig.LOBBY, SettingConfig.LOBBY_NAME, reason);
     }
 }

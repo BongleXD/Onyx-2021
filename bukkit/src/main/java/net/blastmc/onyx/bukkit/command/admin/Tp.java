@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class Tp extends CommandManager {
 
     public Tp() {
-        super("tp", "传送", "/tp <玩家> [玩家] 或者 /tp [玩家] <x> <y> <z>", "传送");
+        super("tp", "传送", "/tp <玩家> [玩家] 或者 /tp [玩家] <x> <y> <z>", "onyx.command.tp", "传送");
     }
 
     @Cmd(arg = "<player>", perm = "onyx.command.tp", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)

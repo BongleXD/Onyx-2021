@@ -3,12 +3,12 @@ package net.blastmc.onyx.bukkit.support.v1_8_R3;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.support.Hologram;
+import net.blastmc.onyx.api.bukkit.Hologram;
 import net.blastmc.onyx.bukkit.util.Method;
 import net.blastmc.onyx.bukkit.util.ReflectUtils;
-import net.blastmc.onyx.bukkit.util.TeamAction;
+import net.blastmc.onyx.api.bukkit.TeamAction;
 import net.blastmc.onyx.bukkit.config.TagConfig;
-import net.blastmc.onyx.bukkit.support.NMS;
+import net.blastmc.onyx.api.bukkit.NMS;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -25,9 +25,15 @@ import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class v1_8_R3 implements NMS {
+
+    @Override
+    public Hologram newInstance(Location loc, List<String> list) {
+        return new Hologram_1_8_R3(loc, list);
+    }
 
     @Override
     public Hologram newInstance(Location loc, String... lines) {

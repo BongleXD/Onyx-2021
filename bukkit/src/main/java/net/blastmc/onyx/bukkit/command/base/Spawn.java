@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class Spawn extends CommandManager {
 
     public Spawn() {
-        super("spawn", "返回出生点", "/setspawn");
+        super("spawn", "返回出生点", "/setspawn", "onyx.command.spawn");
     }
 
     @Cmd(perm = "onyx.command.spawn", only = CommandManager.CommandOnly.PLAYER)

@@ -5,13 +5,14 @@
     <parent>
         <artifactId>onyx-parent</artifactId>
         <groupId>net.blastmc.onyx</groupId>
-        <version>1.1.2</version>
+        <version>1.2.12</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>onyx-api</artifactId>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UnBan extends CommandManager {
 
     public UnBan() {
-        super("unban", "解除封禁", "/unban <玩家> [原因]");
+        super("unban", "解除封禁", "/unban <玩家> [原因]", "onyx.command.unban");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.unban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

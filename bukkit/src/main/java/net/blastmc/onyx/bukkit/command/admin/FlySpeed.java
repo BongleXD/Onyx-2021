@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class FlySpeed extends CommandManager {
 
     public FlySpeed() {
-        super("flyspeed", "飞行速度", "/flyspeed [玩家] <1-10>", "飞行速度");
+        super("flyspeed", "飞行速度", "/flyspeed [玩家] <1-10>", "onyx.command.fly-speed", "飞行速度");
         this.setPermission("onyx.command.flyspeed");
     }
 

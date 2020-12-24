@@ -18,7 +18,7 @@ public class God extends CommandManager implements Listener {
     private List<UUID> players = new ArrayList<>();
 
     public God() {
-        super("godmode", "无敌模式", "/godmode [玩家] [on/off]", "无敌", "god");
+        super("godmode", "无敌模式", "/godmode [玩家] [on/off]", "onyx.command.god", "无敌", "god");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 

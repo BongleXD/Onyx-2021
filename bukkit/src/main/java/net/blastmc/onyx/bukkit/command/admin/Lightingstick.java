@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 public class Lightingstick extends CommandManager implements Listener {
 
     public Lightingstick() {
-        super("lightningstick", "闪电棍", "/lightningstick <give/take> <玩家/all>", "闪电棍", "ls");
+        super("lightningstick", "闪电棍", "/lightningstick <give/take> <玩家/all>", "onyx.command.lightningstick", "闪电棍", "ls");
         this.setPermissionMessage("§c你需要 §cADMIN §c及以上的会员等级才能使用此指令！");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }

@@ -19,7 +19,7 @@ public class Kaboom extends CommandManager implements Listener {
     private List<UUID> players = new ArrayList<>();
 
     public Kaboom() {
-        super("kaboom", "击飞玩家", "/kaboom [玩家]", "kab", "喀嘣");
+        super("kaboom", "击飞玩家", "/kaboom [玩家]", "onyx.command.kaboom", "kab", "喀嘣");
         this.setPermissionMessage("§c你需要 §cADMIN §c及以上的会员等级才能使用此指令！");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }

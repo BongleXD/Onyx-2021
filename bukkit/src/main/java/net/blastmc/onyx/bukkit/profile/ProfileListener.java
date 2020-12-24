@@ -9,7 +9,7 @@ import net.blastmc.onyx.api.bukkit.event.PlayerInitEvent;
 import net.blastmc.onyx.bukkit.api.OnyxPlayerProfile;
 import net.blastmc.onyx.bukkit.command.admin.Vanish;
 import net.blastmc.onyx.bukkit.util.Method;
-import net.blastmc.onyx.bukkit.util.TeamAction;
+import net.blastmc.onyx.api.bukkit.TeamAction;
 import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
 import net.blastmc.onyx.bukkit.config.SettingConfig;
 import net.blastmc.onyx.bukkit.config.TagConfig;

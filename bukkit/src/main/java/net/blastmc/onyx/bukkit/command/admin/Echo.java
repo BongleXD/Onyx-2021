@@ -13,7 +13,7 @@ import java.util.List;
 public class Echo extends CommandManager {
 
     public Echo() {
-        super("echo", "通知某人", "/echo <玩家> <信息>", "通知");
+        super("echo", "通知某人", "/echo <玩家> <信息>", "onyx.command.broadcast","通知");
     }
 
     @Cmd(arg = "<player> <value...>", perm = "onyx.command.broadcast", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")

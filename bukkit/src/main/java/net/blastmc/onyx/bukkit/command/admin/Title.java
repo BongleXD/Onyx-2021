@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class Title extends CommandManager {
 
     public Title() {
-        super("title", "发送标题信息", "/title <玩家名/all/me> <标题> [副标题] [渐入] [持续] [渐出]");
+        super("title", "发送标题信息", "/title <玩家名/all/me> <标题> [副标题] [渐入] [持续] [渐出]", "onyx.command.title");
     }
 
     @Cmd(arg = "<value> <value>", perm = "onyx.command.title")

@@ -19,7 +19,7 @@ public class Freeze extends CommandManager implements Listener {
     private List<UUID> players = new ArrayList<>();
 
     public Freeze() {
-        super("freeze", "冻结", "/freeze <玩家>", "冻结");
+        super("freeze", "冻结", "/freeze <玩家>", "onyx.command.freeze", "冻结");
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 

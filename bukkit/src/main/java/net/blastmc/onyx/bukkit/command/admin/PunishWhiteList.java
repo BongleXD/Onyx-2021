@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 public class PunishWhiteList extends CommandManager {
 
     public PunishWhiteList() {
-        super("punishwhitelist", "惩罚白名单", "/punishwhitelist <add/remove> <玩家>", "punishwl");
+        super("punishwhitelist", "惩罚白名单", "/punishwhitelist <add/remove> <玩家>", "onyx.command.punish-whitelist", "punishwl");
     }
 
-    @Cmd(arg = "add <value>", perm = "onyx.command.punishwhitelist", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
+    @Cmd(arg = "add <value>", perm = "onyx.command.punish-whitelist", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
     public void addWL(CommandSender sender, String[] args){
         Player p = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()).get(0);
         if(p != null){
@@ -29,7 +29,7 @@ public class PunishWhiteList extends CommandManager {
         }
     }
 
-    @Cmd(arg = "remove <value>", perm = "onyx.command.punishwhitelist", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
+    @Cmd(arg = "remove <value>", perm = "onyx.command.punish-whitelist", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
     public void removeWL(CommandSender sender, String[] args){
         Player p = Bukkit.getOnlinePlayers().stream().collect(Collectors.toList()).get(0);
         if(p != null){

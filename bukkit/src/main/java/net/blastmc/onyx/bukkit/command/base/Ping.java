@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class Ping extends CommandManager {
 
     public Ping() {
-        super("ping", "显示自己/他人的延迟", "/ping [玩家]", "延迟", "ms");
+        super("ping", "显示自己/他人的延迟", "/ping [玩家]", "onyx.command.ping", "延迟", "ms");
     }
 
     @Cmd(perm = "onyx.command.ping", only = CommandOnly.PLAYER)

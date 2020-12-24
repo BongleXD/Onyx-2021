@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class Firework extends CommandManager {
 
     public Firework() {
-        super("firework", "发射烟花", "/firework", "fw", "烟花");
+        super("firework", "发射烟花", "/firework", "onyx.command.firework","fw", "烟花");
         this.setPermissionMessage("§c你需要 §aVIP§6+ §c及以上的会员等级才能使用烟花！请移步至主大厅进行购买会员等级！");
     }
 

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class Ban extends CommandManager {
 
     public Ban() {
-        super("ban", "封禁", "/ban <玩家> [时间] [原因]");
+        super("ban", "封禁", "/ban <玩家> [时间] [原因]", "onyx.command.ban");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.ban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

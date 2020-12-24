@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class Sudo extends CommandManager {
 
     public Sudo() {
-        super("sudo", "强行执行指令", "/sudo <玩家> <指令...>", "执行");
+        super("sudo", "强行执行指令", "/sudo <玩家> <指令...>", "onyx.command.sudo", "执行");
         this.setPermissionMessage("§c你需要 ADMIN 及以上的会员等级才能使用此指令！");
     }
 

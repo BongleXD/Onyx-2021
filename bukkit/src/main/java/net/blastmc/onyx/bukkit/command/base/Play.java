@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Play extends CommandManager {
 
     public Play() {
-        super("play", "传送服务器", "/play <目标服务器>");
+        super("play", "传送服务器", "/play <目标服务器>", null);
         this.setPermission(null);
     }
 

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 public class Gamemode extends CommandManager {
 
     public Gamemode() {
-        super("gamemode", "调整游戏模式", "/gamemode [玩家] <模式>", "gm", "模式");
+        super("gamemode", "调整游戏模式", "/gamemode [玩家] <模式>", "onyx.command.gamemode", "gm", "模式");
         this.setPermissionMessage("§c你需要 §cADMIN §c及以上的会员等级才能使用此指令！");
     }
 

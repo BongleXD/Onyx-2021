@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class TpAll extends CommandManager {
 
     public TpAll() {
-        super("tpall", "传送全体", "/tpall", "传送全体");
+        super("tpall", "传送全体", "/tpall", "onyx.command.tpall", "传送全体");
     }
 
     @Cmd(perm = "onyx.command.tpall", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 public class Lightning extends CommandManager {
 
     public Lightning() {
-        super("lightning", "闪电", "/lightning", "shock");
+        super("lightning", "闪电", "/lightning", "onyx.command.lightning", "shock");
     }
 
     @Cmd(coolDown = 1500, perm = "onyx.command.lightning", permMessage = "§c你需要 ADMIN §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)

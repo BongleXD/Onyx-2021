@@ -16,6 +16,10 @@ public class SettingConfig extends ConfigManager {
     public static String JOIN_MSG = "§8[§a+§8] {displayname}";
     @Config(path = "setting.quit-msg")
     public static String QUIT_MSG = "§8[§c-§8] {displayname}";
+    @Config(path = "setting.bungee.lobby-servers")
+    public static String LOBBY = "mainLobby";
+    @Config(path = "setting.bungee.lobby-server-name")
+    public static String LOBBY_NAME = "主大厅";
 
     public SettingConfig() {
         super("setting", "plugins/Onyx");

@@ -18,7 +18,7 @@ public class Vanish extends CommandManager implements Listener {
     public static List<PlayerProfile> vanishList = Lists.newArrayList();
 
     public Vanish() {
-        super("vanish", "隐身", "/vanish [玩家] [on/off]", "v", "隐身");
+        super("vanish", "隐身", "/vanish [玩家] [on/off]", "onyx.command.vanish", "v", "隐身");
     }
 
     @Cmd(coolDown = 5000, perm = "onyx.command.vanish", permMessage = "§c你不能这么做！", only = CommandOnly.PLAYER)

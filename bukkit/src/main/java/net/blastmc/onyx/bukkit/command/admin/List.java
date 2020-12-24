@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 public class List extends CommandManager {
 
     public List() {
-        super("list", "显示在线玩家", "/list");
+        super("list", "显示在线玩家", "/list", "onyx.command.list");
     }
 
     @Cmd(perm = "onyx.command.list")

@@ -9,6 +9,7 @@ import net.blastmc.onyx.bukkit.api.BukkitAPI;
 import net.blastmc.onyx.bukkit.api.OnyxPlayerProfile;
 import net.blastmc.onyx.bukkit.api.OnyxTagData;
 import net.blastmc.onyx.bukkit.chat.ChatListener;
+import net.blastmc.onyx.bukkit.hologram.HologramCommand;
 import net.blastmc.onyx.bukkit.level.ClaimData;
 import net.blastmc.onyx.bukkit.level.LevelListener;
 import net.blastmc.onyx.bukkit.nick.Nick;
@@ -31,7 +32,7 @@ import net.blastmc.onyx.bukkit.messaging.BungeeMessaging;
 import net.blastmc.onyx.bukkit.messaging.LynxMessaging;
 import net.blastmc.onyx.bukkit.profile.Profile;
 import net.blastmc.onyx.bukkit.profile.ProfileListener;
-import net.blastmc.onyx.bukkit.support.NMS;
+import net.blastmc.onyx.api.bukkit.NMS;
 import net.blastmc.onyx.bukkit.support.v1_8_R3.v1_8_R3;
 import net.blastmc.onyx.api.util.Log;
 import net.blastmc.onyx.api.util.SQLHelper;
@@ -149,7 +150,7 @@ public final class Main extends JavaPlugin {
         RankConfig.config.reload();
         OnyxTagData.init();
         RewardConfig.config.reload();
-        BungeeConfig.config.reload();
+        HologramConfig.config.reload();
     }
 
     private void checkNMS(){
@@ -223,6 +224,7 @@ public final class Main extends JavaPlugin {
             CommandManager.regCommand(new Kick(), this);
             CommandManager.regCommand(new Warn(), this);
             CommandManager.regCommand(new Play(), this);
+            CommandManager.regCommand(new HologramCommand(), this);
             if (SettingConfig.LOBBY_REG) {
                 CommandManager.regCommand(new Lobby(), this);
             }
@@ -252,10 +254,10 @@ public final class Main extends JavaPlugin {
         new SpawnConfig();
         new ChatConfig();
         new RewardConfig();
-        new BungeeConfig();
         new RankConfig();
         new WhitelistConfig();
         new SettingConfig();
+        new HologramConfig();
     }
 
     private boolean checkPlugin(String name, boolean disable){

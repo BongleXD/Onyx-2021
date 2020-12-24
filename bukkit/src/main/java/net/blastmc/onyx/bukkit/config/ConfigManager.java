@@ -58,6 +58,7 @@ public class ConfigManager {
             }
             try {
                 Object obj = getYml().get(cfg.path(), field.get(this));
+                yml.set(cfg.path(), obj);
                 if(obj instanceof String){
                     obj = Method.transColor((String) obj);
                 }
@@ -78,8 +79,8 @@ public class ConfigManager {
         init();
     }
 
-    public void set(String string, Object object) {
-        this.yml.set(string, object);
+    public void set(String string, Object obj) {
+        this.yml.set(string, obj);
         this.save();
     }
 

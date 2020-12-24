@@ -3,6 +3,7 @@ package net.blastmc.onyx.bungee.api;
 import net.blastmc.onyx.api.API;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.PlayerData;
+import net.blastmc.onyx.api.bukkit.NMS;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.Rank;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
@@ -123,6 +124,11 @@ public class BungeeAPI implements API {
 
     @Override
     public void refreshVanish(UUID uuid){
+        throw new UnsupportedOperationException("Please use this method on PotatoSpigot Server");
+    }
+
+    @Override
+    public NMS getNMS() {
         throw new UnsupportedOperationException("Please use this method on PotatoSpigot Server");
     }
 

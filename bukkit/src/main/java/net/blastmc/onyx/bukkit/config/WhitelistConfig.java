@@ -17,6 +17,7 @@ public class WhitelistConfig extends ConfigManager{
 
     public WhitelistConfig() {
         super("whitelist");
+        cfg = this;
     }
 
     public static boolean addPlayer(String name){
@@ -29,10 +30,6 @@ public class WhitelistConfig extends ConfigManager{
         cfg.set("white-list", whiteList);
         cfg.save();
         return true;
-    }
-
-    public static boolean isEnabled(){
-        return cfg.getYml().getBoolean("enabled");
     }
 
     public static void setEnabled(boolean value){

@@ -8,17 +8,17 @@ import org.bukkit.entity.Player;
 public class WalkSpeed extends CommandManager {
 
     public WalkSpeed() {
-        super("walkspeed", "行走速度", "/walkspeed [玩家] <1-10>", "行走速度");
+        super("walkspeed", "行走速度", "/walkspeed [玩家] <1-10>", "onyx.command.walk-speed","行走速度");
     }
 
-    @Cmd(perm = "onyx.command.walkspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
+    @Cmd(perm = "onyx.command.walk-speed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
     public void reset(CommandSender sender, String[] args){
         Player p = (Player) sender;
         p.setFlySpeed((float) 0.2);
         p.sendMessage("§a已将你的行走速度修改为默认！");
     }
 
-    @Cmd(arg = "<integer>", perm = "onyx.command.walkspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
+    @Cmd(arg = "<integer>", perm = "onyx.command.walk-speed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！", only = CommandOnly.PLAYER)
     public void set(CommandSender sender, String[] args){
         Player p = (Player) sender;
         float f = Float.parseFloat(args[0] + "f") / 10;
@@ -30,7 +30,7 @@ public class WalkSpeed extends CommandManager {
         }
     }
 
-    @Cmd(arg = "<player> <integer>", perm = "onyx.command.walkspeed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！")
+    @Cmd(arg = "<player> <integer>", perm = "onyx.command.walk-speed", permMessage = "§c你需要 §2MOD §c及以上的会员等级才能使用此指令！")
     public void setOther(CommandSender sender, String[] args){
         Player p = Bukkit.getPlayer(args[0]);
         float f = Float.parseFloat(args[1] + "f") / 10;

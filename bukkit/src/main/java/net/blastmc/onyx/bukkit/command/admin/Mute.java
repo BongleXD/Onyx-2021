@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Mute extends CommandManager {
 
     public Mute() {
-        super("mute", "禁言", "/mute <玩家> [时间] [原因]", "禁言");
+        super("mute", "禁言", "/mute <玩家> [时间] [原因]", "onyx.command.mute", "禁言");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.mute", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

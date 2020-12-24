@@ -4,9 +4,9 @@ import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.bukkit.config.BungeeConfig;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import net.blastmc.onyx.bukkit.config.SettingConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 public class Lobby extends CommandManager {
 
     public Lobby() {
-        super("lobby", "返回大厅", "/lobby", "l", "hub", "leave", "quit");
+        super("lobby", "返回大厅", "/lobby", null, "l", "hub", "leave", "quit");
         setPermission("");
     }
 
@@ -29,7 +29,7 @@ public class Lobby extends CommandManager {
                 }
                 ByteArrayDataOutput b = ByteStreams.newDataOutput();
                 b.writeUTF("BACK_LOBBY");
-                b.writeUTF(BungeeConfig.LOBBY);
+                b.writeUTF(SettingConfig.LOBBY);
                 b.writeUTF(Onyx.getPlayerData(p.getUniqueId()).getName());
                 p.sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
             }

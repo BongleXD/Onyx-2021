@@ -16,8 +16,7 @@ import java.util.List;
 public class MainCommand extends CommandManager{
 
     public MainCommand() {
-        super("onyx", "Onyx 主命令", "/onyx help", "core");
-        this.setPermission(null);
+        super("onyx", "Onyx 主命令", "/onyx help", null, "core");
     }
 
     @Cmd

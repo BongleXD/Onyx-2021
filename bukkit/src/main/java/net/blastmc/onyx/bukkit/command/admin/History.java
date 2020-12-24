@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 public class History extends CommandManager {
 
     public History() {
-        super("history", "惩罚历史", "/history <玩家> [页数]");
+        super("history", "惩罚历史", "/history <玩家> [页数]", "onyx.command.history");
     }
 
     @Cmd(arg = "<player> <integer>", perm = "onyx.command.history", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

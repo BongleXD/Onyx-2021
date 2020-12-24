@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 public class TempBan extends CommandManager {
 
     public TempBan() {
-        super("tempban", "封禁", "/ban <玩家> <时间> [原因]");
+        super("tempban", "封禁", "/ban <玩家> <时间> [原因]", "onyx.command.tempban");
     }
 
-    @Cmd(arg = "<value...>", perm = "onyx.command.ban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
+    @Cmd(arg = "<value...>", perm = "onyx.command.tempban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")
     public void ban(CommandSender sender, String[] args){
         Player p = new ArrayList<Player>(Bukkit.getOnlinePlayers()).get(0);
         if(p != null){
@@ -41,7 +41,12 @@ public class TempBan extends CommandManager {
                     duration = Integer.parseInt(args[1]) * 1000;
                 }
             } catch (Exception ex) {
-                duration = -1;
+                sender.sendMessage("§c请输入天/月/年， 例如 3d/3m/3y， 或者秒数！");
+                return;
+            }
+            if(duration <= 0){
+                sender.sendMessage("§c请输入正整数！");
+                return;
             }
             String[] reasonArgs = new String[args.length - 2];
             System.arraycopy(args, 2, reasonArgs, 0, args.length - 2);

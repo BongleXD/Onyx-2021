@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 public class Level extends CommandManager {
 
     public Level() {
-        super("level", "更改等级", "/level <addXp/addLevel> <玩家> <数值>");
+        super("level", "更改等级", "/level <addXp/addLevel> <玩家> <数值>", "onyx.command.level");
     }
 
-    @Cmd(arg = "addXp <player> <integer>", perm = "onyx.command.level.addxp", permMessage = "§c你不能这么做！")
+    @Cmd(arg = "addXp <player> <integer>", perm = "onyx.command.level", permMessage = "§c你不能这么做！")
     public void addXp(CommandSender sender, String[] args){
         Player target = Bukkit.getPlayer(args[1]);
         PlayerProfile prof = Onyx.getPlayerProfile(target.getUniqueId());
@@ -25,7 +25,7 @@ public class Level extends CommandManager {
         prof.addXpWithoutCallEvent(Integer.parseInt(args[2]));
     }
 
-    @Cmd(arg = "addLevel <player> <integer>", perm = "onyx.command.level.addlevel", permMessage = "§c你不能这么做！")
+    @Cmd(arg = "addLevel <player> <integer>", perm = "onyx.command.level", permMessage = "§c你不能这么做！")
     public void addLevel(CommandSender sender, String[] args){
         Player target = Bukkit.getPlayer(args[1]);
         PlayerProfile prof = Onyx.getPlayerProfile(target.getUniqueId());

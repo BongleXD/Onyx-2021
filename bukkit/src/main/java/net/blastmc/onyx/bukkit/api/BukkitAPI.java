@@ -6,6 +6,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.blastmc.onyx.api.API;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.PlayerData;
+import net.blastmc.onyx.api.bukkit.NMS;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.Rank;
 import net.blastmc.onyx.api.bukkit.event.PlayerDataCreateEvent;
@@ -15,7 +16,7 @@ import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.admin.Vanish;
 import net.blastmc.onyx.bukkit.config.TagConfig;
 import net.blastmc.onyx.bukkit.util.Method;
-import net.blastmc.onyx.bukkit.util.TeamAction;
+import net.blastmc.onyx.api.bukkit.TeamAction;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -172,6 +173,11 @@ public class BukkitAPI implements API {
                 Method.vanishPlayer(Bukkit.getPlayer(prof.getUUID()), p, true);
             }
         }
+    }
+
+    @Override
+    public NMS getNMS() {
+        return Main.getNMS();
     }
 
     @Override

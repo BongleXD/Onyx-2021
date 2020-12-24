@@ -23,7 +23,7 @@ public class CommandManager extends BukkitCommand {
     private CommandManager clazz;
     private boolean containEmptyMethod = false;
 
-    public CommandManager(String name, String desc, String usage, String... aliases) {
+    public CommandManager(String name, String desc, String usage, String permission, String... aliases) {
         super(name);
         if(desc != null) {
             this.setDescription(desc);
@@ -35,6 +35,7 @@ public class CommandManager extends BukkitCommand {
         }
         this.usage = usage == null ? "" : "§c用法： " + usage;
         this.setUsage(this.usage);
+        this.setPermission(permission);
     }
 
     public String getUsage(){
@@ -58,7 +59,7 @@ public class CommandManager extends BukkitCommand {
                 return true;
             }
         }else if(this.usage != null && !this.usage.isEmpty()){
-            if(!sender.hasPermission(this.getPermission() == null ? "onyx.command." + this.getClass().getName().toLowerCase() : this.getPermission())){
+            if(this.getPermission() != null && !sender.hasPermission(this.getPermission())){
                 if(!this.containEmptyMethod) {
                     sender.sendMessage(this.getPermissionMessage() == null ? "§c很抱歉， 但是你没有足够的权限来执行这个指令。如果你认为这是个错误， 请联系管理员或者客服！" : this.getPermissionMessage());
                 }

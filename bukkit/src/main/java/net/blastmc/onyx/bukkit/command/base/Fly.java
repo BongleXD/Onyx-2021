@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class Fly extends CommandManager {
 
     public Fly() {
-        super("fly", "飞行", "/fly [玩家] [on/off]", "飞行");
+        super("fly", "飞行", "/fly [玩家] [on/off]", "onyx.command.fly", "飞行");
         this.setPermissionMessage("§c你需要 §aVIP §c及以上的会员等级才能使用飞行！ 请移步至主大厅进行购买会员等级！");
     }
 

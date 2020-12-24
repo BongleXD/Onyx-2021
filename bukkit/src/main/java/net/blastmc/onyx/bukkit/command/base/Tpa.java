@@ -24,7 +24,7 @@ public class Tpa extends CommandManager implements Listener {
     private HashMap<UUID, BukkitTask> teleportMap = new HashMap<>();
 
     public Tpa() {
-        super("tpa", "传送", "/tpa <玩家> 或 /tpa <accept/deny>");
+        super("tpa", "传送", "/tpa <玩家> 或 /tpa <accept/deny>", "onyx.command.tpa");
         this.setPermission(null);
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }

@@ -21,8 +21,7 @@ public class Rewards extends CommandManager implements Listener {
     private HashMap<UUID, Integer> pageMap = new HashMap<>();
 
     public Rewards(){
-        super("rewards", "查看奖励", "/rewards");
-        this.setPermission("");
+        super("rewards", "查看奖励", "/rewards", null);
         Bukkit.getPluginManager().registerEvents(this, Main.getInstance());
     }
 

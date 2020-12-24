@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class UnMute extends CommandManager {
 
     public UnMute() {
-        super("unmute", "解除禁言", "/unmute <玩家> [原因]");
+        super("unmute", "解除禁言", "/unmute <玩家> [原因]", "onyx.command.unmute");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.unmute", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

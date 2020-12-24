@@ -60,7 +60,9 @@ public class PacketProtocol implements Listener {
                 boolean cancelled = false;
                 for(PacketReadEvent e : readListeners){
                     e.setCancelled(cancelled);
-                    e.onRead(p, new Packet(packet));
+                    Packet onyxPacket = new Packet(packet);
+                    e.onRead(p, onyxPacket);
+                    packet = onyxPacket.getPacket();
                     cancelled = e.isCancelled();
                 }
                 if(cancelled){
@@ -74,7 +76,9 @@ public class PacketProtocol implements Listener {
                 boolean cancelled = false;
                 for(PacketSendEvent e : writeListeners){
                     e.setCancelled(cancelled);
-                    e.onWrite(p, new Packet(packet));
+                    Packet onyxPacket = new Packet(packet);
+                    e.onWrite(p, onyxPacket);
+                    packet = onyxPacket.getPacket();
                     cancelled = e.isCancelled();
                 }
                 if(cancelled){

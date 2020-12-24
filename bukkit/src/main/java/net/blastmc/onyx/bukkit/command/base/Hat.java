@@ -10,7 +10,7 @@ import org.bukkit.inventory.PlayerInventory;
 public class Hat extends CommandManager {
 
     public Hat() {
-        super("hat", "将物品戴在头上", "/hat");
+        super("hat", "将物品戴在头上", "/hat", "onyx.command.hat");
     }
 
     @Cmd(perm = "onyx.command.hat", only = CommandOnly.PLAYER)

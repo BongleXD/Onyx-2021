@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 public class BroadCast extends CommandManager {
 
     public BroadCast() {
-        super("broadcast", "全服通知", "/broadcast [all] <信息>", "广播", "bc");
+        super("broadcast", "全服通知", "/broadcast [all] <信息>", "onyx.command.broadcast", "广播", "bc");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.broadcast", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
