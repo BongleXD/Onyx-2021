@@ -1,0 +1,14 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+dependencies {
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+shadowJar {
+    baseName = 'Onyx-API'
+    classifier = null
+    relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
+}

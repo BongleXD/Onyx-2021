@@ -1,0 +1,22 @@
+allprojects {
+    group = 'net.blastmc.onyx'
+    version = '1.2.19'
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenLocal()
+        maven {
+            url = uri('http://repo.maven.apache.org/maven2')
+        }
+    }
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+}

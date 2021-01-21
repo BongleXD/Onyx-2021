@@ -1,0 +1,13 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+dependencies {
+    implementation project(':onyx-api')
+    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+shadowJar {
+    baseName = 'Onyx-Bungee'
+    classifier = null
+}

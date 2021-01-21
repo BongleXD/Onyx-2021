@@ -1,0 +1,9 @@
+rootProject.name = 'onyx-parent'
+include(':onyx-api')
+include(':onyx-bukkit')
+include(':onyx-bungee')
+include(':onyx-jar')
+project(':onyx-api').projectDir = file('api')
+project(':onyx-bukkit').projectDir = file('bukkit')
+project(':onyx-bungee').projectDir = file('bungee')
+project(':onyx-jar').projectDir = file('jar')
