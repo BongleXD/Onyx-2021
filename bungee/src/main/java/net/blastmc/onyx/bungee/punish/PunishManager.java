@@ -3,7 +3,7 @@ package net.blastmc.onyx.bungee.punish;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.bungee.Main;
 import net.blastmc.onyx.bungee.config.PunishConfig;
-import net.blastmc.onyx.bungee.util.BungeeMethod;
+import net.blastmc.onyx.bungee.util.Method;
 import net.blastmc.onyx.api.util.SQLHelper;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -73,7 +73,7 @@ public class PunishManager {
                         }
                         String reason = rs.getString("reason");
                         String banID = rs.getString("ban_id");
-                        player.disconnect("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "封禁！ " + (duration >= 0 ? "还有 §e" + BungeeMethod.longToTime(banMillis + duration - System.currentTimeMillis()) + " §c解除封禁！" : "") + "\n\n" +
+                        player.disconnect("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "封禁！ " + (duration >= 0 ? "还有 §f" + Method.longToTime(banMillis + duration - System.currentTimeMillis()) + " §c解除封禁！" : "") + "\n\n" +
                                 "§7原因: §f" + reason + "\n" +
                                 "§7了解更多: §b§n764575479\n\n" +
                                 "§7封禁 ID: §f§o#§f" + banID + "\n" +
@@ -206,7 +206,7 @@ public class PunishManager {
                     Ban ban = new Ban(executor, server, System.currentTimeMillis(), duration, genPunishID(type), reason);
                     punishSyncData(pid, ban);
                     if(p != null){
-                        p.disconnect("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "封禁！ " + (duration >= 0 ? "还有 §e" + BungeeMethod.longToTime(ban.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除封禁！" : "") + "\n\n" +
+                        p.disconnect("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "封禁！ " + (duration >= 0 ? "还有 §f" + Method.longToTime(ban.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除封禁！" : "") + "\n\n" +
                                 "§7原因: §f" + reason + "\n" +
                                 "§7了解更多: §b§n764575479\n\n" +
                                 "§7封禁 ID: §f§o#§f" + ban.getPunishID() + "\n" +
@@ -239,7 +239,7 @@ public class PunishManager {
                     punishSyncData(pid, mute);
                     muteData.put(pid, mute);
                     p.sendMessage("§c§m---------------------------");
-                    p.sendMessage("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "禁言！ " + (duration >= 0 ? "还有 §e" + BungeeMethod.longToTime(mute.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除禁言！" : ""));
+                    p.sendMessage("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "禁言！ " + (duration >= 0 ? "还有 §f" + Method.longToTime(mute.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除禁言！" : ""));
                     p.sendMessage("§f原因: " + mute.getReason());
                     p.sendMessage("§f禁言 ID: " + mute.getPunishID());
                     p.sendMessage("§f如对此禁言不满，请前往 QQ 群 申诉");
@@ -255,7 +255,7 @@ public class PunishManager {
         }
         String prefix = type.getPrefix();
         while (true){
-            String punishID = prefix + "-" + BungeeMethod.getRandomString(8);
+            String punishID = prefix + "-" + Method.getRandomString(8);
             if(!sql.checkDataExists(type.getSqlPrefix() + "_data", type.getSqlPrefix() + "_id", punishID)){
                 return punishID;
             }

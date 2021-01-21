@@ -4,7 +4,7 @@ import java.util.Random;
 
 import static net.blastmc.onyx.api.util.Method.toTrisection;
 
-public class BungeeMethod {
+public class Method {
 
     public static String getRandomString(int length) {
         String str = "123456789ABCDEFGHJKLMNPQRSTUVWXY";
@@ -31,16 +31,13 @@ public class BungeeMethod {
             hours = hours % 24;
         }
         if (days > 0) {
-            sb.append(toTrisection(days)).append(" 天").append(hours > 0 ? ", " + hours + " 小时" : "").append(mins > 0 ? ", " + mins + " 分钟" : "");
+            sb.append(toTrisection(days)).append("天").append(hours > 0 ? " " + hours + "时" : "").append(mins > 0 ? " " + mins + "分" : "");
         } else if (hours > 0) {
-            sb.append(hours).append(" 小时").append(mins > 0 ? ", " + mins + " 分钟" : "");
+            sb.append(hours).append("时").append(mins > 0 ? " " + mins + "分" : "");
         } else if (mins > 0) {
-            sb.append(mins).append(" 分钟");
+            sb.append(mins).append("分");
         }
-        if(!sb.toString().isEmpty()){
-            return sb.toString();
-        }
-        return "不到一分钟";
+        return !sb.toString().isEmpty() ? sb.toString() : time <= 0 ? "未知" : "一会";
     }
 
 }

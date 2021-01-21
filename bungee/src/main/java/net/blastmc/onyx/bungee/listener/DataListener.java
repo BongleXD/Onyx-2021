@@ -8,17 +8,28 @@ import net.blastmc.onyx.bungee.api.SkinAPI;
 import net.blastmc.onyx.bungee.Main;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class DataListener implements Listener {
 
     public DataListener(){
         Main.getInstance().getProxy().getPluginManager().registerListener(Main.getInstance(), this);
+    }
+
+    @EventHandler
+    public void onCommand(ChatEvent e){
+        if(e.getSender() instanceof ProxiedPlayer){
+            if(((ProxiedPlayer) e.getSender()).getServer().getInfo().getName().contains("login")){
+                if(Stream.of("/login", "/l", "/blastlogin", "/reg", "/register", "/fakeplayer").noneMatch(s -> e.getMessage().startsWith(s))){
+                    e.setCancelled(true);
+                }
+            }
+        }
     }
 
     @EventHandler
@@ -70,9 +81,6 @@ public class DataListener implements Listener {
 
     @EventHandler
     public void onConnect(ServerConnectEvent e) {
-        if (e.getTarget().getName().contains("login") || e.isCancelled()) {
-            return;
-        }
         ProxiedPlayer p = e.getPlayer();
         PlayerData data = Onyx.getPlayerData(p.getName());
         if(data != null){

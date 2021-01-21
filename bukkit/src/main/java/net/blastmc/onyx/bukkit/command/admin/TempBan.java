@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class TempBan extends CommandManager {
 
     public TempBan() {
-        super("tempban", "封禁", "/ban <玩家> <时间> [原因]", "onyx.command.tempban");
+        super("tempban", "封禁", "/tempban <玩家> <时间> [原因]", "onyx.command.tempban");
     }
 
     @Cmd(arg = "<value...>", perm = "onyx.command.tempban", permMessage = "§c你需要 §2客服 及以上的会员等级才能使用此指令！")

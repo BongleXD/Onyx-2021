@@ -8,10 +8,7 @@ import net.blastmc.onyx.api.bukkit.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HologramConfig extends ConfigManager {
 
@@ -23,6 +20,12 @@ public class HologramConfig extends ConfigManager {
         config = this;
         load();
         this.getYml().options().copyDefaults(true);
+        if(this.getYml().getConfigurationSection("animation") == null
+                || this.getYml().getConfigurationSection("animation").getKeys(false) == null
+                || this.getYml().getConfigurationSection("animation").getKeys(false).isEmpty()) {
+            this.getYml().addDefault("animation.example", Arrays.asList("&aexample:0", "&cexample:0"));
+        }
+        save();
     }
 
     @Override
@@ -43,17 +46,19 @@ public class HologramConfig extends ConfigManager {
 
     public void load(){
         holoMap = new HashMap<>();
-        for (String path : config.getYml().getConfigurationSection("hologram").getKeys(false)) {
-            Hologram holo = Main.getNMS().newInstance(new Location(
-                    Bukkit.getWorld(config.getString("hologram." +path + ".world")),
-                    config.getYml().getDouble("hologram." +path + ".x"),
-                    config.getYml().getDouble("hologram." +path + ".y"),
-                    config.getYml().getDouble("hologram." +path + ".z")),
-                    config.getYml().getStringList("hologram." +path + ".lines"));
-            holoMap.put(path, holo);
-            checkAnim(holo.offset(config.getYml().getDouble("hologram." +path + ".offset")))
-                    .showTo(Bukkit.getOnlinePlayers()).show();
-        }
+        try {
+            for (String path : config.getYml().getConfigurationSection("hologram").getKeys(false)) {
+                Hologram holo = Main.getNMS().newInstance(new Location(
+                                Bukkit.getWorld(config.getString("hologram." + path + ".world")),
+                                config.getYml().getDouble("hologram." + path + ".x"),
+                                config.getYml().getDouble("hologram." + path + ".y"),
+                                config.getYml().getDouble("hologram." + path + ".z")),
+                        config.getYml().getStringList("hologram." + path + ".lines"));
+                holoMap.put(path, holo);
+                checkAnim(holo.offset(config.getYml().getDouble("hologram." + path + ".offset")))
+                        .showTo(Bukkit.getOnlinePlayers()).show();
+            }
+        }catch (Exception ignored){}
     }
 
     public Hologram checkAnim(Hologram holo){

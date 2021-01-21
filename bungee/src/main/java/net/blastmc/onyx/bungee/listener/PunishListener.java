@@ -7,7 +7,7 @@ import net.blastmc.onyx.bungee.config.PunishConfig;
 import net.blastmc.onyx.bungee.punish.Mute;
 import net.blastmc.onyx.bungee.punish.PunishManager;
 import net.blastmc.onyx.bungee.punish.PunishType;
-import net.blastmc.onyx.bungee.util.BungeeMethod;
+import net.blastmc.onyx.bungee.util.Method;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -41,7 +41,7 @@ public class PunishListener implements Listener {
                         return;
                     }
                     p.sendMessage("§c§m---------------------------");
-                    p.sendMessage("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "禁言！ " + (duration >= 0 ? "还有 §e" + BungeeMethod.longToTime(mute.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除禁言！" : ""));
+                    p.sendMessage("§c你已经被此服务器" + (duration <= -1 ? "永久" : "") + "禁言！ " + (duration >= 0 ? "还有 §f" + Method.longToTime(mute.getPunishTimeMillis() + duration - System.currentTimeMillis()) + " §c解除禁言！" : ""));
                     p.sendMessage("§f原因: " + mute.getReason());
                     p.sendMessage("§f禁言 ID: " + mute.getPunishID());
                     p.sendMessage("§f如对此禁言不满，请前往 QQ 群 申诉");
@@ -68,10 +68,15 @@ public class PunishListener implements Listener {
                             : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)) == null
                             ? "NULL" : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)).getServer().getInfo().getName();
                     ProxiedPlayer p = BungeeCord.getInstance().getPlayer(executor);
+                    ProxiedPlayer other = BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineUUID(pid));
                     if(p != null){
-                        p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a封禁, 时长 §e" + (Long.parseLong(duration) <= -1 ? "永久" : BungeeMethod.longToTime(Long.parseLong(duration)))+ "§a！");
+                        if(other != null && other.hasPermission("onyx.punish.bypass")){
+                            p.sendMessage("§c无法惩罚该玩家！");
+                        }else{
+                            p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a封禁, 时长 §e" + (Long.parseLong(duration) <= -1 ? "永久" : Method.longToTime(Long.parseLong(duration)))+ "§a！");
+                            PunishManager.getManager().punishPlayer(PunishType.BAN, pid, executor, reason, server, Long.parseLong(duration));
+                        }
                     }
-                    PunishManager.getManager().punishPlayer(PunishType.BAN, pid, executor, reason, server, Long.parseLong(duration));
                 }
                 if (channel.equals("UNBAN_PLAYER")) {
                     String pid = in.readUTF();
@@ -79,7 +84,7 @@ public class PunishListener implements Listener {
                     String reason = in.readUTF();
                     ProxiedPlayer p = BungeeCord.getInstance().getPlayer(executor);
                     if(p != null){
-                        p.sendMessage("已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a的封禁解除！");
+                        p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a的封禁解除！");
                     }
                     PunishManager.getManager().releasePlayer(PunishType.BAN, pid, executor, reason);
                 }
@@ -92,10 +97,15 @@ public class PunishListener implements Listener {
                             : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)) == null
                             ? "NULL" : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)).getServer().getInfo().getName();
                     ProxiedPlayer p = BungeeCord.getInstance().getPlayer(executor);
+                    ProxiedPlayer other = BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineUUID(pid));
                     if(p != null){
-                        p.sendMessage("已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a移除服务器！");
+                        if(other != null && other.hasPermission("onyx.punish.bypass")){
+                            p.sendMessage("§c无法惩罚该玩家！");
+                        }else {
+                            p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a移除服务器！");
+                            PunishManager.getManager().punishPlayer(PunishType.KICK, pid, executor, reason, server, -1);
+                        }
                     }
-                    PunishManager.getManager().punishPlayer(PunishType.KICK, pid, executor, reason, server, -1);
                 }
                 if (channel.equals("MUTE_PLAYER")) {
                     String pid = in.readUTF();
@@ -107,10 +117,15 @@ public class PunishListener implements Listener {
                             : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)) == null
                             ? "NULL" : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)).getServer().getInfo().getName();
                     ProxiedPlayer p = BungeeCord.getInstance().getPlayer(executor);
+                    ProxiedPlayer other = BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineUUID(pid));
                     if(p != null){
-                        p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a禁言, 时长 §e" + (Long.parseLong(duration) <= -1 ? "永久" : BungeeMethod.longToTime(Long.parseLong(duration)))+ "§a！");
+                        if(other != null && other.hasPermission("onyx.punish.bypass")){
+                            p.sendMessage("§c无法惩罚该玩家！");
+                        }else {
+                            p.sendMessage("§a已将玩家 §e" + Onyx.getAPI().getOfflineName(pid) + " §a禁言, 时长 §e" + (Long.parseLong(duration) <= -1 ? "永久" : Method.longToTime(Long.parseLong(duration))) + "§a！");
+                            PunishManager.getManager().punishPlayer(PunishType.MUTE, pid, executor, reason, server, Long.parseLong(duration));
+                        }
                     }
-                    PunishManager.getManager().punishPlayer(PunishType.MUTE, pid, executor, reason, server, Long.parseLong(duration));
                 }
                 if (channel.equals("UNMUTE_PLAYER")) {
                     String pid = in.readUTF();
@@ -131,10 +146,15 @@ public class PunishListener implements Listener {
                             : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)) == null
                             ? "NULL" : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineName(pid)).getServer().getInfo().getName();
                     ProxiedPlayer p = BungeeCord.getInstance().getPlayer(executor);
+                    ProxiedPlayer other = BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineUUID(pid));
                     if(p != null){
-                        p.sendMessage("§a已警告玩家 §e" + Onyx.getAPI().getOfflineName(pid) + "§a！");
+                        if(other != null && other.hasPermission("onyx.punish.bypass")){
+                            p.sendMessage("§c无法惩罚该玩家！");
+                        }else {
+                            p.sendMessage("§a已警告玩家 §e" + Onyx.getAPI().getOfflineName(pid) + "§a！");
+                            PunishManager.getManager().punishPlayer(PunishType.WARN, pid, executor, reason, server, -1);
+                        }
                     }
-                    PunishManager.getManager().punishPlayer(PunishType.WARN, pid, executor, reason, server, -1);
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();

@@ -36,10 +36,10 @@ public class FormatPlaceholders {
                 if(s.startsWith("translateLuckPerms_")){
                     s = PlaceholderAPI.setPlaceholders(p, s.replace("/", "%"));
                     return s.replace("translateLuckPerms_", "")
-                            .replace("d", " 天,")
-                            .replace("h", " 小时,")
-                            .replace("m", " 分钟,")
-                            .replace("s", " 秒");
+                            .replace("d", "天")
+                            .replace("h", "时")
+                            .replace("m", "分")
+                            .replace("s", "秒");
                 }
                 if(s.startsWith("toSuffix_")){
                     s = PlaceholderAPI.setPlaceholders(p, s.replace("/", "%"));

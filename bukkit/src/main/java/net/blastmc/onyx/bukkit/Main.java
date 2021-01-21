@@ -286,20 +286,8 @@ public final class Main extends JavaPlugin {
 
     private void check() {
         if(!Bukkit.getVersion().contains("Potato")){
-            Log.getLogger().sendError("§c你可能在使用 §bCraftBukkit/Spigot/PaperSpigot/TacoSpigot, §c请更新至 §bPotatoSpigot!");
-            new Thread(() -> {
-                File plugin = instance.getFile();
-                PluginManager.unload(instance);
-                while(true){
-                    System.gc();
-                    if (plugin.delete()) {
-                        Bukkit.shutdown();
-                        break;
-                    } else {
-                        System.out.println("LLL_CRACKER_GO_HOME_AND_PLAY_4399");
-                    }
-                }
-            }).start();
+            Log.getLogger().sendError("§c你可能在使用 §bCraftBukkit/Spigot/Paper/PaperSpigot/TacoSpigot, §c请更新至 §bPotatoSpigot!");
+            getServer().getPluginManager().disablePlugin(this);
             return;
         }
         if(getConfig().getString("server-name") == null || getConfig().getString("server-name").equals("NULL") || getConfig().getString("server-name").isEmpty()){

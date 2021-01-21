@@ -22,11 +22,11 @@ public class Animation {
     public static class Value{
 
         public String line;
-        public int secs;
+        public int frame;
 
-        public Value(String line, int secs){
+        public Value(String line, int frame){
             this.line = line;
-            this.secs = secs;
+            this.frame = frame;
         }
 
     }

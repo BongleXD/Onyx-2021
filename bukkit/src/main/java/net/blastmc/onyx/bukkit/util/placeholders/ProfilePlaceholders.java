@@ -36,10 +36,10 @@ public class ProfilePlaceholders {
                     if (s.equals("rank_time")) {
                         String rank = PlaceholderAPI.setPlaceholders(p, "%luckperms_primary_group_name%");
                         String time = PlaceholderAPI.setPlaceholders(p, "%luckperms_group_expiry_time_" + rank + "%")
-                                .replace("d", " 天,")
-                                .replace("h", " 小时,")
-                                .replace("m", " 分钟,")
-                                .replace("s", " 秒");
+                                .replace("d", "天")
+                                .replace("h", "时")
+                                .replace("m", "分")
+                                .replace("s", "秒");
                         return time.isEmpty() ? "永久" : time;
                     }
                     if (s.equals("color")) {

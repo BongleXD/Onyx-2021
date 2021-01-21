@@ -29,6 +29,6 @@ public class Glist extends Command {
 
             sender.sendMessage("§a" + info.getName() + " §8| §6" + online);
         }
-        sender.sendMessage("§0§m--------------------------");
+        sender.sendMessage("§9§m--------------------------");
     }
 }

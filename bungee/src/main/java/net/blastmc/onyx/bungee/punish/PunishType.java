@@ -19,18 +19,7 @@ public enum PunishType {
     }
 
     public String getSqlPrefix(){
-        switch (this){
-            case MUTE:
-                return "mute";
-            case KICK:
-                return "kick";
-            case BAN:
-                return "ban";
-            case WARN:
-                return "warn";
-            default:
-                return null;
-        }
+        return this.name().toLowerCase();
     }
 
 }

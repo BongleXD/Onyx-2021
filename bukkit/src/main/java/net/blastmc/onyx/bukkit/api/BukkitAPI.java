@@ -254,7 +254,7 @@ public class BukkitAPI implements API {
             }
             for (Player online : Bukkit.getOnlinePlayers()) {
                 Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, priority);
-                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), suffix, TeamAction.CREATE, priority);
+                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
             }
         }else{
             removeTag(p.getUniqueId());
@@ -287,21 +287,25 @@ public class BukkitAPI implements API {
                 if (other == null) {
                     continue;
                 }
-                if (p != online)
-                    Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
-                Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
                 String suffix = PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getSuffix());
                 if (prof.isVanish()) {
                     suffix = " §c[已隐身]";
                 }
                 String priority = Method.getTagPriority(p, prof);
-                Main.getNMS().changeNameTag(online, p, PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()), suffix, TeamAction.CREATE, priority);
+                Main.getNMS().changeNameTag(online, p, "", "", TeamAction.DESTROY, priority);
+                Main.getNMS().changeNameTag(online, p,
+                        PlaceholderAPI.setPlaceholders(p, Method.getTagData(p).getPrefix()),
+                        suffix, TeamAction.CREATE, priority);
                 if (p != online) {
                     String otherSuffix = PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getSuffix());
                     if (other.isVanish()) {
                         otherSuffix = " §c[已隐身]";
                     }
-                    Main.getNMS().changeNameTag(p, online, PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()), PlaceholderAPI.setPlaceholders(online, otherSuffix), TeamAction.CREATE, Method.getTagPriority(online, other));
+                    Main.getNMS().changeNameTag(p, online, "", "", TeamAction.DESTROY, Method.getTagPriority(online, other));
+                    Main.getNMS().changeNameTag(p, online,
+                            PlaceholderAPI.setPlaceholders(online, Method.getTagData(online).getPrefix()),
+                            PlaceholderAPI.setPlaceholders(online, otherSuffix),
+                            TeamAction.CREATE, Method.getTagPriority(online, other));
                 }
             }
         }

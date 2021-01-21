@@ -5,6 +5,7 @@ import net.blastmc.onyx.api.bukkit.Animation;
 import net.blastmc.onyx.bukkit.exception.HologramException;
 import net.blastmc.onyx.api.bukkit.Hologram;
 import com.google.common.collect.Lists;
+import net.blastmc.onyx.bukkit.hologram.AnimData;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -168,15 +169,14 @@ public class Hologram_1_8_R3 implements Hologram {
         for(int i = 0; i < lines.size(); i++){
             if(animMap.containsKey(i) && !drawMap.containsKey(i)){
                 Animation.Value value = animMap.get(i).getValueList().get(0);
-                drawMap.put(i, new AnimData(0, value.line, value.secs));
+                drawMap.put(i, new AnimData(0, value.line, value.frame));
             }
         }
         update();
-        Iterator<UUID> it = this.players.iterator();
-        while (it.hasNext()){
+        for(Iterator<UUID> it = this.players.iterator(); it.hasNext();){
             UUID uuid = it.next();
             Player p = Bukkit.getPlayer(uuid);
-            if(p == null || !p.isOnline()){
+            if(p == null){
                 continue;
             }
             EntityPlayer ep = ((CraftPlayer) p).getHandle();
@@ -185,19 +185,17 @@ public class Hologram_1_8_R3 implements Hologram {
                 HoloData data = lines.get(i);
                 EntityArmorStand stand = data.stand;
                 stand.setLocation(loc.getX(), loc.getY(), loc.getZ(), 0, 0);
-                String name = stand.getCustomName();
                 if(animMap.containsKey(i)) {
-                    if (drawMap.get(i).secs <= 0) {
+                    if (drawMap.get(i).frame <= 0) {
                         AnimData animData = drawMap.get(i);
-                        stand.setCustomName(PlaceholderAPI.setPlaceholders(ep.getBukkitEntity().getPlayer(), animData.line));
                         int id = animData.id + 1 >= animMap.get(i).getValueList().size() ? 0 : animData.id + 1;
                         Animation.Value value = animMap.get(i).getValueList().get(id);
-                        drawMap.put(i, new AnimData(id, value.line, value.secs));
+                        drawMap.put(i, new AnimData(id, value.line, value.frame));
                     }
-                }else {
-                    stand.setCustomName(PlaceholderAPI.setPlaceholders(ep.getBukkitEntity().getPlayer(), name));
                 }
+                stand.setCustomName("§f读取中...");
                 ep.playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(stand));
+                update(uuid);
                 loc.add(0, -offset, 0);
             }
             this.create.add(uuid);
@@ -206,11 +204,30 @@ public class Hologram_1_8_R3 implements Hologram {
         this.show = true;
     }
 
+    private void update(UUID uuid) {
+        Location loc = this.loc.clone();
+        for (int i = 0; i < lines.size(); i++) {
+            if (animMap.containsKey(i)) {
+                AnimData animData = drawMap.get(i);
+                Player p = Bukkit.getPlayer(uuid);
+                if (p != null) {
+                    updateMetadata(uuid, animData.line, i);
+                }
+            } else {
+                Player p = Bukkit.getPlayer(uuid);
+                if (p != null) {
+                    updateMetadata(uuid, lines.get(i).line, i);
+                }
+            }
+            loc.add(0, -offset, 0);
+        }
+    }
+
     private void update() {
         Location loc = this.loc.clone();
         for (int i = 0; i < lines.size(); i++) {
             if (animMap.containsKey(i)) {
-                if (drawMap.get(i).secs <= 0) {
+                if (drawMap.get(i).frame <= 0) {
                     AnimData animData = drawMap.get(i);
                     for (UUID uuid : create) {
                         Player p = Bukkit.getPlayer(uuid);
@@ -220,10 +237,10 @@ public class Hologram_1_8_R3 implements Hologram {
                     }
                     int id = animData.id + 1 >= animMap.get(i).getValueList().size() ? 0 : animData.id + 1;
                     Animation.Value value = animMap.get(i).getValueList().get(id);
-                    drawMap.put(i, new AnimData(id, value.line, value.secs));
+                    drawMap.put(i, new AnimData(id, value.line, value.frame));
                 } else {
                     AnimData animData = drawMap.get(i);
-                    animData.secs--;
+                    animData.frame--;
                     drawMap.put(i, animData);
                 }
             } else {
@@ -247,14 +264,14 @@ public class Hologram_1_8_R3 implements Hologram {
                 e.printStackTrace();
             }
         }
-        this.create.forEach(uuid -> {
-            lines.stream()
-                    .map(data -> data.stand).forEach(stand -> {
+        for(Iterator<UUID> it = this.create.iterator(); it.hasNext();){
+            UUID uuid = it.next();
+            lines.stream().map(data -> data.stand).forEach(stand -> {
                 remove(uuid, stand);
             });
             this.players.add(uuid);
-            this.create.remove(uuid);
-        });
+            it.remove();
+        }
         this.show = false;
     }
 
@@ -314,13 +331,14 @@ public class Hologram_1_8_R3 implements Hologram {
     }
 
     private void updateMetadata(UUID uuid, String line, int i){
-        EntityPlayer ep = ((CraftPlayer) Bukkit.getPlayer(uuid)).getHandle();
+        Player p = Bukkit.getPlayer(uuid);
+        EntityPlayer ep = ((CraftPlayer) p).getHandle();
         EntityArmorStand stand = lines.get(i).stand;
-        stand.setCustomName(PlaceholderAPI.setPlaceholders(ep.getBukkitEntity().getPlayer(), line));
+        stand.setCustomName(PlaceholderAPI.setPlaceholders(p, line));
         ep.playerConnection.sendPacket(new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true));
     }
 
-    protected class HoloData{
+    protected class HoloData {
 
         String line;
         EntityArmorStand stand;
@@ -328,20 +346,6 @@ public class Hologram_1_8_R3 implements Hologram {
         HoloData(String line, EntityArmorStand stand) {
             this.line = line;
             this.stand = stand;
-        }
-
-    }
-
-    protected class AnimData{
-
-        int id;
-        String line;
-        int secs;
-
-        AnimData(int id, String line, int secs) {
-            this.id = id;
-            this.line = line;
-            this.secs = secs;
         }
 
     }
