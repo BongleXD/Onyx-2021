@@ -175,7 +175,6 @@ public class CommandManager extends BukkitCommand {
                 continue;
             }
             boolean b = true;
-            boolean moduleCheck = false;
             String[] cmdArgs = cmd.arg().split(" ");
             if (cmd.arg().isEmpty() && args.length == 0) {
                 this.containEmptyMethod = true;

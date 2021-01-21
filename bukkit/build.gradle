@@ -10,4 +10,5 @@ dependencies {
 shadowJar {
     baseName = 'Onyx-Bukkit'
     classifier = null
+    relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
 }
