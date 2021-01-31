@@ -36,12 +36,12 @@ public class Reboot extends CommandManager {
 
     @Cmd(perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void reboot(CommandSender sender, String[] args){
-        Bukkit.dispatchCommand(sender, "reboot 30 重启服务器");
+        Bukkit.dispatchCommand(sender, "reboot 30 计划性重启");
     }
 
     @Cmd(arg = "<integer>", perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
     public void rebootSec(CommandSender sender, String[] args){
-        Bukkit.dispatchCommand(sender, "reboot " + args[0] + " 重启服务器");
+        Bukkit.dispatchCommand(sender, "reboot " + args[0] + " 计划性重启");
     }
 
     @Cmd(arg = "<integer> <value>", perm = "onyx.command.reboot", permMessage = "§c你需要 ADMIN 及以上的会员等级才能使用此指令！")
@@ -51,14 +51,6 @@ public class Reboot extends CommandManager {
             return;
         }
         sender.sendMessage("§e已执行服务器重启操作！");
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            online.playSound(online.getLocation(), SoundUtil.NOTE_PIANO.getSound(), 2.0F, 1.6F);
-            TextComponent text = new TextComponent("§a§n点击这里");
-            text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hub"));
-            text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击这里， 传送至大厅").create()));
-            online.sendMessage(new TextComponent("§c[重要] §e这个服务器即将要重启: §b" + args[1]));
-            online.sendMessage(new TextComponent("§e你有 §a60 秒 §e来传送至大厅！"), text, new TextComponent(" 传送至大厅！"));
-        }
         BukkitTask task = new BukkitRunnable(){
             int i = Integer.parseInt(args[0]);
             @Override
@@ -81,14 +73,16 @@ public class Reboot extends CommandManager {
                         }
                     }.runTaskLater(Main.getInstance(), 40L);
                     this.cancel();
-                }else if(i % 10 == 0 || i <= 5) {
+                } else if(i == Integer.parseInt(args[0]) || i % 10 == 0 || i <= 5) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
                         online.playSound(online.getLocation(), SoundUtil.NOTE_PIANO.getSound(), 2.0F, 1.6F);
                         TextComponent text = new TextComponent("§a§n点击这里");
                         text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hub"));
                         text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击这里， 传送至大厅").create()));
-                        online.sendMessage(new TextComponent("§c[重要] §e这个服务器即将要重启: §b" + args[1]));
-                        online.sendMessage(new TextComponent("§e你有 §a60 秒 §e来传送至大厅！"), text, new TextComponent(" 传送至大厅！"));
+                        online.sendMessage("");
+                        online.sendMessage(new TextComponent("§c[重要信息] §e此服务器即将要进行重启: §b" + args[1]));
+                        online.sendMessage(new TextComponent("§e你有 §a" + i + " 秒 §e来传送至大厅！ "), text, new TextComponent("§e传送至大厅！"));
+                        online.sendMessage("");
                     }
                 }
                 i--;
