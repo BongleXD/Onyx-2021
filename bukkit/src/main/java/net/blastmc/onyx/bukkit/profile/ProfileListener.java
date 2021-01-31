@@ -6,7 +6,7 @@ import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.api.bukkit.event.PlayerInitEvent;
-import net.blastmc.onyx.bukkit.api.OnyxPlayerProfile;
+import net.blastmc.onyx.bukkit.api.impl.OnyxPlayerProfile;
 import net.blastmc.onyx.bukkit.command.admin.Vanish;
 import net.blastmc.onyx.bukkit.util.Method;
 import net.blastmc.onyx.api.bukkit.TeamAction;

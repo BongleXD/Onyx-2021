@@ -1,4 +1,4 @@
-package net.blastmc.onyx.bukkit.api;
+package net.blastmc.onyx.bukkit.api.impl;
 
 import net.blastmc.onyx.api.bukkit.Rank;
 import net.blastmc.onyx.bukkit.config.RankConfig;

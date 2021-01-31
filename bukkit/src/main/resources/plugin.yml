@@ -1,5 +1,5 @@
 name: Onyx
-version: ${project.version}
+version: @version@
 main: net.blastmc.onyx.bukkit.Main
 prefix: Onyx
 softdepend:

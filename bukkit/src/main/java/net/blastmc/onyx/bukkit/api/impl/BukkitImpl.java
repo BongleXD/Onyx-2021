@@ -1,4 +1,4 @@
-package net.blastmc.onyx.bukkit.api;
+package net.blastmc.onyx.bukkit.api.impl;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
-public class BukkitAPI implements API {
+public class BukkitImpl implements API {
 
     static HashMap<String, OnyxPlayerProfile> dataMap = new HashMap<>();
 

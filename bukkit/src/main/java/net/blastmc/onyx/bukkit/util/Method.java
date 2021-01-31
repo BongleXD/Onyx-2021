@@ -5,7 +5,7 @@ import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.TagData;
 import net.blastmc.onyx.api.bukkit.TeamAction;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.api.OnyxTagData;
+import net.blastmc.onyx.bukkit.api.impl.OnyxTagData;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.mojang.authlib.GameProfile;

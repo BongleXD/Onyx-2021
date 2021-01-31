@@ -95,7 +95,7 @@ public class Hologram_1_8_R3 implements Hologram {
                 lines.stream()
                         .map(data -> data.stand)
                         .forEach(stand -> {
-                            stand.setLocation(loc.getX(), loc.getY(), loc.getZ(), 0, 0);
+                            stand.setPosition(loc.getX(), loc.getY(), loc.getZ());
                             EntityPlayer ep = ((CraftPlayer) p).getHandle();
                             ep.playerConnection.sendPacket(new PacketPlayOutEntityTeleport(stand));
                             newLoc.add(0, -offset, 0);
@@ -184,7 +184,7 @@ public class Hologram_1_8_R3 implements Hologram {
             for(int i = 0; i < lines.size(); i++){
                 HoloData data = lines.get(i);
                 EntityArmorStand stand = data.stand;
-                stand.setLocation(loc.getX(), loc.getY(), loc.getZ(), 0, 0);
+                stand.setPosition(loc.getX(), loc.getY(), loc.getZ());
                 if(animMap.containsKey(i)) {
                     if (drawMap.get(i).frame <= 0) {
                         AnimData animData = drawMap.get(i);

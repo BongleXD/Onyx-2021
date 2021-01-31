@@ -8,6 +8,8 @@ public class SettingConfig extends ConfigManager {
     public static boolean LYNX = false;
     @Config(path = "setting.reg-lobby-command")
     public static boolean LOBBY_REG = true;
+    @Config(path = "setting.reg-spawn-command")
+    public static boolean SPAWN_REG = true;
     @Config(path = "setting.join-msg-enabled")
     public static boolean JOIN_MSG_ENABLED = true;
     @Config(path = "setting.quit-msg-enabled")

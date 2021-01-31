@@ -3,7 +3,7 @@ package net.blastmc.onyx.bungee;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.PlayerData;
 import net.blastmc.onyx.api.PluginInfo;
-import net.blastmc.onyx.bungee.api.BungeeAPI;
+import net.blastmc.onyx.bungee.api.impl.BungeeImpl;
 import net.blastmc.onyx.bungee.command.*;
 import net.blastmc.onyx.bungee.config.*;
 import net.blastmc.onyx.bungee.listener.DataListener;
@@ -41,7 +41,7 @@ public class Main extends Plugin {
         String passwd = MainConfig.cfg.getYml().getString("passwd");
         String database = MainConfig.cfg.getYml().getString("database");
         this.sql = new SQLHelper(url, user, passwd, database);
-        Onyx.setAPI(new BungeeAPI());
+        Onyx.setAPI(new BungeeImpl());
         PunishManager.init();
         getProxy().getPluginManager().registerCommand(this, new AntiAttack());
         getProxy().getPluginManager().registerCommand(this, new Glist());

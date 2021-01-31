@@ -42,11 +42,9 @@ public class Tpa extends CommandManager implements Listener {
                 public void run() {
                     requester.teleport(p.getLocation());
                     requester.sendMessage("§a正在将你传送至 " + p.getDisplayName());
-                    Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
-                        teleportMap.remove(requester.getUniqueId());
-                    });
+                    teleportMap.remove(requester.getUniqueId());
                 }
-            }.runTaskLaterAsynchronously(Main.getInstance(), 60));
+            }.runTaskLater(Main.getInstance(), 60));
         }else{
             p.sendMessage("§c你目前未接受到任何请求！");
         }

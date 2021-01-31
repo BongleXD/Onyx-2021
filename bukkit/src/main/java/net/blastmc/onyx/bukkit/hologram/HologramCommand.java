@@ -1,6 +1,5 @@
 package net.blastmc.onyx.bukkit.hologram;
 
-import com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent;
 import net.blastmc.onyx.api.bukkit.Hologram;
 import net.blastmc.onyx.api.bukkit.event.PlayerInitEvent;
 import net.blastmc.onyx.bukkit.Main;
@@ -11,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 
 public class HologramCommand extends CommandManager implements Listener {
 
@@ -24,6 +24,16 @@ public class HologramCommand extends CommandManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerInitEvent e){
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
+            HologramConfig.holoMap.forEach((name, holo) -> {
+                holo.showTo(e.getPlayer());
+                holo.show();
+            });
+        }, 20L);
+    }
+
+    @EventHandler
+    public void onSwitch(PlayerChangedWorldEvent e){
         Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
             HologramConfig.holoMap.forEach((name, holo) -> {
                 holo.showTo(e.getPlayer());

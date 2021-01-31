@@ -3,7 +3,6 @@ package net.blastmc.onyx.api;
 import net.blastmc.onyx.api.util.SQLHelper;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 

@@ -239,12 +239,9 @@ public class CommandManager extends BukkitCommand {
         return finalMethod;
     }
 
-    public static void regCommand(CommandManager command, Plugin plugin) throws ReflectiveOperationException {
+    public static void regCommand(CommandManager command, Plugin plugin) {
         command.clazz = command;
-        Method commandMap = plugin.getServer().getClass().getMethod("getCommandMap", (Class<?>) null);
-        Object cmdmap = commandMap.invoke(plugin.getServer(), (Object) null);
-        Method register = cmdmap.getClass().getMethod("register", String.class, String.class, Command.class);
-        register.invoke(cmdmap, command.getName(), plugin.getDescription().getName(), command);
+        Bukkit.getCommandMap().register(command.getName(), plugin.getDescription().getName(), command);
     }
 
     public enum CommandOnly{

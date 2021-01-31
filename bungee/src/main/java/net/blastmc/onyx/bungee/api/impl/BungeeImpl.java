@@ -1,4 +1,4 @@
-package net.blastmc.onyx.bungee.api;
+package net.blastmc.onyx.bungee.api.impl;
 
 import net.blastmc.onyx.api.API;
 import net.blastmc.onyx.api.Onyx;
@@ -17,7 +17,7 @@ import java.sql.Statement;
 import java.util.Random;
 import java.util.UUID;
 
-public class BungeeAPI implements API {
+public class BungeeImpl implements API {
 
     @Override
     public String getPIDIgnoreNick(String name) {

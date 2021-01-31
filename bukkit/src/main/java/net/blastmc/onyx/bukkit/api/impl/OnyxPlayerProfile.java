@@ -1,4 +1,4 @@
-package net.blastmc.onyx.bukkit.api;
+package net.blastmc.onyx.bukkit.api.impl;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
@@ -46,13 +46,13 @@ public class OnyxPlayerProfile implements PlayerProfile {
         this.secondPasswd = secondPasswd;
         this.prefix = prefix;
         this.suffix = suffix;
-        BukkitAPI.dataMap.put(pid, this);
+        BukkitImpl.dataMap.put(pid, this);
     }
 
     public OnyxPlayerProfile(String pid) {
         this.pid = pid;
         putData();
-        BukkitAPI.dataMap.put(pid, this);
+        BukkitImpl.dataMap.put(pid, this);
     }
 
     private void putData() {
@@ -295,7 +295,7 @@ public class OnyxPlayerProfile implements PlayerProfile {
                 new SQLHelper.SqlValue("prefix", this.prefix),
                 new SQLHelper.SqlValue("suffix", this.suffix));
         if (destroy) {
-            BukkitAPI.dataMap.remove(pid);
+            BukkitImpl.dataMap.remove(pid);
         }
     }
 

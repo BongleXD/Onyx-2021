@@ -189,7 +189,7 @@ public class Nick extends CommandManager {
                 Main.getNMS().openBookMenu(p,
                         new BookBuilder("name_error")
                                 .addText(new TextBuilder("注意！你不能将" + name + "用作你的昵称！\n").build())
-                                .addText(new TextBuilder("\n这个昵称是 NewCraft 玩家的哦！\n").build())
+                                .addText(new TextBuilder("\n这个昵称是 BlastMC 玩家的哦！\n").build())
                                 .addText(new TextBuilder("\n        §c§n点击重试")
                                         .setClick(ClickEvent.Action.RUN_COMMAND, "/nick " + args[0] + " " + args[1] + " enter")
                                         .setHover(HoverEvent.Action.SHOW_TEXT, "点击这里, 输入要使用的昵称")

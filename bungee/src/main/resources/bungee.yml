@@ -1,4 +1,4 @@
 main: net.blastmc.onyx.bungee.Main
 author: Hello_Han
 name: Onyx
-version: ${project.version}
+version: @version@

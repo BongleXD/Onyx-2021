@@ -147,8 +147,9 @@ public class v1_12_R1 implements NMS {
         prof.setNicked(true);
 
         //remove player
-        PacketPlayOutPlayerInfo remove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, ep);
-        Bukkit.getOnlinePlayers().forEach(online -> { ((CraftPlayer) online).getHandle().playerConnection.sendPacket(remove); });
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.hidePlayer(p);
+        }
 
         //change name
         Class<?> entityHuman = ep.getClass().getSuperclass();
@@ -184,10 +185,9 @@ public class v1_12_R1 implements NMS {
         }
 
         //add player
-        PacketPlayOutPlayerInfo add = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, ep);
-        Bukkit.getOnlinePlayers().forEach(online -> {
-            ((CraftPlayer) online).getHandle().playerConnection.sendPacket(add);
-        });
+        for (Player online : Bukkit.getOnlinePlayers()){
+            online.showPlayer(p);
+        }
 
         //destroy player
         PacketPlayOutEntityDestroy destroy = new PacketPlayOutEntityDestroy(new int[]{p.getEntityId()});
@@ -218,16 +218,6 @@ public class v1_12_R1 implements NMS {
             }
         }
         p.setDisplayName(PlaceholderAPI.setPlaceholders(p, "%profile_prefix%") + p.getName() + PlaceholderAPI.setPlaceholders(p, "%profile_suffix%"));
-        Method.setSkin(p, prof.getNickSkin());
-
-        new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-                reloadPlayer(p);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     @Override

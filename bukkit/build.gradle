@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'com.github.johnrengelman.shadow' version '5.0.0'
 }
@@ -11,4 +13,10 @@ shadowJar {
     baseName = 'Onyx-Bukkit'
     classifier = null
     relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
 }

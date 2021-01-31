@@ -5,19 +5,18 @@ import net.blastmc.onyx.api.PlayerData;
 import net.blastmc.onyx.api.PluginInfo;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
-import net.blastmc.onyx.bukkit.api.BukkitAPI;
-import net.blastmc.onyx.bukkit.api.OnyxPlayerProfile;
-import net.blastmc.onyx.bukkit.api.OnyxTagData;
+import net.blastmc.onyx.bukkit.api.impl.BukkitImpl;
+import net.blastmc.onyx.bukkit.api.impl.OnyxPlayerProfile;
+import net.blastmc.onyx.bukkit.api.impl.OnyxTagData;
 import net.blastmc.onyx.bukkit.chat.ChatListener;
 import net.blastmc.onyx.bukkit.hologram.HologramCommand;
 import net.blastmc.onyx.bukkit.level.ClaimData;
 import net.blastmc.onyx.bukkit.level.LevelListener;
 import net.blastmc.onyx.bukkit.nick.Nick;
 import net.blastmc.onyx.bukkit.nick.UnNick;
-import net.blastmc.onyx.bukkit.api.OnyxRank;
+import net.blastmc.onyx.bukkit.api.impl.OnyxRank;
 import net.blastmc.onyx.bukkit.util.placeholders.FormatPlaceholders;
 import net.blastmc.onyx.bukkit.util.placeholders.ProfilePlaceholders;
-import net.blastmc.onyx.bukkit.util.plugin.PluginManager;
 import net.blastmc.onyx.bukkit.packet.PacketProtocol;
 import net.blastmc.onyx.bukkit.packet.AntiCrash;
 import net.blastmc.onyx.bukkit.support.v1_12_R1.v1_12_R1;
@@ -45,8 +44,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public final class Main extends JavaPlugin {
 
@@ -108,7 +105,7 @@ public final class Main extends JavaPlugin {
             }
             check();
             sql = new SQLHelper(getConfig().getString("url"), getConfig().getString("user"), getConfig().getString("passwd"), getConfig().getString("database"));
-            Onyx.setAPI(new BukkitAPI());
+            Onyx.setAPI(new BukkitImpl());
             serverName = getConfig().getString("server-name");
             PlayerData.init();
             OnyxPlayerProfile.init();
@@ -178,58 +175,58 @@ public final class Main extends JavaPlugin {
     }
 
     private void regCommand(){
-        try {
-            CommandManager.regCommand(new MainCommand(), this);
-            CommandManager.regCommand(new BroadCast(), this);
-            CommandManager.regCommand(new Fly(), this);
-            CommandManager.regCommand(new FlySpeed(), this);
-            CommandManager.regCommand(new FootStep(), this);
-            CommandManager.regCommand(new Firework(), this);
-            CommandManager.regCommand(new Freeze(), this);
-            CommandManager.regCommand(new Gamemode(), this);
-            CommandManager.regCommand(new Echo(), this);
-            CommandManager.regCommand(new God(), this);
-            CommandManager.regCommand(new Hat(), this);
-            CommandManager.regCommand(new Heal(), this);
-            CommandManager.regCommand(new Kaboom(), this);
-            CommandManager.regCommand(new Lightning(), this);
-            CommandManager.regCommand(new Lightingstick(), this);
-            CommandManager.regCommand(new List(), this);
-            CommandManager.regCommand(new OpenInventory(), this);
-            CommandManager.regCommand(new Ping(), this);
-            CommandManager.regCommand(new Reboot(), this);
-            CommandManager.regCommand(new Sudo(), this);
-            CommandManager.regCommand(new Title(), this);
-            CommandManager.regCommand(new Tp(), this);
-            CommandManager.regCommand(new TpAll(), this);
-            CommandManager.regCommand(new TpHere(), this);
-            CommandManager.regCommand(new WalkSpeed(), this);
-            CommandManager.regCommand(new Level(), this);
-            CommandManager.regCommand(new Vanish(), this);
-            CommandManager.regCommand(new Rewards(), this);
-            CommandManager.regCommand(new Tpa(), this);
-            CommandManager.regCommand(new Crash(), this);
-            CommandManager.regCommand(new SetSpawn(), this);
-            CommandManager.regCommand(new Profile(), this);
-            CommandManager.regCommand(new Nick(), this);
-            CommandManager.regCommand(new UnNick(), this);
+        CommandManager.regCommand(new MainCommand(), this);
+        CommandManager.regCommand(new BroadCast(), this);
+        CommandManager.regCommand(new Fly(), this);
+        CommandManager.regCommand(new FlySpeed(), this);
+        CommandManager.regCommand(new FootStep(), this);
+        CommandManager.regCommand(new Firework(), this);
+        CommandManager.regCommand(new Freeze(), this);
+        CommandManager.regCommand(new Gamemode(), this);
+        CommandManager.regCommand(new Echo(), this);
+        CommandManager.regCommand(new God(), this);
+        CommandManager.regCommand(new Hat(), this);
+        CommandManager.regCommand(new Heal(), this);
+        CommandManager.regCommand(new Kaboom(), this);
+        CommandManager.regCommand(new Lightning(), this);
+        CommandManager.regCommand(new Lightingstick(), this);
+        CommandManager.regCommand(new List(), this);
+        CommandManager.regCommand(new OpenInventory(), this);
+        CommandManager.regCommand(new Ping(), this);
+        CommandManager.regCommand(new Reboot(), this);
+        CommandManager.regCommand(new Sudo(), this);
+        CommandManager.regCommand(new Title(), this);
+        CommandManager.regCommand(new Tp(), this);
+        CommandManager.regCommand(new TpAll(), this);
+        CommandManager.regCommand(new TpHere(), this);
+        CommandManager.regCommand(new WalkSpeed(), this);
+        CommandManager.regCommand(new Level(), this);
+        CommandManager.regCommand(new Vanish(), this);
+        CommandManager.regCommand(new Rewards(), this);
+        CommandManager.regCommand(new Tpa(), this);
+        CommandManager.regCommand(new Crash(), this);
+        CommandManager.regCommand(new SetSpawn(), this);
+        CommandManager.regCommand(new Profile(), this);
+        CommandManager.regCommand(new Nick(), this);
+        CommandManager.regCommand(new UnNick(), this);
+        CommandManager.regCommand(new Whitelist(), this);
+        CommandManager.regCommand(new Ban(), this);
+        CommandManager.regCommand(new TempBan(), this);
+        CommandManager.regCommand(new UnBan(), this);
+        CommandManager.regCommand(new Mute(), this);
+        CommandManager.regCommand(new TempMute(), this);
+        CommandManager.regCommand(new UnMute(), this);
+        CommandManager.regCommand(new Kick(), this);
+        CommandManager.regCommand(new Warn(), this);
+        CommandManager.regCommand(new Play(), this);
+        CommandManager.regCommand(new HologramCommand(), this);
+        CommandManager.regCommand(new Raffle(), this);
+        CommandManager.regCommand(new PlayNote(), this);
+        if (SettingConfig.LOBBY_REG) {
+            CommandManager.regCommand(new Lobby(), this);
+        }
+        if (SettingConfig.SPAWN_REG){
             CommandManager.regCommand(new Spawn(), this);
-            CommandManager.regCommand(new Whitelist(), this);
-            CommandManager.regCommand(new Ban(), this);
-            CommandManager.regCommand(new TempBan(), this);
-            CommandManager.regCommand(new UnBan(), this);
-            CommandManager.regCommand(new Mute(), this);
-            CommandManager.regCommand(new TempMute(), this);
-            CommandManager.regCommand(new UnMute(), this);
-            CommandManager.regCommand(new Kick(), this);
-            CommandManager.regCommand(new Warn(), this);
-            CommandManager.regCommand(new Play(), this);
-            CommandManager.regCommand(new HologramCommand(), this);
-            if (SettingConfig.LOBBY_REG) {
-                CommandManager.regCommand(new Lobby(), this);
-            }
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
         }
     }
 
