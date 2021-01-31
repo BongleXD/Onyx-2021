@@ -75,13 +75,13 @@ public class Reboot extends CommandManager {
                     this.cancel();
                 } else if(i == Integer.parseInt(args[0]) || i % 10 == 0 || i <= 5) {
                     for (Player online : Bukkit.getOnlinePlayers()) {
-                        online.playSound(online.getLocation(), SoundUtil.NOTE_PIANO.getSound(), 2.0F, 1.6F);
+                        online.playSound(online.getLocation(), SoundUtil.NOTE_PIANO.getSound(), 2.0F, 1.3F);
                         TextComponent text = new TextComponent("§a§n点击这里");
                         text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hub"));
                         text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击这里， 传送至大厅").create()));
                         online.sendMessage("");
                         online.sendMessage(new TextComponent("§c[重要信息] §e此服务器即将要进行重启: §b" + args[1]));
-                        online.sendMessage(new TextComponent("§e你有 §a" + i + " 秒 §e来传送至大厅！ "), text, new TextComponent("§e传送至大厅！"));
+                        online.sendMessage(new TextComponent("§e你有 §a" + i + " 秒 §e来传送至大厅！ "), text, new TextComponent(" §e传送至大厅！"));
                         online.sendMessage("");
                     }
                 }
