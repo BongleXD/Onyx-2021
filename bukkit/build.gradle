@@ -6,7 +6,11 @@ plugins {
 
 dependencies {
     implementation project(':onyx-api')
-    compileOnly fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly files('libs/PotatoSpigot-1.12.2.jar')
+    compileOnly files('libs/PotatoSpigot-1.8.8.jar')
+    compileOnly files('libs/Bungee.jar')
+    compileOnly files('libs/PlaceholderAPI-2.9.2.jar')
+    compileOnly files('libs/Vault.jar')
 }
 
 shadowJar {
