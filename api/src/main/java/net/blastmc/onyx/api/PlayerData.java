@@ -1,6 +1,6 @@
 package net.blastmc.onyx.api;
 
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 
 import java.math.BigDecimal;
 import java.util.List;

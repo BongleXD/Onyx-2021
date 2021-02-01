@@ -3,7 +3,7 @@ package net.blastmc.onyx.bukkit.messaging;
 import net.blastmc.onyx.bukkit.Main;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;

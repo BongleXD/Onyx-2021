@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bungee.api;
 
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bungee.config.SkinConfig;
 import com.google.gson.internal.LinkedTreeMap;
 import net.md_5.bungee.BungeeCord;

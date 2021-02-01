@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.interact.ItemBuilder;
+import net.blastmc.onyx.bukkit.utils.interact.ItemBuilder;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -4,7 +4,7 @@ import net.blastmc.onyx.api.bukkit.server.ServerType;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import net.blastmc.onyx.bukkit.config.RewardConfig;
-import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
+import net.blastmc.onyx.bukkit.utils.interact.SoundUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

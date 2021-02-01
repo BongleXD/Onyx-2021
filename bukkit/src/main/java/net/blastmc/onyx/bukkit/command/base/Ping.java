@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.command.base;
 
-import net.blastmc.onyx.bukkit.util.ReflectUtils;
+import net.blastmc.onyx.bukkit.utils.ReflectUtils;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

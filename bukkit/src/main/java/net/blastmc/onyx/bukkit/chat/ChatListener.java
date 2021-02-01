@@ -3,7 +3,7 @@ package net.blastmc.onyx.bukkit.chat;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
-import net.blastmc.onyx.bukkit.util.JsonMessageUtil;
+import net.blastmc.onyx.bukkit.utils.JsonMessageUtil;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.config.ChatConfig;
 import me.clip.placeholderapi.PlaceholderAPI;

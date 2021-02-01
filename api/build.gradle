@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'com.offbytwo.jenkins:jenkins-client:0.3.8'
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
 }
 

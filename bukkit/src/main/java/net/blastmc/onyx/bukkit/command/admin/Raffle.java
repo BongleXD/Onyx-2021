@@ -2,13 +2,12 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import com.google.common.base.Joiner;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.blastmc.onyx.api.Onyx;
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.bukkit.util.NoteUtil;
-import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
-import net.blastmc.onyx.bukkit.util.interact.TitleUtil;
+import net.blastmc.onyx.bukkit.utils.NoteUtil;
+import net.blastmc.onyx.bukkit.utils.interact.SoundUtil;
+import net.blastmc.onyx.bukkit.utils.interact.TitleUtil;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

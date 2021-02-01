@@ -6,14 +6,12 @@ import com.google.common.io.ByteStreams;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class Kick extends CommandManager {
 

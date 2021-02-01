@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.command.base;
 
-import net.blastmc.onyx.bukkit.util.FireworkUtil;
+import net.blastmc.onyx.bukkit.utils.FireworkUtil;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

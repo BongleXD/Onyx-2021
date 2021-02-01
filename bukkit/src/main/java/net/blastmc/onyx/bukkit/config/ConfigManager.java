@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.config;
 
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bukkit.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;

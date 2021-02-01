@@ -2,10 +2,10 @@ package net.blastmc.onyx.bukkit.api.impl;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.TagData;
-import net.blastmc.onyx.api.util.Log;
+import net.blastmc.onyx.api.utils.Log;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.config.TagConfig;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

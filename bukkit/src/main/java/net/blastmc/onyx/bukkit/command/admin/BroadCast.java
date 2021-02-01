@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import com.google.common.base.Joiner;
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 

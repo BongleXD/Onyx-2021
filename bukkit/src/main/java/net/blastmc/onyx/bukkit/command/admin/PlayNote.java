@@ -2,9 +2,8 @@ package net.blastmc.onyx.bukkit.command.admin;
 
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.command.CommandManager;
-import net.blastmc.onyx.bukkit.util.NoteUtil;
-import net.blastmc.onyx.bukkit.util.interact.SoundUtil;
-import org.bukkit.Bukkit;
+import net.blastmc.onyx.bukkit.utils.NoteUtil;
+import net.blastmc.onyx.bukkit.utils.interact.SoundUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

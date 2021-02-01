@@ -4,7 +4,7 @@ import net.blastmc.onyx.api.bukkit.NMS;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.Rank;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 
 import java.util.UUID;
 

@@ -2,8 +2,8 @@ package net.blastmc.onyx.bukkit.command;
 
 import net.blastmc.onyx.api.PluginInfo;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.Method;
-import net.blastmc.onyx.bukkit.util.plugin.PluginManager;
+import net.blastmc.onyx.bukkit.utils.Method;
+import net.blastmc.onyx.bukkit.utils.plugin.PluginManager;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;

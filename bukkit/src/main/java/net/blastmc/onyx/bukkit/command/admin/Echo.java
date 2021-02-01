@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.command.admin;
 
-import net.blastmc.onyx.api.util.Method;
+import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

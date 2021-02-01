@@ -6,10 +6,10 @@ import net.blastmc.onyx.api.bukkit.Rank;
 import net.blastmc.onyx.api.bukkit.event.PlayerLevelUPEvent;
 import net.blastmc.onyx.api.bukkit.event.PlayerXpGainEvent;
 import net.blastmc.onyx.api.bukkit.server.ServerType;
-import net.blastmc.onyx.bukkit.util.interact.ActionBarUtil;
+import net.blastmc.onyx.bukkit.utils.interact.ActionBarUtil;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.api.util.Method;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.Method;
+import net.blastmc.onyx.api.utils.SQLHelper;
 import org.bukkit.Bukkit;
 
 import java.util.List;

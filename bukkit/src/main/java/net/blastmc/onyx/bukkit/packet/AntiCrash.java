@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bukkit.packet;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.ReflectUtils;
+import net.blastmc.onyx.bukkit.utils.ReflectUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

@@ -7,7 +7,7 @@ import net.blastmc.onyx.bungee.config.PunishConfig;
 import net.blastmc.onyx.bungee.punish.Mute;
 import net.blastmc.onyx.bungee.punish.PunishManager;
 import net.blastmc.onyx.bungee.punish.PunishType;
-import net.blastmc.onyx.bungee.util.Method;
+import net.blastmc.onyx.bungee.utils.Method;
 import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;

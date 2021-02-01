@@ -2,7 +2,7 @@ package net.blastmc.onyx.bungee.listener;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.PlayerData;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 import net.blastmc.onyx.bungee.punish.PunishManager;
 import net.blastmc.onyx.bungee.api.SkinAPI;
 import net.blastmc.onyx.bungee.Main;
@@ -12,7 +12,6 @@ import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class DataListener implements Listener {

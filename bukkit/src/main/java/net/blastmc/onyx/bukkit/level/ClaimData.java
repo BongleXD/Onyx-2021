@@ -2,12 +2,11 @@ package net.blastmc.onyx.bukkit.level;
 
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 import com.google.common.collect.Lists;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 public class ClaimData {

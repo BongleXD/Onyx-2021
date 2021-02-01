@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.Method;
+import net.blastmc.onyx.bukkit.utils.Method;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

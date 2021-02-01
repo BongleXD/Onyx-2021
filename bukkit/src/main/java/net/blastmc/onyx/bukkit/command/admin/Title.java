@@ -1,6 +1,6 @@
 package net.blastmc.onyx.bukkit.command.admin;
 
-import net.blastmc.onyx.bukkit.util.interact.TitleUtil;
+import net.blastmc.onyx.bukkit.utils.interact.TitleUtil;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.config;
 
 import com.google.common.collect.Lists;
 import net.blastmc.onyx.api.bukkit.Animation;
-import net.blastmc.onyx.api.util.Log;
+import net.blastmc.onyx.api.utils.Log;
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.api.bukkit.Hologram;
 import org.bukkit.Bukkit;

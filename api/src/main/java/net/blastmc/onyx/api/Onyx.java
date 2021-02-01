@@ -2,7 +2,7 @@ package net.blastmc.onyx.api;
 
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.api.bukkit.Rank;
-import net.blastmc.onyx.api.util.Log;
+import net.blastmc.onyx.api.utils.Log;
 
 import java.util.HashMap;
 import java.util.UUID;

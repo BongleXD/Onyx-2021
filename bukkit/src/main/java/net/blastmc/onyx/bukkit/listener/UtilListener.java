@@ -1,8 +1,8 @@
 package net.blastmc.onyx.bukkit.listener;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.interact.inventory.ItemClickEvent;
-import net.blastmc.onyx.bukkit.util.interact.inventory.SimpleInventory;
+import net.blastmc.onyx.bukkit.utils.interact.inventory.ItemClickEvent;
+import net.blastmc.onyx.bukkit.utils.interact.inventory.SimpleInventory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

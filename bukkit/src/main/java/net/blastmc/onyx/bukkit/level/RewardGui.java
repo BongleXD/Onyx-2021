@@ -4,8 +4,8 @@ import net.blastmc.onyx.api.Onyx;
 import net.blastmc.onyx.api.bukkit.PlayerProfile;
 import net.blastmc.onyx.bukkit.config.RewardConfig;
 import net.blastmc.onyx.bukkit.gui.PlayerGui;
-import net.blastmc.onyx.bukkit.util.Method;
-import net.blastmc.onyx.bukkit.util.interact.ItemBuilder;
+import net.blastmc.onyx.bukkit.utils.Method;
+import net.blastmc.onyx.bukkit.utils.interact.ItemBuilder;
 import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -79,7 +79,7 @@ public class RewardGui extends PlayerGui {
         PlayerProfile profile = Onyx.getPlayerProfile(p.getUniqueId());
         List<String> lore = Lists.newArrayList();
         RewardConfig.config.getYml().getStringList("rewards." + level + ".lore").forEach(s -> {
-            lore.add(net.blastmc.onyx.api.util.Method.transColor(s));
+            lore.add(net.blastmc.onyx.api.utils.Method.transColor(s));
         });
         if(profile.getLevel() < level){
             return new ItemBuilder(Material.STORAGE_MINECART)

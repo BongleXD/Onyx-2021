@@ -1,7 +1,7 @@
 package net.blastmc.onyx.bukkit.messaging;
 
 import net.blastmc.onyx.bukkit.Main;
-import net.blastmc.onyx.bukkit.util.IrcUtil;
+import net.blastmc.onyx.bukkit.utils.IrcUtil;
 import net.blastmc.onyx.bukkit.config.SettingConfig;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;

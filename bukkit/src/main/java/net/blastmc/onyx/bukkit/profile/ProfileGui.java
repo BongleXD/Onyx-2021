@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.profile;
 
 import net.blastmc.onyx.bukkit.Main;
 import net.blastmc.onyx.bukkit.gui.PlayerGui;
-import net.blastmc.onyx.api.util.SQLHelper;
+import net.blastmc.onyx.api.utils.SQLHelper;
 import org.bukkit.entity.Player;
 
 public class ProfileGui extends PlayerGui {
