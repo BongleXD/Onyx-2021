@@ -33,7 +33,9 @@ public class JenkinsImpl implements VersionControl {
     }
 
     @Override
-    public boolean isLatest(String version) {
+    public boolean isLatest(String md5) {
+        Build stable = job.getLastStableBuild();
+
         return false;
     }
 

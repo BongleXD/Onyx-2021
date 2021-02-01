@@ -1,0 +1,23 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+}
+
+dependencies {
+    implementation project(':onyx-api')
+    compileOnly files('libs/PotatoSpigot-1.12.2.jar')
+    compileOnly files('libs/PotatoSpigot-1.8.8.jar')
+}
+
+shadowJar{
+    baseName = 'Onyx'
+    classifier = null
+    relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
