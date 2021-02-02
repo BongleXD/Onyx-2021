@@ -6,6 +6,7 @@ import net.blastmc.onyx.api.utils.Log;
 import net.blastmc.onyx.survival.Main;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -19,7 +20,11 @@ public class HomeDatabase {
             file.getParentFile().mkdirs();
         }
         if(!file.exists()){
-            Main.getInstance().saveResource("Home.db", false);
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         HikariConfig config = new HikariConfig();
         config.setDriverClassName("org.sqlite.JDBC");
