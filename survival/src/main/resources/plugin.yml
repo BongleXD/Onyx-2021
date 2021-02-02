@@ -2,5 +2,7 @@ name: Onyx-Survival
 version: @version@
 main: net.blastmc.onyx.survival.Main
 prefix: Onyx-Survival
-author: Hello_Han
+author: May_Block
+depend:
+  - Onyx
 description: Within essential and enhanced functions for Bukkit Survival Servers
