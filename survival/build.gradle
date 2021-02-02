@@ -5,9 +5,9 @@ plugins {
 }
 
 dependencies {
-    compileOnly project(':onyx-api')
+    implementation project(':onyx-api')
     compileOnly project(':onyx-bukkit')
-    compileOnly 'com.zaxxer:HikariCP:3.4.5'
+    implementation ('com.zaxxer:HikariCP:3.4.5')
     compileOnly files('libs/PotatoSpigot-1.12.2.jar')
     compileOnly files('libs/PotatoSpigot-1.8.8.jar')
 }
