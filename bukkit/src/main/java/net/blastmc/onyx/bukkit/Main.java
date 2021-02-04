@@ -85,7 +85,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        PluginInfo.init(this.getDescription().getVersion());
+        PluginInfo.init(this.getClass().getPackage().getImplementationVersion());
         Log.getLogger().sendLog("§e插件读取中...");
         checkNMS();
     }

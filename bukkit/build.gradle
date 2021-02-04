@@ -16,6 +16,10 @@ dependencies {
 shadowJar {
     baseName = 'Onyx-Bukkit'
     classifier = null
+    manifest {
+        attributes 'Implementation-Title': 'Onyx-Bukkit'
+        attributes 'Implementation-Version': version + '-' + (System.getenv("BUILD_NUMBER") == 'null' ? 'Unknown' : System.getenv("BUILD_NUMBER"))
+    }
     relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
 }
 

@@ -5,6 +5,7 @@ import com.offbytwo.jenkins.client.JenkinsHttpClient;
 import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import net.blastmc.onyx.api.plugin.VersionControl;
+import org.apache.commons.lang.Validate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,9 +34,13 @@ public class JenkinsImpl implements VersionControl {
     }
 
     @Override
-    public boolean isLatest(String md5) {
-        Build stable = job.getLastStableBuild();
-
+    public boolean isLatest(String num) {
+        try {
+            Build stable = job.getLastStableBuild();
+            return stable.getNumber() == Integer.parseInt(num);
+        }catch (NumberFormatException ex){
+            ex.printStackTrace();
+        }
         return false;
     }
 

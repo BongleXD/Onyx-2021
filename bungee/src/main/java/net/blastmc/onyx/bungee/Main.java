@@ -28,7 +28,7 @@ public class Main extends Plugin {
 
     @Override
     public void onLoad() {
-        PluginInfo.init(this.getDescription().getVersion());
+        PluginInfo.init(this.getClass().getPackage().getImplementationVersion());
         Log.getLogger().sendLog("§a读取中...");
     }
 

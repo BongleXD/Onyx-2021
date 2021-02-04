@@ -2,9 +2,11 @@ allprojects {
     apply plugin: 'java'
     group = 'net.blastmc.onyx'
     version = '1.3.2-DEV'
+
     repositories {
         maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
     }
+
 }
 
 subprojects {
@@ -14,4 +16,5 @@ subprojects {
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
+
 }

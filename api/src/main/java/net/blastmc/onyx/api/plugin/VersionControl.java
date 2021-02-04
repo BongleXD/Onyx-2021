@@ -2,7 +2,7 @@ package net.blastmc.onyx.api.plugin;
 
 public interface VersionControl {
 
-    boolean isLatest(String md5);
+    boolean isLatest(String ver);
 
     void download(String version, String path);
 
