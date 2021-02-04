@@ -26,11 +26,11 @@ public class SetHome extends CommandManager {
 
     private void setHome(CommandSender sender, String[] args) throws SQLException {
         Player p = (Player) sender;
-        Connection conn = Main.getDatabase().getConnection();
+        Connection conn = Main.getSql().getConnection();
         PreparedStatement preparedStatement;
         Statement statement;
         ResultSet result;
-        preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_home (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,uuid VARCHAR(200) CHARACTER SET utf8,homename VARCHAR(200) CHARACTER SET utf8,world VARCHAR(200) CHARACTER SET utf8,x VARCHAR(200) CHARACTER SET utf8,y VARCHAR(200) CHARACTER SET utf8,z VARCHAR(200) CHARACTER SET utf8);");
+        preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_home (id INTEGER PRIMARY KEY,uuid VARCHAR(200) CHARACTER SET utf8,homename VARCHAR(200) CHARACTER SET utf8,world VARCHAR(200) CHARACTER SET utf8,x VARCHAR(200) CHARACTER SET utf8,y VARCHAR(200) CHARACTER SET utf8,z VARCHAR(200) CHARACTER SET utf8);");
         preparedStatement.executeUpdate();
         preparedStatement.close();
         statement = conn.createStatement();

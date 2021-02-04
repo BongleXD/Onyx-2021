@@ -16,7 +16,7 @@ public class Main extends JavaPlugin {
         return instance;
     }
 
-    public static HomeDatabase getDatabase() {
+    public static HomeDatabase getSql() {
         return instance.homeDB;
     }
 

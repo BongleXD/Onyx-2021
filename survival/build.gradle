@@ -5,9 +5,8 @@ plugins {
 }
 
 dependencies {
-    implementation project(':onyx-api')
+    compileOnly project(':onyx-api')
     compileOnly project(':onyx-bukkit')
-    implementation ('com.zaxxer:HikariCP:3.4.5')
     compileOnly files('libs/PotatoSpigot-1.12.2.jar')
     compileOnly files('libs/PotatoSpigot-1.8.8.jar')
 }
@@ -15,7 +14,6 @@ dependencies {
 shadowJar{
     baseName = 'Onyx-Survival'
     classifier = null
-    relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.survival.lib.hikari'
 }
 
 processResources {
