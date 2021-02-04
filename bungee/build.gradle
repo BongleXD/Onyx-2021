@@ -14,7 +14,7 @@ shadowJar {
     classifier = null
     manifest {
         attributes 'Implementation-Title': 'Onyx-Bungee'
-        attributes 'Implementation-Version': version + '-' + (System.getenv("BUILD_NUMBER") == 'null' ? 'Unknown' : System.getenv("BUILD_NUMBER"))
+        attributes 'Implementation-Version': version + ':' + (System.getenv("BUILD_NUMBER") == 'null' ? 'Unknown' : System.getenv("BUILD_NUMBER"))
     }
     relocate 'com.zaxxer.hikari', 'net.blastmc.onyx.lib.hikari'
 }
