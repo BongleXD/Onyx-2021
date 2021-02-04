@@ -129,7 +129,7 @@ public class Tpa extends CommandManager implements Listener {
             if(teleportMap.containsKey(p.getUniqueId())){
                 teleportMap.get(p.getUniqueId()).cancel();
                 teleportMap.remove(p.getUniqueId());
-                p.sendMessage("§c请勿在传送时移动！");
+                p.sendMessage("§c你在即将传送时移动了，传送取消！");
             }
         }
     }

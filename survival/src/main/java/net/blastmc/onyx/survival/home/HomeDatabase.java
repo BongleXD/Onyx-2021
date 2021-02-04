@@ -8,13 +8,14 @@ import net.blastmc.onyx.survival.Main;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class HomeDatabase {
 
     private HikariDataSource source;
 
-    public void init() {
+    public void init() throws SQLException {
         File file = new File(Main.getInstance().getDataFolder(), "Home.db");
         if(!file.getParentFile().exists()){
             file.getParentFile().mkdirs();
@@ -31,6 +32,11 @@ public class HomeDatabase {
         config.setPoolName("home-hikari");
         config.setJdbcUrl("jdbc:sqlite:" + file);
         source = new HikariDataSource(config);
+        Connection conn = getConnection();
+        PreparedStatement preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_home (id INTEGER PRIMARY KEY,uuid VARCHAR(200),homename VARCHAR(200),world VARCHAR(200),x VARCHAR(200),y VARCHAR(200),z VARCHAR(200));");
+        preparedStatement.executeUpdate();
+        preparedStatement.close();
+        conn.close();
         Log.getLogger().sendLog("§a已经连接至 SQLite！");
     }
 

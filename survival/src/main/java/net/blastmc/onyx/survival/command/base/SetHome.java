@@ -1,5 +1,6 @@
 package net.blastmc.onyx.survival.command.base;
 
+import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import net.blastmc.onyx.survival.Main;
 import org.bukkit.Location;
@@ -30,9 +31,6 @@ public class SetHome extends CommandManager {
         PreparedStatement preparedStatement;
         Statement statement;
         ResultSet result;
-        preparedStatement = conn.prepareStatement("CREATE TABLE IF NOT EXISTS player_home (id INTEGER PRIMARY KEY,uuid VARCHAR(200) CHARACTER SET utf8,homename VARCHAR(200) CHARACTER SET utf8,world VARCHAR(200) CHARACTER SET utf8,x VARCHAR(200) CHARACTER SET utf8,y VARCHAR(200) CHARACTER SET utf8,z VARCHAR(200) CHARACTER SET utf8);");
-        preparedStatement.executeUpdate();
-        preparedStatement.close();
         statement = conn.createStatement();
         result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE uuid = '" + p.getUniqueId().toString()+"';");
         if (result.next()) {
@@ -42,11 +40,12 @@ public class SetHome extends CommandManager {
             if (count > 5) {
                 p.sendMessage("§c您当前可以设置的家已达最大值！");
             } else {
-                String homeName = args.length == 0 ? "Home_"+count : args[0];
+                String homeName = args.length == 0 ? "Home_"+count+1 : args[0];
                 statement = conn.createStatement();
                 result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename = '"+homeName + "' AND uuid = '" + p.getUniqueId().toString() + "';");
-                if (result.next()){
-                    p.sendMessage("当前名字 "+homeName+" 与当前已存在的家名字冲突！");
+                count = result.getInt(1);
+                if (count != 0){
+                    p.sendMessage("§c当前名字 "+homeName+" 与当前已存在的家名字冲突！");
                     statement.close();
                     result.close();
                     return;
@@ -57,10 +56,10 @@ public class SetHome extends CommandManager {
                 double x = loc.getX();
                 double y = loc.getY();
                 double z = loc.getZ();
-                preparedStatement = conn.prepareStatement("INSERT INTO user_data (uuid, homename, world, x, y, z) VALUES('"+p.getUniqueId().toString()+"', '"+homeName+"', '"+p.getWorld().getName()+"', '"+x+"', '"+y+"', '"+z+"');");
+                preparedStatement = conn.prepareStatement("INSERT INTO player_home (uuid, homename, world, x, y, z) VALUES('"+p.getUniqueId().toString()+"', '"+homeName+"', '"+p.getWorld().getName()+"', '"+x+"', '"+y+"', '"+z+"');");
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
-                p.sendMessage("§a已成功设置家 §b" + homeName + "§a 位于：§eX："+x+" Y："+y+" Z："+z);
+                p.sendMessage("§a已成功设置家 §b" + homeName + "§a 位于：§eX："+ Method.roundDouble(x, 1)+" Y："+Method.roundDouble(y, 1)+" Z："+Method.roundDouble(z, 1));
             }
         }
         conn.close();
