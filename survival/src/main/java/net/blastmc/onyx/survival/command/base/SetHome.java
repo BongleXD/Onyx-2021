@@ -3,6 +3,7 @@ package net.blastmc.onyx.survival.command.base;
 import net.blastmc.onyx.api.utils.Method;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import net.blastmc.onyx.survival.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,12 +38,12 @@ public class SetHome extends CommandManager {
             int count = result.getInt(1);
             statement.close();
             result.close();
-            if (count > 5) {
+            if (count >= 5) {
                 p.sendMessage("§c您当前可以设置的家已达最大值！");
             } else {
-                String homeName = args.length == 0 ? "Home_"+count+1 : args[0];
+                String homeName = args.length == 0 ? "Home_"+(count+1) : args[0];
                 statement = conn.createStatement();
-                result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename = '"+homeName + "' AND uuid = '" + p.getUniqueId().toString() + "';");
+                result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename LIKE UPPER('"+homeName+"') AND uuid = '" + p.getUniqueId().toString() + "';");
                 count = result.getInt(1);
                 if (count != 0){
                     p.sendMessage("§c当前名字 "+homeName+" 与当前已存在的家名字冲突！");
@@ -59,7 +60,7 @@ public class SetHome extends CommandManager {
                 preparedStatement = conn.prepareStatement("INSERT INTO player_home (uuid, homename, world, x, y, z) VALUES('"+p.getUniqueId().toString()+"', '"+homeName+"', '"+p.getWorld().getName()+"', '"+x+"', '"+y+"', '"+z+"');");
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
-                p.sendMessage("§a已成功设置家 §b" + homeName + "§a 位于：§eX："+ Method.roundDouble(x, 1)+" Y："+Method.roundDouble(y, 1)+" Z："+Method.roundDouble(z, 1));
+                p.sendMessage("§a已成功设置家 §b" + homeName + "§a 位于：§e世界："+loc.getWorld().getName()+" X："+ Method.roundDouble(x, 1)+" Y："+Method.roundDouble(y, 1)+" Z："+Method.roundDouble(z, 1));
             }
         }
         conn.close();

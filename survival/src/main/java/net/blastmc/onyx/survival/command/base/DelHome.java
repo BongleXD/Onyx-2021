@@ -13,21 +13,20 @@ public class DelHome extends CommandManager {
         super("delhome", "删除家", "/delhome <家名字>", "survival.command.delhome");
     }
 
-    @Cmd(arg = "<value>", perm = "survival.command.delhome", coolDown = 1000, only = CommandOnly.PLAYER)
-    public void onDelHome(CommandSender sender, String[] args) throws SQLException {
-        Player p = (Player)sender;
+    @Cmd(arg = "<value>", perm = "survival.command.delhome", coolDown = 3000, only = CommandOnly.PLAYER)
+    public void delHome(CommandSender sender, String[] args) throws SQLException {
+        Player p = (Player) sender;
         String name = args[0];
         Connection conn = Main.getSql().getConnection();
         Statement statement = conn.createStatement();
-        ResultSet result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename = '" + name+"' AND uuid='"+p.getUniqueId().toString()+"';");
+        ResultSet result = statement.executeQuery("SELECT homename FROM player_home WHERE homename LIKE UPPER('" + name + "') AND uuid='" + p.getUniqueId().toString() + "';");
         if (result.next()) {
-            if (result.getInt(1) != 0){
-                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM player_home WHERE homename='"+name+"' AND uuid='"+p.getUniqueId().toString()+"';");
-                preparedStatement.executeUpdate();
-                p.sendMessage("§a已删除家 §b"+name);
-            } else {
-                p.sendMessage("§c家 "+name+" 不存在！");
-            }
+            name = result.getString(1);
+            PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM player_home WHERE homename='" + name + "' AND uuid='" + p.getUniqueId().toString() + "';");
+            preparedStatement.executeUpdate();
+            p.sendMessage("§a已删除家 §b" + name);
+        } else {
+            p.sendMessage("§c家 " + name + " 不存在！");
         }
         result.close();
         statement.close();

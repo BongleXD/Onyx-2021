@@ -6,6 +6,7 @@ import net.blastmc.onyx.survival.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockFace;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,24 +31,27 @@ public class Back extends CommandManager implements Listener {
     }
 
     @Cmd(coolDown = 3000, perm = "survival.command.back", only = CommandOnly.PLAYER)
-    public void onBack(CommandSender sender, String[] args){
+    public void back(CommandSender sender, String[] args){
         Player p = (Player)sender;
         if (deathMap.containsKey(p.getUniqueId())){
             p.sendMessage("§a即将在 §e3 §a秒后传送至死亡点 §c请不要移动！");
-            Main.getTpQueue().add(p.getUniqueId());
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
-                if (Main.getTpQueue().contains(p.getUniqueId())){
+            BukkitTask task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                if (Main.getTpQueue().containsKey(p.getUniqueId())){
                     p.teleport(deathMap.get(p.getUniqueId()));
                     p.sendMessage("§a已将你传送至死亡点！");
                     deathMap.remove(p.getUniqueId());
                 }
             }, 60L);
+            Main.getTpQueue().put(p.getUniqueId(), task);
+        } else {
+            p.sendMessage("§c找不到死亡点，该死亡点可能已被传送过一次或不存在！");
         }
     }
+
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if (p.hasPermission("survival.command.back") && p.isOnGround() && p.getLocation().getBlock().getType() != Material.LAVA) {
+        if (p.hasPermission("survival.command.back") && p.isOnGround() && p.getLocation().getBlock().getRelative(BlockFace.UP).getType() != Material.LAVA) {
             onGroundMap.put(p.getUniqueId(), p.getLocation());
         }
     }
@@ -62,6 +67,7 @@ public class Back extends CommandManager implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e){
+        deathMap.remove(e.getPlayer().getUniqueId());
         onGroundMap.remove(e.getPlayer().getUniqueId());
     }
 }
