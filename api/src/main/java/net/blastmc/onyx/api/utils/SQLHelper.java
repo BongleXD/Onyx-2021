@@ -257,28 +257,13 @@ public class SQLHelper {
         AtomicBoolean b = new AtomicBoolean(false);
         pool.execute(() -> {
             Connection conn = null;
-            Statement stmt = null;
-            ResultSet rs = null;
             try {
                 conn = getConnection();
-                stmt = conn.createStatement();
-                rs = stmt.executeQuery("SELECT COUNT(*) FROM " + table + " WHERE " + flag + " = '" + data + "';");
-                if (rs.next()) {
-                    b.set(rs.getInt(1) != 0);
-                }
-                rs.close();
-                stmt.close();
-                conn.close();
+                b.set(conn.prepareStatement("SELECT * FROM " + table + " WHERE " + flag + " = '" + data + "';").executeQuery().next());
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
                 try {
-                    if(rs != null){
-                        rs.close();
-                    }
-                    if(stmt != null){
-                        stmt.close();
-                    }
                     if(conn != null){
                         conn.close();
                     }
@@ -414,15 +399,12 @@ public class SQLHelper {
                                 .collect(Collectors.toList()));
                 if (!checkDataExists(table, flag, flagData)) {
                     stmt = conn.prepareStatement("INSERT INTO " + table + " (" + data + ") VALUES(" + sqlValue + ");");
-                    stmt.executeUpdate();
-                    stmt.close();
-                    conn.close();
                 } else {
                     stmt = conn.prepareStatement("UPDATE " + table + " SET " + set + " WHERE " + flag + " = '" + flagData + "';");
-                    stmt.executeUpdate();
-                    stmt.close();
-                    conn.close();
                 }
+                stmt.executeUpdate();
+                stmt.close();
+                conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
