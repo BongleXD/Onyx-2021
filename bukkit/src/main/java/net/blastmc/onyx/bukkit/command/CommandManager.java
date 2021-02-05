@@ -241,7 +241,14 @@ public class CommandManager extends BukkitCommand {
 
     public static void regCommand(CommandManager command, Plugin plugin) {
         command.clazz = command;
-        Bukkit.getCommandMap().register(command.getName(), plugin.getDescription().getName(), command);
+        try {
+            Method commandMap = plugin.getServer().getClass().getMethod("getCommandMap", null);
+            Object cmdmap = commandMap.invoke(plugin.getServer(), null);
+            Method register = cmdmap.getClass().getMethod("register", String.class, String.class, Command.class);
+            register.invoke(cmdmap, command.getName(), plugin.getDescription().getName(), command);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
     public enum CommandOnly{

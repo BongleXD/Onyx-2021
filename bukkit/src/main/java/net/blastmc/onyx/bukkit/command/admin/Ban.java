@@ -32,13 +32,13 @@ public class Ban extends CommandManager {
             long duration;
             try {
                 if (args[1].endsWith("d")) {
-                    duration = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24;
+                    duration = Long.parseLong(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24;
                 } else if (args[1].endsWith("m")) {
-                    duration = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30;
+                    duration = Long.parseLong(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30;
                 } else if (args[1].endsWith("y")) {
-                    duration = Integer.parseInt(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30 * 12;
+                    duration = Long.parseLong(args[1].substring(0, args[1].length() - 1)) * 1000 * 60 * 60 * 24 * 30 * 12;
                 } else {
-                    duration = Integer.parseInt(args[1]) * 1000;
+                    duration = Long.parseLong(args[1]) * 1000;
                 }
             } catch (Exception ex) {
                 duration = -1;

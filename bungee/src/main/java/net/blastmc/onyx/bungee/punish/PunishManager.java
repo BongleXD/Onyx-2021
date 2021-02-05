@@ -200,7 +200,7 @@ public class PunishManager {
 
     public void punishPlayer(PunishType type, String pid, String executor, String reason, String server, long duration){
         new Thread(() -> {
-            ProxiedPlayer p = Onyx.getPlayerDataFromPID(pid) == null ? null : BungeeCord.getInstance().getPlayer(Onyx.getPlayerDataFromPID(pid).getName());
+            ProxiedPlayer p = Onyx.getAPI().getOfflineUUID(pid) == null ? null : BungeeCord.getInstance().getPlayer(Onyx.getAPI().getOfflineUUID(pid));
             switch (type){
                 case BAN:
                     Ban ban = new Ban(executor, server, System.currentTimeMillis(), duration, genPunishID(type), reason);
