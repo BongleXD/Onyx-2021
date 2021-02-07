@@ -3,6 +3,7 @@ package net.blastmc.onyx.survival.command.base;
 import com.google.common.collect.Lists;
 import net.blastmc.onyx.bukkit.command.CommandManager;
 import net.blastmc.onyx.survival.Main;
+import net.blastmc.onyx.survival.command.TeleportMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -36,13 +37,13 @@ public class Back extends CommandManager implements Listener {
         if (deathMap.containsKey(p.getUniqueId())){
             p.sendMessage("§a即将在 §e3 §a秒后传送至死亡点 §c请不要移动！");
             BukkitTask task = Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                if (Main.getTpQueue().containsKey(p.getUniqueId())){
+                if (TeleportMap.getTpQueue().containsKey(p.getUniqueId())){
                     p.teleport(deathMap.get(p.getUniqueId()));
                     p.sendMessage("§a已将你传送至死亡点！");
                     deathMap.remove(p.getUniqueId());
                 }
             }, 60L);
-            Main.getTpQueue().put(p.getUniqueId(), task);
+            TeleportMap.getTpQueue().put(p.getUniqueId(), task);
         } else {
             p.sendMessage("§c找不到死亡点，该死亡点可能已被传送过一次或不存在！");
         }

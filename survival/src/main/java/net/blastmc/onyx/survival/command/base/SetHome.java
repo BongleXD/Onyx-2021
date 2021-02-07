@@ -33,20 +33,20 @@ public class SetHome extends CommandManager {
         Statement statement;
         ResultSet result;
         statement = conn.createStatement();
-        result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE uuid = '" + p.getUniqueId().toString()+"';");
+        result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE uuid = '" + p.getUniqueId().toString() + "';");
         if (result.next()) {
             int count = result.getInt(1);
             statement.close();
             result.close();
             if (count >= 5) {
-                p.sendMessage("§c您当前可以设置的家已达最大值！");
+                p.sendMessage("§c你不能在设置更多的家园！");
             } else {
-                String homeName = args.length == 0 ? "Home_"+(count+1) : args[0];
+                String homeName = args.length == 0 ? "Home_" + (count + 1) : args[0];
                 statement = conn.createStatement();
-                result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename LIKE UPPER('"+homeName+"') AND uuid = '" + p.getUniqueId().toString() + "';");
+                result = statement.executeQuery("SELECT COUNT(*) FROM player_home WHERE homename LIKE UPPER('" + homeName + "') AND uuid = '" + p.getUniqueId().toString() + "';");
                 count = result.getInt(1);
-                if (count != 0){
-                    p.sendMessage("§c当前名字 "+homeName+" 与当前已存在的家名字冲突！");
+                if (count != 0) {
+                    p.sendMessage("§c当前名字 " + homeName + " 与当前已存在的家园名字冲突！");
                     statement.close();
                     result.close();
                     return;
@@ -57,12 +57,13 @@ public class SetHome extends CommandManager {
                 double x = loc.getX();
                 double y = loc.getY();
                 double z = loc.getZ();
-                preparedStatement = conn.prepareStatement("INSERT INTO player_home (uuid, homename, world, x, y, z) VALUES('"+p.getUniqueId().toString()+"', '"+homeName+"', '"+p.getWorld().getName()+"', '"+x+"', '"+y+"', '"+z+"');");
+                preparedStatement = conn.prepareStatement("INSERT INTO player_home (uuid, homename, world, x, y, z) VALUES('" + p.getUniqueId().toString() + "', '" + homeName + "', '" + p.getWorld().getName() + "', '" + x + "', '" + y + "', '" + z + "');");
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
-                p.sendMessage("§a已成功设置家 §b" + homeName + "§a 位于：§e世界："+loc.getWorld().getName()+" X："+ Method.roundDouble(x, 1)+" Y："+Method.roundDouble(y, 1)+" Z："+Method.roundDouble(z, 1));
+                p.sendMessage("§a已在当前世界设置家园: §b" + homeName + " §7(" + Method.roundDouble(x, 1) + ", " + Method.roundDouble(y, 1) + ", " + Method.roundDouble(z, 1) + ")");
             }
         }
         conn.close();
     }
+
 }

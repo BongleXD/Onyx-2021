@@ -17,33 +17,35 @@ import java.sql.Statement;
 public class HomeList extends CommandManager {
 
     public HomeList() {
-        super("homelist", "返回上一个死亡点", "/homelist", "survival.command.homelist");
+        super("homelist", "返回上一个死亡点", "/homelist 家园列表", "survival.command.homelist");
     }
 
     @Cmd(coolDown = 3000, perm = "survival.command.homelist", only = CommandOnly.PLAYER)
     public void homeList(CommandSender sender, String[] args) throws SQLException {
-        Player p = (Player)sender;
+        Player p = (Player) sender;
         Connection conn = Main.getSql().getConnection();
         Statement statement = conn.createStatement();
-        ResultSet result = statement.executeQuery("SELECT homename FROM player_home WHERE uuid='"+p.getUniqueId().toString()+"';");
-        boolean b = result.next();
-        if (b){
-            p.sendMessage("§9§l↓    已设置的家    ↓");
-            int i = 0;
-            while (b){
-                i++;
-                String homeName = result.getString(1);
-                TextComponent accept = new TextComponent("§b"+homeName);
-                accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + homeName));
-                accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击这里传送至家 §b"+homeName).create()));
-                p.spigot().sendMessage(new TextComponent("§7"+i+". "), accept);
+        ResultSet rs = statement.executeQuery("SELECT homename FROM player_home WHERE uuid='" + p.getUniqueId().toString() + "';");
+        boolean hasHome = false;
+        for(int i = 0; rs.next(); i++){
+            if(i == 0){
+                hasHome = true;
+                p.sendMessage("§6§m-----------------------------");
             }
-            p.sendMessage("");
-        } else {
-            p.sendMessage("§c你当前还仍未设置任何家，输入 §e/sethome [家名称] §c来设置第一个家吧！");
+            String homeName = rs.getString(1);
+            TextComponent accept = new TextComponent("§a[点击传送]");
+            accept.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/home " + homeName));
+            accept.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("点击这里传送至此家园").create()));
+            p.spigot().sendMessage(new TextComponent("§7" + i + ". " + homeName + " "), accept);
         }
-        result.close();
+        if (hasHome) {
+            p.sendMessage("§6§m-----------------------------");
+        } else {
+            p.sendMessage("§c你当前还仍未设置任何家，输入 §b/sethome [家名称] §c来设置第一个家吧！");
+        }
+        rs.close();
         statement.close();
         conn.close();
     }
+
 }
