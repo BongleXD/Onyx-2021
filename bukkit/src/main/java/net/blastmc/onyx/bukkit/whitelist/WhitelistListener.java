@@ -18,7 +18,7 @@ public class WhitelistListener implements Listener {
     @EventHandler
     public void onPreLogin(AsyncPlayerPreLoginEvent e){
         UUID uuid = e.getUniqueId();
-        if(WhitelistConfig.ENABLED && !WhitelistConfig.getWhitelist().contains(uuid.toString())){
+        if(WhitelistConfig.ENABLED && !WhitelistConfig.WHITE_LIST.contains(uuid.toString())){
             e.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, "§c你未拥有此服务器的白名单！");
         }
     }
