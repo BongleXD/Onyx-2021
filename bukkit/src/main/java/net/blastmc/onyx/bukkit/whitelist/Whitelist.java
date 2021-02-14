@@ -25,7 +25,7 @@ public class Whitelist extends CommandManager {
 
     @Cmd(arg = "reload", perm = "onyx.command.whitelist", permMessage = "§c你需要 OWNER 及以上的会员等级才能使用此指令！")
     public void reload(CommandSender sender, String[] args){
-        WhitelistConfig.cfg.reload();
+        WhitelistConfig.config.reload();
         sender.sendMessage("§a已从配置文件刷新白名单！");
     }
 
@@ -34,7 +34,7 @@ public class Whitelist extends CommandManager {
         WhitelistConfig.setEnabled(true);
         sender.sendMessage("§a已开启白名单！");
         Bukkit.getOnlinePlayers().forEach(online -> {
-            if(!WhitelistConfig.getWhitelist().contains(online.getUniqueId().toString())){
+            if(!WhitelistConfig.WHITE_LIST.contains(online.getUniqueId().toString())){
                 online.kickPlayer("§c此服务器已开启白名单！你未拥有此服务器的白名单！");
             }
         });
