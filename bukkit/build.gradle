@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation project(':onyx-api')
+    compileOnly files('libs/PotatoSpigot-1.16.5.jar')
     compileOnly files('libs/PotatoSpigot-1.12.2.jar')
     compileOnly files('libs/PotatoSpigot-1.8.8.jar')
     compileOnly files('libs/Bungee.jar')

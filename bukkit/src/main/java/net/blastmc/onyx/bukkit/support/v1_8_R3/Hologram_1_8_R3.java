@@ -142,10 +142,10 @@ public class Hologram_1_8_R3 implements Hologram {
     public Hologram removeTo(Player p) {
         this.players.remove(p.getUniqueId());
         if(this.create.contains(p.getUniqueId())) {
-            this.create.remove(p.getUniqueId());
             lines.stream().map(data -> data.stand).forEach(stand -> {
                 remove(p.getUniqueId(), stand);
             });
+            this.create.remove(p.getUniqueId());
         }
         return this;
     }
@@ -155,10 +155,10 @@ public class Hologram_1_8_R3 implements Hologram {
         for(Player p : list){
             this.players.remove(p.getUniqueId());
             if(this.create.contains(p.getUniqueId())) {
-                this.create.remove(p.getUniqueId());
                 lines.stream().map(data -> data.stand).forEach(stand -> {
                     remove(p.getUniqueId(), stand);
                 });
+                this.create.remove(p.getUniqueId());
             }
         }
         return this;
@@ -193,7 +193,7 @@ public class Hologram_1_8_R3 implements Hologram {
                         drawMap.put(i, new AnimData(id, value.line, value.frame));
                     }
                 }
-                stand.setCustomName("§f读取中...");
+                stand.setCustomName(animMap == null || animMap.isEmpty() ? data.line : "§f读取中...");
                 ep.playerConnection.sendPacket(new PacketPlayOutSpawnEntityLiving(stand));
                 update(uuid);
                 loc.add(0, -offset, 0);

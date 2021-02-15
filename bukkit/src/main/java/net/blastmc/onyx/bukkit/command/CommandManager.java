@@ -38,6 +38,7 @@ public class CommandManager extends BukkitCommand {
         this.setPermission(permission);
     }
 
+    @Override
     public String getUsage(){
         return usage;
     }
