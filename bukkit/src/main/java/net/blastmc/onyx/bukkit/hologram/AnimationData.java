@@ -2,7 +2,7 @@ package net.blastmc.onyx.bukkit.hologram;
 
 public class AnimData{
 
-    public int id;
+    public final int id;
     public String line;
     public int frame;
 
